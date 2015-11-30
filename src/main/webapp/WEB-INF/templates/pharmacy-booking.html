@@ -1,0 +1,107 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorator="layout">
+	
+<head>
+	<title>Pharmacy Booking</title>
+	<script type="text/javascript" src="resources/custom/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="resources/custom/lakshman.js"></script>
+	<style>
+	.panel-title {
+    margin-left: 170px;
+}
+
+
+</style>
+	 <script>
+  $(function() {
+	  
+	  $("#clinicSearchBtn").click(function(){
+		 	
+		    $.ajax({url: "api/pharmacy", 
+		    	data:{"speciality":$("#speciality").val(),"location":$("#location").val()},
+		    	success: function(result){
+		    	console.log(result);
+		    	if(result.status == "OK"){
+		    		$('#displayArea').html('');
+		    		$.each(result.clinics, 
+		    				function(index, item) {
+		    					
+		    					var htmlContent = '<div class="col-md-4">';
+		    					htmlContent = htmlContent + '<h3 class="style-heading">' + item.clinicName + "</h3>";
+		    					
+		    					htmlContent = htmlContent + "<p>" + item.clinicAddress + "</p>";
+		    					htmlContent = htmlContent + "<p>" + item.clinicPhones + "</p>";
+		    					
+		    					console.log(index + " => " + item.clinicName);
+		    					htmlContent = htmlContent + "</div>";
+		    					$('#displayArea').append(htmlContent);
+		    				}
+		    		);
+		    		c
+		    	}
+		    }});		  
+	  });
+    
+
+  });
+  </script> 
+</head>
+<body>
+
+	<section layout:fragment="content">
+	  <div class="row" >
+	  	<div class="col-md-6 col-md-offset-3  col-sm-8 col-sm-offset-2">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div class="panel-title">Pharmacy Booking</div>
+				</div>
+				<div style="padding-top: 30px" class="panel-body">
+					
+					<div class="form-group">
+					
+					  
+					
+					
+				<span>Type&nbsp;&nbsp;&nbsp;&nbsp;:</span>	
+				
+			<select id="speciality" class="btn btn-primary round-squre">
+			<option value="Alopathy">Alopathy</option>
+			<option value="Homeopathy">Homeopathy</option>
+			<option value="Ayurveda">Ayurveda</option>
+						
+						
+			
+			</select>
+			
+			
+			
+			
+		
+				
+							&nbsp;&nbsp;
+									
+			    <span>Location&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+			     <input id="location" type="text" class="btn btn-primary round-squre"/>
+			      
+    					<br/>
+						
+						<br/><br/>
+						
+					
+						<button id="clinicSearchBtn" class="btn btn-success">Serach</button>
+  					</div>
+  					
+					
+				</div>
+				
+			</div>
+		</div>
+	  </div>
+      <div class="row">
+      	<div id="displayArea">
+      	</div>
+      </div>
+    </section>
+</body>
+</html>

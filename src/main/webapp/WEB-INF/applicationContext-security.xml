@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+		
+	<security:http auto-config="true" entry-point-ref="authenticationEntryPointImpl">
+		<security:form-login 
+			login-page="/login" 
+			authentication-failure-url="/login?error"
+			default-target-url="/"
+			authentication-success-handler-ref="authSuccessHandler" 
+			authentication-failure-handler-ref="authFailureHandler" />
+		<security:logout delete-cookies="JSESSIONID" />
+		<security:intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/home-user" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/protected/**" access="hasRole('ROLE_USER')" />
+		<security:csrf disabled="true"/>
+	</security:http>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource" />
+			<security:password-encoder hash="bcrypt" />
+			<!-- <security:user-service>
+				<security:user authorities="ROLE_USER" name="a@b.c" password="password" />
+				<security:user authorities="ROLE_USER" name="sharan" password="password" />
+			</security:user-service> -->
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
+    	<property name="username" value="root"/>
+    	<property name="password" value="root"/>
+	</bean>
+	
+	<bean id="authSuccessHandler" class="com.wow.webapp.security.AuthenticationSuccessHandlerImpl"/>
+	<bean id="authFailureHandler" class="com.wow.webapp.security.AuthenticationFailureHandlerImpl">
+		<constructor-arg name="defaultFailureUrl" value="/login?error" />
+	</bean>
+	<bean id="authenticationEntryPointImpl" class="com.wow.webapp.security.AuthenticationEntryPointImpl" >
+		<constructor-arg name="loginFormUrl" value="/login" />
+	</bean>
+</beans>
