@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorator="layout">
+<head>
+	<title>Tests</title>
+</head>
+<body>
+	<section layout:fragment="content">
+	  <div>
+	  	<table class="table table-striped">
+	  		<thead>
+	  			<tr>
+	  				<th>Test</th>
+	  				<th>Clinic</th>
+	  				<th>Current Price</th>
+	  				<th>Actual Price</th>
+	  				<th>Home PickUp</th>
+	  				<th>Online Reports</th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+		  		<tr th:each="test : ${tests}">
+		  			<td th:text="${test.test_name}"></td>
+		  			<td th:text="${test.clinic_name}"></td>
+		  			<td th:text="${test.current_price}"></td>
+		  			<td th:text="${test.actual_price}"></td>
+		  			
+		  			<td th:if="${test.home_pickup}">Home PickUp</td>
+		  			<td th:if="!${test.home_pickup}"></td>
+		  			
+		  			
+		  			<td th:if="${test.online_reports}">Online Reports</td>
+		  			<td th:if="!${test.online_reports}"></td>
+		  		</tr>
+	  		</tbody>
+	  	</table>
+	  </div>
+    </section>
+</body>
+</html>

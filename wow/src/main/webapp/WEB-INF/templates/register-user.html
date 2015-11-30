@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Register User</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div ng-app="registerUserApp"  ng-controller="registerCtrl" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" style="padding-top: 50px">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">Register User</div>
+				</div>
+				
+				<div style="padding-top: 30px" class="panel-body">
+					<form name="userForm" novalidate="novalidate">
+							<span style="color:red" ng-show="userForm.username.$dirty &amp;&amp; userForm.username.$invalid">
+  								<span ng-show="userForm.username.$error.required">Email is required.</span>
+  								<span ng-show="userForm.username.$error.email">Enter valid email address</span>
+  							</span>						
+ 						<div style="margin-bottom: 25px" class="input-group">
+							<span class="input-group-addon">
+							  <i class="glyphicon glyphicon-user"></i>
+							</span>
+							<input id="usernameid" name="username" type="email" class="form-control" required="required" placeholder="email" ng-model="user.username"/>
+
+						</div>
+							<span style="color:red" ng-show="userForm.password.$dirty &amp;&amp; userForm.password.$invalid">
+  								<span ng-show="userForm.password.$error.required">Password is required.</span>
+  								<span ng-show="userForm.password.$error.pattern">Enter valid Password Min 10 characters</span>
+  							</span>
+						<div style="margin-bottom: 25px" class="input-group">	
+							<span class="input-group-addon">
+							  <i class="glyphicon glyphicon-lock"></i>
+							</span> 
+							<input id="passwordid" name="password" type="password" class="form-control" required="required" pattern=".{10,50}" title="Password Min 10 characters"
+							    placeholder="password" ng-model="user.password"/>
+						</div>
+
+						<div style="margin-top: 10px" class="form-group">
+							<div class="col-sm-12 controls">
+								<button class="btn btn-primary" ng-show="inprogress==true"><i class="fa fa-cog fa-spin"></i> Processing</button>
+								<button id="btn-register" ng-show="inprogress==false" class="btn btn-success" ng-disabled="userForm.$invalid" ng-click="OnRegisterBtnClick(user)">Register</button>
+								<button id="btn-reset"    ng-show="inprogress==false" class="btn btn-danger" ng-click="reset(userForm)">Reset</button>
+							</div>
+						</div>
+					</form>
+					<div ng-show="showSuccess==true" class="alert alert-success" role="alert">
+						<strong>{{showMessage}} </strong>
+					</div>
+					<div ng-show="showSuccess==false" class="alert alert-danger" role="alert">
+						<strong>{{showMessage}}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+		  var registerUserApp = angular.module('registerUserApp', []);
+		  registerUserApp.controller('registerCtrl', function ($scope,$http) {
+			  $scope.inprogress = false;
+			  $scope.OnRegisterBtnClick = function(user){
+				  $scope.inprogress = true;
+				  console.log("In Register Click");
+				  
+				  console.log(user);
+				  $http({
+					  method: 'POST',
+					  url: 'api/register-user',
+					  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+					  data : $.param(user)
+					}).then(function successCallback(response) {
+						if(response.data.status == "OK"){
+							console.log("OK Response");
+							$scope.showMessage = "Registration success. Please login with " + user.username  +" to continue";
+							$scope.showSuccess = true;
+							
+							$scope.reset($scope.userForm);
+						}
+						else{
+							console.log("Error Response");
+							$scope.showMessage = "Registration fail." + response.data.errors;
+							$scope.showSuccess = false;
+							$scope.user.password = "";
+						}
+						$scope.inprogress = false;
+						console.log(response.data);
+					  }, function errorCallback(response) {
+						  console.log("HTTP Error");
+						    $scope.showMessage = "Registration fail. Try again";
+						    $scope.showSuccess = false;
+							$scope.user.password = "";
+						    $scope.inprogress = false;
+						    console.log(response);
+					  });
+			  };
+			  $scope.reset = function(form){
+				  console.log("In reset");
+				  if(form){
+					  $scope.user = {};
+					  console.log("Setting");
+					  form.$setPristine();
+					  form.$setUntouched();
+				  }
+				  else{
+					  console.log("form is null");
+				  }
+			  };
+			  
+			});
+		  /*]]>*/
+		</script>
+	</section>
+</body>
+</html>

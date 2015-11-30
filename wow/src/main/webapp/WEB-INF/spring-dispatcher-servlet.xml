@@ -1,0 +1,90 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<context:component-scan base-package="com.wow.webapp.controllers"/>                                 
+	<context:component-scan base-package="com.wow.webapp.controllers.api" />
+	
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/resources/**" location="/resources/" cache-period="31556926"/>
+	<tx:annotation-driven />
+	<mvc:view-controller path="/" view-name="HomeOne"/>
+	
+<!-- 	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/pages/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean> -->
+	<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+ 	  <property name="prefix" value="/WEB-INF/templates/" />
+  	  <property name="suffix" value=".html" />
+  	  <property name="templateMode" value="HTML5" />
+  	  <property name="cacheable" value="false" />
+ 	</bean>
+ 	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+      <property name="templateResolver" ref="templateResolver" />
+      <property name="additionalDialects">
+    	<set>
+      		<bean class="nz.net.ultraq.thymeleaf.LayoutDialect"/>
+      		<bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
+    	</set>
+  	  </property>
+ 	</bean>
+ 	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+      <property name="templateEngine" ref="templateEngine" />
+      <property name="order" value="1" />
+<!--       <property name="viewNames" value="*.html,*.xhtml" /> -->
+ 	</bean>
+ 
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
+    	<property name="username" value="root"/>
+    	<property name="password" value="root"/>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+    	<property name="configLocation" value="classpath:hibernate-annotation.cfg.xml" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userDao" class="com.wow.webapp.dao.UserDAOImpl">
+    	<constructor-arg>
+        	<ref bean="sessionFactory" />
+    	</constructor-arg>
+	</bean>
+	
+	<bean id="bookingDao" class="com.wow.webapp.dao.BookingDAOImpl">
+    	<constructor-arg>
+        	<ref bean="sessionFactory" />
+    	</constructor-arg>
+	</bean>
+	
+	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000" />
+    </bean>
+    
+    <bean id="seedDb" class="com.wow.webapp.seeddb.SeedDatabase">
+    	<constructor-arg>
+        	<ref bean="userDao" />
+    	</constructor-arg>    </bean>
+    
+</beans>

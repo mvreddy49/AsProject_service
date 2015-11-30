@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Administration</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div>
+			<p>Upload Clinic Data</p>
+			<form th:action="@{/clinic-data-upload}" method="post" role="form"
+				enctype="multipart/form-data">
+				<input type="file" name="clinicdatafile" /> <input type="submit" />
+			</form>
+		</div>
+		<div>
+			<p>Upload Doctor Data</p>
+			<form th:action="@{/doctor-data-upload}" method="post" role="form"
+				enctype="multipart/form-data">
+				<input type="file" name="doctordatafile" /> <input type="submit" />
+			</form>
+		</div>
+	</section>
+</body>
+</html>
