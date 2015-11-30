@@ -13,6 +13,7 @@ public interface BookingDAO {
 	public Slots findSlot(Integer slot_id); 
 	public List<Booking> findBookings(Clinic clinic,Doctor doctor);
 	public void save(Booking b);
+	public List<Booking> findBookingsOnUserId(Integer userId);
 	
 	
 }
