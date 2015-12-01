@@ -26,16 +26,16 @@ public class Booking {
 	private Integer booking_id;
 	
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "clinic_id", nullable = false)
 	private Clinic clinic;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "doctor_id", nullable = false)
 	private Doctor doctor;
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
@@ -43,14 +43,6 @@ public class Booking {
 	//@Temporal(TemporalType.DATE)
 	private Date booking_time;
 	
-	@Override
-	public String toString() {
-		return "Booking [booking_id=" + booking_id + ", clinic=" + clinic + ", doctor=" + doctor + ", user=" + user
-				+ ", booking_time=" + booking_time + ", inserted_on=" + inserted_on + ", updated_on=" + updated_on
-				+ "]";
-	}
-
-
 	public Integer getBooking_id() {
 		return booking_id;
 	}

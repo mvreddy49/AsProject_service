@@ -21,8 +21,6 @@ public interface UserDAO {
 	public List<ClinicModel> getClinics(String speciality, String location);
 	public List<ClinicModel> getPharmacy(String speciality, String location);
 	public User findByUserName(String username) throws Exception;
-	public User findByUserMobile(String mobile) throws Exception;
-	public User findByid(Integer userId);
 	public Clinic findByClinicName(String clinicname);
 	public void AddTestToClinic(String clinicname, ClinicTest t) ;
 	public List<ClinicTestModel> getTests();

@@ -360,26 +360,6 @@ public class UserDAOImpl implements UserDAO{
 		
 		
 	}
-
-	@Transactional
-	public User findByUserMobile(String mobile) throws Exception {
-		// TODO Auto-generated method stub
-		Session session=this.getSession();
-		List<User> user=session.createQuery("from User u where u.mobile=?").setParameter(0, mobile).list();
-		if(user!=null && user.size() > 0)
-			return user.get(0);
-		return null;
-	}
-	@Transactional
-	public User findByid(Integer userId) {
-		// TODO Auto-generated method stub
-		Session session=this.getSession();
-		List<User> user=session.createQuery("from User u where u.id=?").setParameter(0, userId).list();
-		if(user!=null && user.size() > 0)
-			return user.get(0);
-		
-		return null;
-	}
 	
 	
 

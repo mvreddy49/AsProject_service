@@ -61,15 +61,6 @@ public class BookingDAOImpl implements BookingDAO {
 		
 		
 	}
-	@Transactional
-	public List<Booking> findBookingsOnUserId(Integer userId) {
-		// TODO Auto-generated method stub
-		Session session = this.getSession();
-		User user=new User(userId);
-		List<Booking> bookings=session.createQuery("from User b where b.user=?").setParameter(0,user).list();
-		
-		return bookings;
-	}
 	
 
 }
