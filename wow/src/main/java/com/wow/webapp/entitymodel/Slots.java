@@ -32,7 +32,7 @@ public class Slots {
 	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "clinic_id", nullable = false)
+	@JoinColumn(name = "clinic_id", nullable = true)
 	private Clinic clinic;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -52,7 +52,8 @@ public class Slots {
 	 
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "inserted_on", updatable = true,insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
+	//@Column(name = "inserted_on", updatable = false,insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
+	@Column(name = "inserted_on", updatable = false,insertable = false)
 	private Date inserted_on;
 
 	public Integer getId() {

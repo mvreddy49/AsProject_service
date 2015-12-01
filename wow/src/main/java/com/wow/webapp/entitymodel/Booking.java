@@ -104,7 +104,8 @@ public class Booking {
 
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "inserted_on", length = 19,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
+	//@Column(name = "inserted_on", length = 19,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
+	@Column(name = "inserted_on", updatable = false,insertable = false)
 	private Date inserted_on;
 
 	@Temporal(TemporalType.TIMESTAMP)

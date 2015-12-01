@@ -102,7 +102,8 @@ public class User {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "inserted_on", updatable = false, insertable = true,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
+	//@Column(name = "inserted_on", updatable = false, insertable = true,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
+	@Column(name = "inserted_on", updatable = false,insertable = false)
 	private Date inserted_on;
 	
 
