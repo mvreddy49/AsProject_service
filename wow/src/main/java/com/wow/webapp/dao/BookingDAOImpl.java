@@ -1,5 +1,6 @@
 package com.wow.webapp.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,6 +10,9 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.ClinicModel;
+import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
@@ -61,6 +65,32 @@ public class BookingDAOImpl implements BookingDAO {
 		
 		
 	}
-	
+	@Transactional
+	public List<BookingModel> findBookingsOnUserId(Integer userId) {
+		// TODO Auto-generated method stub
+		Session session = this.getSession();
+		User user=new User(userId);
+		List<BookingModel> bookingModel=new ArrayList<BookingModel>();
+		List<Booking> bookings=session.createQuery("from Booking b where b.user=?").setParameter(0,user).list();
+		if(bookings!=null&&bookings.size()>0)
+		{
+			for(Booking b:bookings)
+			{
+				BookingModel bm=new BookingModel();
+				bm.setBooking_slottime(b.getBooking_time());
+				bm.setUser_id(b.getUser().getId());
+				ClinicModel clinicModel=new ClinicModel();
+				clinicModel.setClinicName(b.getClinic().getName());
+				bm.setClinic(clinicModel);
+				DoctorModel doctorModel=new DoctorModel();
+				doctorModel.setName(b.getDoctor().getName());
+				doctorModel.setMobile(b.getDoctor().getMobile());
+				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
+				bm.setDoctor(doctorModel);
+				bookingModel.add(bm);
+			}
+		}
+		return bookingModel;
+	}
 
 }

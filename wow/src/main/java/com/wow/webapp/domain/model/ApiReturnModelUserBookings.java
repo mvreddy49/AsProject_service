@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ApiReturnModelUserBookings extends ApiReturnModel {
 	
-	private List<BookingModel> bookings = new ArrayList<BookingModel>(0);
+	private List<BookingReturnModel> bookings = new ArrayList<BookingReturnModel>(0);
 
 	
 	
@@ -26,16 +26,16 @@ public class ApiReturnModelUserBookings extends ApiReturnModel {
 		super(status);
 	}
 
-	public ApiReturnModelUserBookings(List<BookingModel> bookings) {
+	public ApiReturnModelUserBookings(List<BookingReturnModel> bookings) {
 		super();
 		this.bookings = bookings;
 	}
 
-	public List<BookingModel> getBookings() {
+	public List<BookingReturnModel> getBookings() {
 		return bookings;
 	}
 
-	public void setBookings(List<BookingModel> bookings) {
+	public void setBookings(List<BookingReturnModel> bookings) {
 		this.bookings = bookings;
 	}
 	
