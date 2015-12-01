@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.BookingReturnModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.ClinicTestModel;
 import com.wow.webapp.entitymodel.Booking;
@@ -272,27 +272,27 @@ public class UserDAOImpl implements UserDAO{
 		return list;
 	}
 	
-	@Transactional
-	public void save(BookingModel b, String username) throws Exception {
+	/*@Transactional
+	public void save(BookingReturnModel b, String username) throws Exception {
 		logger.debug("save(BookingModel) start");
 		Session session = this.getSession();
 		
-	/*	ClinicTest test = findClinicTestByNameForClinic(session, b.getClinic_name(), b.getTest_name());*/
+		ClinicTest test = findClinicTestByNameForClinic(session, b.getClinic_name(), b.getTest_name());
 		User u = findUserByUsername(session,username);
 
-	/*	Booking booking = new Booking(u, b.getDate(), test, b.isHomePickUp());
+		Booking booking = new Booking(u, b.getDate(), test, b.isHomePickUp());
 		session.saveOrUpdate(booking);
-*/
+
 		logger.debug("save(BookingModel) end");
 		
 	}
 	
 	@Transactional
-	public List<BookingModel> getBookingsForUser(String username) throws Exception {
+	public List<BookingReturnModel> getBookingsForUser(String username) throws Exception {
 		Session session = this.getSession();
-		List<BookingModel> list = new ArrayList<BookingModel>();
+		List<BookingReturnModel> list = new ArrayList<BookingReturnModel>();
 		User u = this.findUserByUsername(session, username);
-/*		for(Booking b : u.getBookings()){
+		for(Booking b : u.getBookings()){
 			BookingModel model = new BookingModel();
 			model.setId(b.getBooking_id());
 			model.setTest_name(b.getTest().getTest_name());
@@ -301,8 +301,8 @@ public class UserDAOImpl implements UserDAO{
 			model.setDate(b.getDate());
 			list.add(model);
 		}
-*/		return list;
-	}
+		return list;
+	}*/
 	
 	private Session getSession(){
 		return this.sessionFactory.getCurrentSession();
@@ -361,7 +361,25 @@ public class UserDAOImpl implements UserDAO{
 		
 		
 	}
-	
+	@Transactional
+	public User findByUserMobile(String mobile) throws Exception {
+		// TODO Auto-generated method stub
+		Session session=this.getSession();
+		List<User> user=session.createQuery("from User u where u.mobile=?").setParameter(0, mobile).list();
+		if(user!=null && user.size() > 0)
+			return user.get(0);
+		return null;
+	}
+	@Transactional
+	public User findByid(Integer userId) {
+		// TODO Auto-generated method stub
+		Session session=this.getSession();
+		List<User> user=session.createQuery("from User u where u.id=?").setParameter(0, userId).list();
+		if(user!=null && user.size() > 0)
+			return user.get(0);
+		
+		return null;
+	}
 	
 
 }
