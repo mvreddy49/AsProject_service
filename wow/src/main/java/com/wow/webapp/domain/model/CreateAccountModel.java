@@ -7,50 +7,50 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class CreateAccountModel {
 	
-	@NotEmpty(message="Email Can not be empty")
+	@NotEmpty(message="email Can not be empty")
 	@Email
 	private String email;
 	
-	@NotEmpty(message="Password Can not be empty")
+	@NotEmpty(message="passwd Can not be empty")
 	@Size(min=10, max=50)
 	private String passwd;
 	
-	@NotEmpty(message="Clinic Name Can not be empty")
+	@NotEmpty(message="clinicName Can not be empty")
 	@Size(min=2, max=50)
 	private String clinicName;
 	
-	@NotEmpty(message="Clinic Description Can not be empty")
+	@NotEmpty(message="clinicDesc Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicDesc;
 	
-	@NotEmpty(message="Clinic Address Can not be empty")
+	@NotEmpty(message="clinicAddrLine1 Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicAddrLine1;
 	
-	@NotEmpty(message="Clinic Address Can not be empty")
+	@NotEmpty(message="clinicAddrLine2 Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicAddrLine2;
 	
-	@NotEmpty(message="Clinic City Can not be empty")
+	@NotEmpty(message="clinicCity Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicCity;
 		
-	@NotEmpty(message="Clinic State Can not be empty")
+	@NotEmpty(message="clinicState Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicState;
 
-	@NotEmpty(message="Clinic Country Can not be empty")
+	@NotEmpty(message="clinicCountry Can not be empty")
 	@Size(min=2, max=100)
 	private String clinicCountry;
 	
-	@NotEmpty(message="Clinic zip code Can not be empty")
+	@NotEmpty(message="clinicZipCode code Can not be empty")
 	@Size(min=2, max=10)
 	private String clinicZipCode;
 
 	@Size(max=100)
 	private String clinicLandmark;
 
-	@NotEmpty(message="Clinic Phone Number Can not be empty")
+	@NotEmpty(message="clinicPhone1 Number Can not be empty")
 	@Size(min=10, max=10)
 	private String clinicPhone1;
 

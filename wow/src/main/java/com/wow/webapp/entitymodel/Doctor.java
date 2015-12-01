@@ -3,12 +3,17 @@ package com.wow.webapp.entitymodel;
 
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,7 +23,7 @@ import org.hibernate.annotations.GenerationTime;
 
 
 @Entity
-@Table(name="Doctor")
+@Table(name="doctor")
 public class Doctor {
 
 	@Id
@@ -37,6 +42,7 @@ public class Doctor {
 
 	
 	@Temporal(TemporalType.TIMESTAMP)
+	//@Column(name = "updated_on", updatable = true, insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
 	@Column(name = "updated_on", updatable = true, insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
 	private Date modified_on;
 	 
@@ -51,7 +57,8 @@ public class Doctor {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "inserted_on", updatable = false, insertable = true,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
+	//@Column(name = "inserted_on", updatable = false, insertable = true,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
+	@Column(name = "inserted_on", updatable = false, insertable = true)
 	private Date inserted_on;
 	
 	public Integer getId() {
@@ -82,5 +89,15 @@ public class Doctor {
 		this.mobile = mobile;
 	}
 	
+	@OneToMany(mappedBy = "doctor" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+	private Set<Slots> slots = new HashSet<Slots>(0);
+	
+	public Set<Slots> getSlots() {
+		return slots;
+	}
+
+	public void setSlots(Set<Slots> slots) {
+		this.slots = slots;
+	}
 	
 }

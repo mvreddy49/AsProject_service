@@ -350,8 +350,9 @@ public class UserDAOImpl implements UserDAO{
 				.setParameter("username", username)
 				.list();
 		if(userList == null || userList.size() <= 0){
-			logger.debug("Not Found : " + username);
-			throw new Exception("Not Found : " + username);
+//			logger.debug("Not Found : " + username);
+//			throw new Exception("Not Found : " + username);
+			return null;
 		}
 		return userList.get(0);
 	}
