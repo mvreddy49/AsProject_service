@@ -12,18 +12,23 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.CreateAccountModel;
 import com.wow.webapp.domain.model.CreateDoctorModel;
+import com.wow.webapp.domain.model.LoginModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
@@ -89,6 +94,8 @@ public class ContentInsertController {
 	@RequestMapping(value = "/register-doctor", method = RequestMethod.POST)
 	public ApiReturnModel registerDoctor(@Valid CreateDoctorModel model, BindingResult bindingResult){
 		logger.debug("register get start");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		logger.debug("User details are :" + auth.getPrincipal().toString());
 		List<String> errors = new ArrayList<String>();
 		ApiReturnModel apiReturnModel= new ApiReturnModel();
 		if(bindingResult.hasFieldErrors()){
@@ -96,8 +103,7 @@ public class ContentInsertController {
 			for(FieldError e : bindingResult.getFieldErrors()){
 				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
 				errors.add(e.getDefaultMessage());
-			}
-			
+			}	
 		}
 		else{
 			
@@ -180,8 +186,6 @@ public class ContentInsertController {
 	
 	/* Doctor Implementation */
 	public List<String> registerDoctorImpl(CreateDoctorModel model,List<String> errors){
-		String user_id = "8";
-		String clinic_id = "8";
 		Utils u = new Utils();
 		Date startTime,endTime;
 		try{

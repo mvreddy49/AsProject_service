@@ -47,4 +47,6 @@
 	<bean id="authenticationEntryPointImpl" class="com.wow.webapp.security.AuthenticationEntryPointImpl" >
 		<constructor-arg name="loginFormUrl" value="/login" />
 	</bean>
+	
+	
 </beans>
