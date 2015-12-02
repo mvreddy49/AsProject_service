@@ -26,22 +26,25 @@ private static final Logger logger = LoggerFactory.getLogger(SeedDatabase.class)
 				logger.debug("UserDAO null");
 			}
 			else{
-				userDao.findByUserName(adminUserName);
-				logger.debug("Admin user exists " + adminUserName);				
+				User u = userDao.findByUserName(adminUserName);
+				logger.debug("Admin user exists " + adminUserName);	
+				if(u == null){
+					u = new User();
+					u.setUsername(adminUserName);
+					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+					u.setPassword(passwordEncoder.encode("password@1234"));
+					u.setMobile("1212121");
+					u.setEnabled(true);
+					Set<Authority> authorities = new HashSet<Authority>();
+					authorities.add(new Authority(u, "ROLE_USER"));
+					authorities.add(new Authority(u, "ROLE_ADMIN"));
+					u.setUserRole(authorities);
+					userDao.save(u);
+				}
 			}
 		}
 		catch(Exception e){
-			User u = new User();
-			u.setUsername(adminUserName);
-			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			u.setPassword(passwordEncoder.encode("password@1234"));
-			u.setMobile("1212121");
-			u.setEnabled(true);
-			Set<Authority> authorities = new HashSet<Authority>();
-			authorities.add(new Authority(u, "ROLE_USER"));
-			authorities.add(new Authority(u, "ROLE_ADMIN"));
-			u.setUserRole(authorities);
-			userDao.save(u);
+			logger.debug("Exception raised");
 		}		
 		logger.debug("SeedDatabase end");
 	}

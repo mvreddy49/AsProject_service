@@ -36,7 +36,7 @@ public class Booking {
 	
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "username", nullable = false)
 	private User user;
 	
 	@DateTimeFormat(iso = ISO.DATE_TIME)

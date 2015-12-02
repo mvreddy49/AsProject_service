@@ -23,12 +23,8 @@ import javax.persistence.TemporalType;
 @Table(name="users")
 public class User {
 	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	
-	
 	@Column(name="username", unique = true ,length=50, nullable=false)
 	private String username;
 	
@@ -88,18 +84,12 @@ public class User {
 	}
 
 	
-	public User(Integer id) {
+	public User(String username) {
 		super();
-		this.id = id;
+		this.username = username;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	
 
 	@Temporal(TemporalType.TIMESTAMP)
 	//@Column(name = "inserted_on", updatable = false, insertable = true,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
