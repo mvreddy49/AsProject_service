@@ -2,6 +2,7 @@ package com.wow.webapp.entitymodel;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,16 +27,16 @@ public class Booking {
 	private Integer id;
 	
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "clinic_id", nullable = false)
 	private Clinic clinic;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "doctor_id", nullable = false)
 	private Doctor doctor;
 	
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "username", nullable = false)
 	private User user;
 	

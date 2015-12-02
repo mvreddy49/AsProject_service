@@ -7,6 +7,7 @@ public class Responses {
 	public static final Integer FAILURE_CODE=500;
 	
 	public static final Integer INVALID_PARAM_CODE=400;
+	public static final Integer USER_NOTLOGGEDIN=401;
 	
 	public static final Integer CUSTOM_CODE=210;
 	

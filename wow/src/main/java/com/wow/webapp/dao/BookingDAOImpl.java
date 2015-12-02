@@ -66,10 +66,10 @@ public class BookingDAOImpl implements BookingDAO {
 		
 	}
 	@Transactional
-	public List<BookingModel> findBookingsOnUserId(Integer userId) {
+	public List<BookingModel> findBookingsOnUser(String userName) {
 		// TODO Auto-generated method stub
 		Session session = this.getSession();
-		User user=new User(userId);
+		User user=new User(userName);
 		List<BookingModel> bookingModel=new ArrayList<BookingModel>();
 		List<Booking> bookings=session.createQuery("from Booking b where b.user=?").setParameter(0,user).list();
 		if(bookings!=null&&bookings.size()>0)
@@ -78,7 +78,7 @@ public class BookingDAOImpl implements BookingDAO {
 			{
 				BookingModel bm=new BookingModel();
 				bm.setSlotTime(b.getBooking_time().toString());
-				bm.setUser_id(b.getUser().getId());
+				bm.setUserName(b.getUser().getUsername());
 				ClinicModel clinicModel=new ClinicModel();
 				clinicModel.setClinicName(b.getClinic().getName());
 				bm.setClinic(clinicModel);
