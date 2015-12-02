@@ -11,9 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wow.webapp.domain.model.ClinicModel;
+import com.wow.webapp.domain.model.DoctorModel;
+import com.wow.webapp.domain.model.SlotsModel;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.Slots;
 import com.wow.webapp.entitymodel.User;
 
 public class ContentDAOImpl implements ContentDAO{
@@ -90,6 +93,63 @@ public class ContentDAOImpl implements ContentDAO{
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<DoctorModel> getDoctorsInfo(String speciality, String location){
+		logger.debug("getDoctorsInfo start");
+		List<DoctorModel> list = new ArrayList<DoctorModel>();
+		Session session = this.getSession();
+		List<Clinic> clinics = session.createQuery("from Clinic where type=:paramType")
+				.setParameter("paramType", "clinic")
+				.list();
+		for(  Clinic c : clinics){
+			boolean addressMatch = false;
+			for( ClinicAddress addr : c.getAddresses()){
+				if(addr.getCity().toLowerCase().equals(location.toLowerCase())){
+					addressMatch = true; break;
+				}
+			}
+			logger.debug("addressMatch Match : " + addressMatch);
+			if(!addressMatch) continue;
+			List<Slots> slots = session.createQuery("from Slots where clinic=:paramType")
+					.setParameter("paramType", c)
+					.list();
+			if(slots.size() == 0) continue;
+			for(Slots s : slots){
+				if(!s.getDoctor().getSpeciality().equalsIgnoreCase(speciality)) continue;
+				
+				DoctorModel doctorModel = new DoctorModel();
+				Doctor d = s.getDoctor();
+				doctorModel.setId(d.getId());
+				doctorModel.setName(d.getName());
+				doctorModel.setMobile(d.getMobile());
+				
+				/*Clinic Info */ 
+				
+				ClinicModel clinicModel = new ClinicModel();
+				clinicModel.setId(c.getId());
+				clinicModel.setClinicName(c.getName());
+				clinicModel.setClinicDesc(c.getDescription());
+				clinicModel.setClinicAddress(c.getAddresses().toString());
+				clinicModel.setClinicPhones(c.getPhoneNos().toString());
+				doctorModel.setClinic(clinicModel);
+				
+				/* Slots info */
+				
+				SlotsModel slotModel = new SlotsModel();
+				slotModel.setId(s.getId());
+				logger.debug(s.getEndTime().toString());
+				slotModel.setStartTime("");
+				slotModel.setEndTime("");
+				
+				doctorModel.setSlot(slotModel);
+				list.add(doctorModel);
+			}
+			
+		}
+		logger.debug("getClinics end");
+		return list;
+	}
 	
 	@Transactional
 	public Doctor findDoctorByMobile(String mobile) throws Exception {

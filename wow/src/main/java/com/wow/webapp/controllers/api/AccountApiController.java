@@ -26,6 +26,7 @@ import com.wow.webapp.domain.model.ClinicTestSearchModel;
 import com.wow.webapp.domain.model.LoginModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Responses;
 
 @RestController
 public class AccountApiController {
@@ -37,7 +38,7 @@ public class AccountApiController {
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST)
 	public ApiReturnModel login(@Valid LoginModel model, BindingResult bindingResult){
 		logger.debug("api/login start");
-		ApiReturnModel returnValue = new ApiReturnModel("OK");
+		ApiReturnModel returnValue = new ApiReturnModel(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS);
 		if(bindingResult.hasFieldErrors()){
 			returnValue.setStatus("ERROR");
 			List<String> errors = new ArrayList<String>();
@@ -55,7 +56,7 @@ public class AccountApiController {
 	@RequestMapping(value = "/api/register-user", method = RequestMethod.POST)
 	public ApiReturnModel register_user(@Valid LoginModel model, BindingResult bindingResult){
 		logger.debug("api/register_user start");
-		ApiReturnModel returnValue = new ApiReturnModel("OK");
+		ApiReturnModel returnValue = new ApiReturnModel(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS);
 		List<String> errors = new ArrayList<String>();
 		if(bindingResult.hasFieldErrors()){
 			returnValue.setStatus("ERROR");

@@ -26,6 +26,7 @@ import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slots;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
 
 @RestController
@@ -47,7 +48,7 @@ public class BookingApiController {
 			List<BookingModel> bookings = bookingDao.findBookingsOnUserId(Integer.parseInt(userId));
 			//User user=userDao.findByid(Integer.parseInt(userId));
 			if (bookings != null && bookings.size()>0) {
-				bookingModel = new BookingReturnModel(200, "records", "records", bookings);
+				bookingModel = new BookingReturnModel(Responses.SUCCESS_CODE, "records", "records", bookings);
 			} else {
 				bookingModel = new BookingReturnModel(400, "no records", "no records", null);
 			}
