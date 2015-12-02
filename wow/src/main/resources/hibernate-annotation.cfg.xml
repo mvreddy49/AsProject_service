@@ -23,7 +23,7 @@
         <mapping class="com.wow.webapp.entitymodel.City"/>
         <mapping class="com.wow.webapp.entitymodel.Booking"/>
         <mapping class="com.wow.webapp.entitymodel.Doctor"/>
-        <mapping class="com.wow.webapp.entitymodel.Slots"/>
+        <mapping class="com.wow.webapp.entitymodel.Slot"/>
         
         
     </session-factory>

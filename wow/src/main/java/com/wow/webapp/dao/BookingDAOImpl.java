@@ -16,7 +16,7 @@ import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 
 public class BookingDAOImpl implements BookingDAO {
@@ -33,13 +33,13 @@ public class BookingDAOImpl implements BookingDAO {
 	}
 
 	@Transactional
-	public Slots findSlot(Integer slot_id) {
+	public Slot findSlot(Integer slot_id) {
 		// TODO Auto-generated method stub
 		System.out.println("enter into getSlots");
 		Session session = this.getSession();
 		
 		System.out.println("before executing:::");
-		List<Slots> slots = session.createQuery("from Slots s where s.id=?").setParameter(0, slot_id).list();
+		List<Slot> slots = session.createQuery("from Slot s where s.id=?").setParameter(0, slot_id).list();
 		return slots.get(0);
 		
 	}
@@ -77,7 +77,7 @@ public class BookingDAOImpl implements BookingDAO {
 			for(Booking b:bookings)
 			{
 				BookingModel bm=new BookingModel();
-				bm.setBooking_slottime(b.getBooking_time());
+				bm.setSlotTime(b.getBooking_time().toString());
 				bm.setUser_id(b.getUser().getId());
 				ClinicModel clinicModel=new ClinicModel();
 				clinicModel.setClinicName(b.getClinic().getName());

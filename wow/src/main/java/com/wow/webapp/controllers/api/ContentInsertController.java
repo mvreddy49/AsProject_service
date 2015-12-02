@@ -29,7 +29,7 @@ import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.ClinicPhoneNo;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Utils;
 
@@ -194,7 +194,7 @@ public class ContentInsertController {
 			d.setName(model.getName());
 			d.setSpeciality(model.getSpeciality());
 			
-			Slots s = new Slots();
+			Slot s = new Slot();
 			s.setDoctor(d);
 			s.setStartTime(startTime);
 			s.setEndTime(endTime);

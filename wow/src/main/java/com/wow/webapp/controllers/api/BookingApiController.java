@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.engine.query.spi.ReturnMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.UserDAO;
+import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
-import com.wow.webapp.domain.model.BookingReturnModel;
+import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
@@ -41,36 +43,79 @@ public class BookingApiController {
 	private UserDAO userDao;
 
 	@RequestMapping(value = "/myBookings")
-	public BookingReturnModel myBookings() {
-		BookingReturnModel bookingModel = null;
+	public ApiReturnModel myBookings(HttpServletRequest request) {
+		ApiReturnModel returnModel = null;
+		List<String> errors = new ArrayList<String>();
 		try {
-			String userId = "9";
-			List<BookingModel> bookings = bookingDao.findBookingsOnUserId(Integer.parseInt(userId));
-			//User user=userDao.findByid(Integer.parseInt(userId));
-			if (bookings != null && bookings.size()>0) {
-				bookingModel = new BookingReturnModel(Responses.SUCCESS_CODE, "records", "records", bookings);
-			} else {
-				bookingModel = new BookingReturnModel(400, "no records", "no records", null);
-			}
+			Integer userId = 3;
+			returnModel=getBookingsOnUserId(userId);
+			
 		} catch (Exception e) {
-			logger.info("some thing error comes");
-			e.printStackTrace();
-			bookingModel = new BookingReturnModel(500, "internal error occurs", "error");
+			logger.info("exception occurs :::"+e.toString());
+			returnModel = new ApiBookingReturnModel(Responses.FAILURE_CODE, Responses.SUCCESS_STATUS,e.getMessage());
 
 		}
-		return bookingModel;
+		return returnModel;
 	}
 
+	@RequestMapping(value = "/clinicBookings")
+	public ApiReturnModel ckinicBookings(HttpServletRequest request) {
+		ApiReturnModel returnModel = null;
+		List<String> errors = new ArrayList<String>();
+		try {
+			Integer userId = 3;
+			returnModel=getBookingsOnUserId(userId);
+			
+		} catch (Exception e) {
+			logger.info("exception occurs :::"+e.toString());
+			returnModel = new ApiBookingReturnModel(Responses.FAILURE_CODE, Responses.SUCCESS_STATUS,e.getMessage());
+
+		}
+		return returnModel;
+	}
+	
+	private ApiReturnModel getBookingsOnUserId(Integer userId)
+	{
+		ApiReturnModel returnModel = null;
+		List<BookingModel> bookings = bookingDao.findBookingsOnUserId(userId);
+		//User user=userDao.findByid(Integer.parseInt(userId));
+		ApiBookingReturnModel bookingReturnModel = new ApiBookingReturnModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG);
+		bookingReturnModel.setBookings(bookings);
+		returnModel = bookingReturnModel;
+		return returnModel;
+	}
+	
+	@RequestMapping(value="/anonymousBookings")
+	public ApiReturnModel anonymousBookings(@RequestParam("mobile") String mobile)
+	{
+		ApiReturnModel returnModel = null;
+		List<String> errors = new ArrayList<String>();
+		try {
+			
+			User user=userDao.findByUserMobile(mobile);
+			if(user!=null)
+				returnModel=getBookingsOnUserId(user.getId());
+			else
+				returnModel = new ApiBookingReturnModel(Responses.CUSTOM_CODE, Responses.SUCCESS_STATUS,"Mobile number is not registred");
+			
+		} catch (Exception e) {
+			logger.info("exception occurs :::"+e.toString());
+			returnModel = new ApiBookingReturnModel(Responses.FAILURE_CODE, Responses.SUCCESS_STATUS,e.getMessage());
+
+		}
+		return returnModel;
+	}
+	
 	@RequestMapping(value = "/slotBooking")
-	public BookingReturnModel slotBooking(@RequestParam("slot_id") String slot_id,
+	public ApiReturnModel slotBooking(@RequestParam("slot_id") String slot_id,
 			@RequestParam("slot_time") String slot_time, HttpServletRequest request) {
 
-		BookingReturnModel bookingModel = null;
-
-		logger.info("enter into slotBooking slot_id::" + slot_id + " slot_time is::" + slot_time);
+		ApiReturnModel retunModel = null;
+		List<String> errors = new ArrayList<String>();
+		logger.info("enter into slotBooking, params are::::slot_id::" + slot_id + " slot_time is::" + slot_time);
 		try {
-			Slots slot = bookingDao.findSlot(Integer.parseInt(slot_id));
-			logger.info("after slots getting");
+			Slot slot = bookingDao.findSlot(Integer.parseInt(slot_id));
+			
 			if (slot != null) {
 				Clinic clinic = new Clinic(slot.getClinic().getId());
 				Doctor doctor = new Doctor(slot.getDoctor().getId());
@@ -94,7 +139,7 @@ public class BookingApiController {
 
 				if (slotTimimgsStatus && bookingStatus) {
 
-					logger.info("booking started");
+					
 					String userId = null;
 					if (userId == null) {
 						String name = request.getParameter("name");
@@ -102,6 +147,7 @@ public class BookingApiController {
 						if (name != null && mobile != null) {
 							User user = userDao.findByUserMobile(mobile);
 							if (user != null) {
+								logger.info("user is already availble in user table as a anonymous user");
 								userId = String.valueOf(user.getId());
 							} else {
 								User u = new User();
@@ -117,10 +163,10 @@ public class BookingApiController {
 							}
 
 						} else {
-							logger.info("invalid parameters");
-							bookingModel = new BookingReturnModel(400, "Invalid user parameters",
-									"we expected some user parameters");
-							return bookingModel;
+							logger.info("invalid user parameters");
+							errors.add(Responses.INVALID_USER_PARAM);
+							retunModel = new ApiBookingReturnModel(Responses.INVALID_PARAM_CODE,Responses.SUCCESS_STATUS,Responses.INVALID_PARAMS_MSG,errors);
+							return retunModel;
 						}
 
 					}
@@ -136,42 +182,41 @@ public class BookingApiController {
 					
 					bookingDao.save(booking);
 					logger.info("new booking saved");
-					bookingModel = new BookingReturnModel(200, "slot booked successfully", "slot is allocated to user");
+					String msg="Requested slot is booked success::: slot time is ::"+slot_time;
+					retunModel = new ApiBookingReturnModel(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,msg);
 
 				} else {
 
 					logger.info("booking already there");
-					bookingModel = new BookingReturnModel(202, "Request slot is not available",
-							"already slot booked by another user");
+					errors.add("Requested slot is booked by another user");
+					retunModel = new ApiBookingReturnModel(Responses.CUSTOM_CODE,Responses.SUCCESS_STATUS,Responses.ERROR_MSG,errors);
 
 				}
 			} else {
 				logger.info("slot is not availble");
-				bookingModel = new BookingReturnModel(400, "Request slot is not availble in slot table",
-						"slot table is not availeble that record");
+				errors.add("Requested slot is not availble in slot table");
+				retunModel = new ApiBookingReturnModel(Responses.CUSTOM_CODE,Responses.SUCCESS_STATUS,Responses.ERROR_MSG,errors);
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			bookingModel = new BookingReturnModel(500, "internal exception occurs", "error");
+			logger.info("exception occurs:::"+e.toString());
+			
+			retunModel = new ApiBookingReturnModel(Responses.FAILURE_CODE, Responses.SUCCESS_STATUS,e.getMessage());
 
 		}
-		return bookingModel;
+		return retunModel;
 
 	}
 
-	private boolean checkSlotTimings(Slots slot, String slot_time) {
+	private boolean checkSlotTimings(Slot slot, String slot_time) {
 		// TODO Auto-generated method stub
 		try {
 			Date slotTime =new Utils().convertStringToDate(slot_time);
-			System.out.println("slotTime:::" + slotTime);
 			Date startTime = slot.getStartTime();
 			Date endTime = slot.getEndTime();
 			int comp = startTime.compareTo(slotTime);
 			int comp1 = endTime.compareTo(slotTime);
-			System.out.println("comp:::" + comp + "  comp1:::" + comp1);
 			if ((comp == -1 || comp == 0) && (comp1 == 0 || comp1 == 1)) {
-				System.out.println("validate");
 				logger.info("slot checking is true");
 				return true;
 			} else {
@@ -179,8 +224,7 @@ public class BookingApiController {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("date parsing exception occurs");
+			logger.info("exception ocuurs:::"+e.toString());
 		}
 
 		return false;
@@ -200,7 +244,7 @@ public class BookingApiController {
 			} else
 				return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("exception ocuurs:::"+e.toString());
 		}
 		return false;
 	}

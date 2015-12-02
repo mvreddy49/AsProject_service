@@ -1,5 +1,7 @@
 package com.wow.webapp.domain.model;
 
+import java.util.List;
+
 public class DoctorModel {
 
 	private Integer id;
@@ -8,6 +10,8 @@ public class DoctorModel {
 	private String speciality;
 	private ClinicModel clinic;
 	private SlotsModel slot;
+	private List<BookingModel> booking;
+	
 	public String getName() {
 		return name;
 	}
@@ -43,6 +47,12 @@ public class DoctorModel {
 	}
 	public void setSlot(SlotsModel slot) {
 		this.slot = slot;
+	}
+	public List<BookingModel> getBooking() {
+		return booking;
+	}
+	public void setBooking(List<BookingModel> booking) {
+		this.booking = booking;
 	}
 	
 }
