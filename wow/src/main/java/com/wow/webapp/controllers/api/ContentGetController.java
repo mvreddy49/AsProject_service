@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModelClinics;
@@ -29,6 +30,10 @@ public class ContentGetController {
 	
 	@Autowired
 	private ContentDAO contentDao;
+	
+	@Autowired
+	private BookingDAO bookingDao;
+	
 	
 	@RequestMapping(value = "/clinics", method = RequestMethod.GET)
 	public ApiReturnModel clinics(@RequestParam("speciality") String speciality,

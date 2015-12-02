@@ -90,13 +90,13 @@ public class Doctor {
 	}
 	
 	@OneToMany(mappedBy = "doctor" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-	private Set<Slots> slots = new HashSet<Slots>(0);
+	private Set<Slot> slots = new HashSet<Slot>(0);
 	
-	public Set<Slots> getSlots() {
+	public Set<Slot> getSlots() {
 		return slots;
 	}
 
-	public void setSlots(Set<Slots> slots) {
+	public void setSlots(Set<Slot> slots) {
 		this.slots = slots;
 	}
 	

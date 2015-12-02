@@ -22,8 +22,8 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 public class Booking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="booking_id",nullable = false)
-	private Integer booking_id;
+	@Column(name="id",nullable = false)
+	private Integer id;
 	
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -43,14 +43,7 @@ public class Booking {
 	//@Temporal(TemporalType.DATE)
 	private Date booking_time;
 	
-	public Integer getBooking_id() {
-		return booking_id;
-	}
-
-
-	public void setBooking_id(Integer booking_id) {
-		this.booking_id = booking_id;
-	}
+	
 
 
 	public Clinic getClinic() {
@@ -124,6 +117,16 @@ public class Booking {
 
 	public Booking(){
 		
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	

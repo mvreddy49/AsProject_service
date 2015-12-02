@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wow.webapp.domain.model.BookingReturnModel;
+import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.ClinicTestModel;
 import com.wow.webapp.entitymodel.Booking;
@@ -17,7 +17,7 @@ import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.ClinicTest;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 
 public class UserDAOImpl implements UserDAO{
@@ -36,7 +36,7 @@ public class UserDAOImpl implements UserDAO{
 	}
 	
 	@Transactional
-	public void save(Slots s) {
+	public void save(Slot s) {
 		Session session = this.getSession();
         session.persist(s);
 	}
@@ -108,7 +108,7 @@ public class UserDAOImpl implements UserDAO{
 	public User findByUserName(String username) throws Exception {
 		logger.debug("findByUserName start " + username + ":" + username);
 		User u = this.findUserByUsername(this.getSession(), username);
-		if(u== null) throw new Exception("Not Found : " + username);
+		//if(u== null) throw new Exception("Not Found : " + username);
 		logger.debug("findByUserName end ");
 		return u;
 	}

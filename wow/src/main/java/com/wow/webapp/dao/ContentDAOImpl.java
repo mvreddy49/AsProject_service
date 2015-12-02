@@ -10,13 +10,15 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.domain.model.SlotsModel;
+import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 
 public class ContentDAOImpl implements ContentDAO{
@@ -111,11 +113,11 @@ public class ContentDAOImpl implements ContentDAO{
 			}
 			logger.debug("addressMatch Match : " + addressMatch);
 			if(!addressMatch) continue;
-			List<Slots> slots = session.createQuery("from Slots where clinic=:paramType")
+			List<Slot> slots = session.createQuery("from Slot where clinic=:paramType")
 					.setParameter("paramType", c)
 					.list();
 			if(slots.size() == 0) continue;
-			for(Slots s : slots){
+			for(Slot s : slots){
 				if(!s.getDoctor().getSpeciality().equalsIgnoreCase(speciality)) continue;
 				
 				DoctorModel doctorModel = new DoctorModel();
@@ -143,7 +145,23 @@ public class ContentDAOImpl implements ContentDAO{
 				slotModel.setEndTime("");
 				
 				doctorModel.setSlot(slotModel);
+				
+				
+				
+				/* Booked slots info*/
+				List<BookingModel> bookingsList=new ArrayList<BookingModel>();
+				
+				List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? and b.doctor=?").setParameter(0, c)
+						.setParameter(1, d).list();
+				for(Booking b:bookings)
+				{
+					BookingModel bookingModel=new BookingModel();
+					bookingModel.setSlotTime(b.getBooking_time().toString());
+					bookingsList.add(bookingModel);
+				}
+				doctorModel.setBooking(bookingsList);
 				list.add(doctorModel);
+				
 			}
 			
 		}

@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
 @Table(name = "Slots")
-public class Slots {
+public class Slot {
 
 	@Id
 	@Column(name="id")

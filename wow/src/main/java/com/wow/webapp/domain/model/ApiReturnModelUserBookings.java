@@ -7,7 +7,7 @@ import com.wow.webapp.util.Responses;
 
 public class ApiReturnModelUserBookings extends ApiReturnModel {
 	
-	private List<BookingReturnModel> bookings = new ArrayList<BookingReturnModel>(0);
+	private List<ApiBookingReturnModel> bookings = new ArrayList<ApiBookingReturnModel>(0);
 
 	
 	
@@ -28,16 +28,16 @@ public class ApiReturnModelUserBookings extends ApiReturnModel {
 		super(Responses.SUCCESS_CODE,status);
 	}
 
-	public ApiReturnModelUserBookings(List<BookingReturnModel> bookings) {
+	public ApiReturnModelUserBookings(List<ApiBookingReturnModel> bookings) {
 		super();
 		this.bookings = bookings;
 	}
 
-	public List<BookingReturnModel> getBookings() {
+	public List<ApiBookingReturnModel> getBookings() {
 		return bookings;
 	}
 
-	public void setBookings(List<BookingReturnModel> bookings) {
+	public void setBookings(List<ApiBookingReturnModel> bookings) {
 		this.bookings = bookings;
 	}
 	

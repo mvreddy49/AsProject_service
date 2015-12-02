@@ -6,12 +6,12 @@ import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
-import com.wow.webapp.entitymodel.Slots;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 
 public interface BookingDAO {
 
-	public Slots findSlot(Integer slot_id); 
+	public Slot findSlot(Integer slot_id); 
 	public List<Booking> findBookings(Clinic clinic,Doctor doctor);
 	public void save(Booking b);
 	public List<BookingModel> findBookingsOnUserId(Integer userId);

@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class BookingModel {
 	
-	private Date booking_slottime;
+	private String slotTime;
 	private Integer user_id;
 	private ClinicModel clinic;
 	private DoctorModel doctor;
-	public Date getBooking_slottime() {
-		return booking_slottime;
+	public String getSlotTime() {
+		return slotTime;
 	}
-	public void setBooking_slottime(Date booking_slottime) {
-		this.booking_slottime = booking_slottime;
+	public void setSlotTime(String slotTime) {
+		this.slotTime = slotTime;
 	}
 	public Integer getUser_id() {
 		return user_id;
@@ -32,6 +32,7 @@ public class BookingModel {
 	public void setDoctor(DoctorModel doctor) {
 		this.doctor = doctor;
 	}
+	
 	
 	
 	
