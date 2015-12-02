@@ -2,6 +2,7 @@ package com.wow.webapp.domain.model;
 
 public class ClinicModel {
 
+	private Integer id;
 	private String email;	
 	private String clinicName;	
 	private String clinicDesc;	
@@ -39,6 +40,12 @@ public class ClinicModel {
 	}
 	public void setClinicPhones(String clinicPhones) {
 		this.clinicPhones = clinicPhones;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	

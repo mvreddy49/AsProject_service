@@ -20,11 +20,13 @@ public class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoi
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationEntryPointImpl.class);
 	public AuthenticationEntryPointImpl(String loginFormUrl) {
 		super(loginFormUrl);
+		logger.debug("In entry");
 	}
 	
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException auth) throws IOException, ServletException {
+		logger.info(getLoginFormUrl());
 		logger.debug("Ajax Authentication EntryPoint Handler Start");
 		
 		if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {

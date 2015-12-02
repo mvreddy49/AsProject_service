@@ -108,6 +108,7 @@ public class UserDAOImpl implements UserDAO{
 	public User findByUserName(String username) throws Exception {
 		logger.debug("findByUserName start " + username + ":" + username);
 		User u = this.findUserByUsername(this.getSession(), username);
+		if(u== null) throw new Exception("Not Found : " + username);
 		logger.debug("findByUserName end ");
 		return u;
 	}

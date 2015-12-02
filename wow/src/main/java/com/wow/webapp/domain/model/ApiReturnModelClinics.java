@@ -18,7 +18,8 @@ public class ApiReturnModelClinics extends ApiReturnModel{
 	public ApiReturnModelClinics() {
 	}
 
-	public ApiReturnModelClinics(List<ClinicModel> clinics) {
+	public ApiReturnModelClinics(Integer code,String status,String message,List<ClinicModel> clinics) {
+		super(code,status,message);
 		this.clinics = clinics;
 	}
 }

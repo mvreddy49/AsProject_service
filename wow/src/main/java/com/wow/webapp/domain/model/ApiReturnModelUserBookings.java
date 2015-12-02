@@ -3,6 +3,8 @@ package com.wow.webapp.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wow.webapp.util.Responses;
+
 public class ApiReturnModelUserBookings extends ApiReturnModel {
 	
 	private List<BookingReturnModel> bookings = new ArrayList<BookingReturnModel>(0);
@@ -19,11 +21,11 @@ public class ApiReturnModelUserBookings extends ApiReturnModel {
 	}
 
 	public ApiReturnModelUserBookings(String status, String message) {
-		super(status, message);
+		super(Responses.SUCCESS_CODE,status, message);
 	}
 
 	public ApiReturnModelUserBookings(String status) {
-		super(status);
+		super(Responses.SUCCESS_CODE,status);
 	}
 
 	public ApiReturnModelUserBookings(List<BookingReturnModel> bookings) {
