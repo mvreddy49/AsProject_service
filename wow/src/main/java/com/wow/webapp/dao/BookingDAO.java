@@ -14,7 +14,7 @@ public interface BookingDAO {
 	public Slot findSlot(Integer slot_id); 
 	public List<Booking> findBookings(Clinic clinic,Doctor doctor);
 	public void save(Booking b);
-	public List<BookingModel> findBookingsOnUserId(Integer userId);
+	public List<BookingModel> findBookingsOnUser(String userName);
 	
 	
 }
