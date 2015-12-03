@@ -1,7 +1,9 @@
 package com.wow.webapp.controllers;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +15,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.wow.webapp.controllers.api.ContentInsertController;
+import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.CreateAccountModel;
+import com.wow.webapp.domain.model.CreateDoctorModel;
 import com.wow.webapp.domain.model.LoginModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
@@ -40,7 +44,9 @@ import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.ClinicPhoneNo;
 import com.wow.webapp.entitymodel.ClinicTest;
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Utils;
 
 
 @Controller
@@ -51,6 +57,9 @@ public class AccountController {
 	
 	@Autowired
     private UserDAO userDao;
+	
+	@Autowired
+	private ContentDAO contentDao;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(){
@@ -169,6 +178,7 @@ public class AccountController {
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					u.setPassword(passwordEncoder.encode(row.getCell(2).toString()));
 					u.setEnabled(true);
+					u.setMobile(row.getCell(3).toString());
 					Set<Authority> authorities = new HashSet<Authority>();
 					//authorities.add(new Authority(u, "ROLE_USER"));
 					authorities.add(new Authority(u, "ROLE_CLINIC"));
@@ -213,9 +223,11 @@ public class AccountController {
 	public ModelAndView register_doctor_from_file(
 			@RequestParam("doctordatafile") MultipartFile doctordatafile){
 		logger.debug("register_from_file post start");
+		UserDetails ud = Utils.getUserSession();
+		//if(ud == null) return Responses.invaliedSession();
 		if(doctordatafile != null && !doctordatafile.isEmpty()){
 			logger.debug("processing file : " + doctordatafile.getOriginalFilename());
-			
+			List<String> errors = new ArrayList<String>();
 			try {
 				
 				Workbook wb = new XSSFWorkbook(doctordatafile.getInputStream());
@@ -228,16 +240,28 @@ public class AccountController {
 					Doctor d = new Doctor();
 					logger.debug("Type is :");
 					row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-					d.setName(row.getCell(0).toString());
-					d.setMobile(row.getCell(1).toString());
-					d.setSpeciality(row.getCell(2).toString());
-					try{
-					userDao.save(d);
+					
+					CreateDoctorModel model = new CreateDoctorModel();
+					model.setName(row.getCell(0).toString());
+					model.setMobile(row.getCell(1).toString());
+					model.setSpeciality(row.getCell(2).toString());
+					model.setStartTime(row.getCell(3).toString());
+					model.setEndTime(row.getCell(4).toString());
+					
+					logger.debug("Persisting");
+					try {
+						Doctor doctor = contentDao.findDoctorByMobile(model.getMobile());
+						logger.debug("After retriving doctor" + model.toString());
+						if(doctor != null){
+							throw new Exception("Not Found : " + model.getMobile());
+						}
+						logger.debug("After exception");
+						errors = registerDoctorImpl(model,errors,ud);
+					} catch (Exception e) {
+						logger.debug("Exception is :" + e.toString());
+						errors.add("Doctor Already registered");
 					}
-					catch(ConstraintViolationException cve){
-						logger.info("Duplicate entry for the mobile number : " + cve.toString());
-					}
-					logger.debug("User id is :" + d.getId());
+					
 				}
 				wb.close();
 				logger.debug("Reading completed");
@@ -252,6 +276,44 @@ public class AccountController {
 		ModelAndView mv = new ModelAndView("admin");
 		return mv;
 	}
+	
+	
+	public List<String> registerDoctorImpl(CreateDoctorModel model,List<String> errors,UserDetails ud){
+		Utils u = new Utils();
+		Date startTime,endTime;
+		try{
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			startTime= u.convertStringToDate(model.getStartTime());
+			endTime = u.convertStringToDate(model.getEndTime());
+			Doctor d = new Doctor();
+			d.setMobile(model.getMobile());
+			d.setName(model.getName());
+			d.setSpeciality(model.getSpeciality());
+			
+			Slot s = new Slot();
+			try{
+				Clinic c = userDao.getClinicByUserName(ud.getUsername());
+				s.setClinic(c);
+			}
+			catch(Exception ex){
+				logger.debug("Exception is : "+ ex);
+			}
+			s.setDoctor(d);
+			s.setStartTime(startTime);
+			s.setEndTime(endTime);
+			
+			d.getSlots().add(s);
+			contentDao.save(d);
+			
+			logger.debug("StaetTime :"+startTime);
+		}
+		catch(Exception ex){
+			errors.add("Mobile number is already registered");
+		}
+		return errors;
+	}
+	
 	
 	@RequestMapping(value = "/register-clinic", method = RequestMethod.POST)
 	public ModelAndView register(@Valid CreateAccountModel model, BindingResult bindingResult){
@@ -290,6 +352,7 @@ public class AccountController {
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			u.setPassword(passwordEncoder.encode(model.getPasswd()));
 			u.setEnabled(true);
+			u.setMobile(model.getClinicPhone1());
 			Set<Authority> authorities = new HashSet<Authority>();
 			//authorities.add(new Authority(u, "ROLE_USER"));
 			authorities.add(new Authority(u, "ROLE_CLINIC"));

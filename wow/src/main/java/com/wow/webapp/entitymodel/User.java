@@ -35,7 +35,7 @@ public class User {
 	@Column(name="enabled", nullable = false)
 	private boolean enabled;
 	
-	@Column(name="mobile", unique = true ,length=20, nullable=false)
+	@Column(name="mobile", unique = true ,length=20, nullable=true)
 	private String mobile;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL})
@@ -115,6 +115,14 @@ public class User {
 		this.password = password;
 		this.enabled = enabled;
 		this.userRole = userRole;
+	}
+	
+	public User(String username, String password, boolean enabled, Set<Authority> userRole, Clinic clinic) {
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.userRole = userRole;
+		this.clinic = clinic;
 	}
 	
 	public String getUsername() {

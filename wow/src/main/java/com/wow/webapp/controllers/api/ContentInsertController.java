@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -36,6 +37,7 @@ import com.wow.webapp.entitymodel.ClinicPhoneNo;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
 
 
@@ -94,8 +96,8 @@ public class ContentInsertController {
 	@RequestMapping(value = "/register-doctor", method = RequestMethod.POST)
 	public ApiReturnModel registerDoctor(@Valid CreateDoctorModel model, BindingResult bindingResult){
 		logger.debug("register get start");
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		logger.debug("User details are :" + auth.getPrincipal().toString());
+		UserDetails ud = Utils.getUserSession();
+		if(ud == null) return Responses.invaliedSession();
 		List<String> errors = new ArrayList<String>();
 		ApiReturnModel apiReturnModel= new ApiReturnModel();
 		if(bindingResult.hasFieldErrors()){
@@ -110,11 +112,11 @@ public class ContentInsertController {
 			logger.debug("Persisting");
 			try {
 				Doctor doctor = contentDao.findDoctorByMobile(model.getMobile());
-				logger.debug("After retriving user");
+				logger.debug("After retriving doctor");
 				if(doctor != null){
 					throw new Exception("Not Found : " + model.getMobile());
 				}
-				errors = registerDoctorImpl(model,errors);
+				errors = registerDoctorImpl(model,errors,ud);
 			} catch (Exception e) {
 				logger.debug("Exception is :" + e.toString());
 				errors.add("Doctor Already registered");
@@ -124,10 +126,10 @@ public class ContentInsertController {
 		logger.debug(errors.toString());
 		if(errors.size() != 0){
 			apiReturnModel.setErrors(errors);
-			apiReturnModel.setMessage("Clinic Registered unsuccessfullty");
+			apiReturnModel.setMessage("Doctor Registration unsuccessfullty");
 		}
 		else{
-			apiReturnModel.setMessage("Clinic Registered successfullty");
+			apiReturnModel.setMessage("Doctor Registration successfullty");
 		}
 		return apiReturnModel;
 	}
@@ -185,7 +187,7 @@ public class ContentInsertController {
 	
 	
 	/* Doctor Implementation */
-	public List<String> registerDoctorImpl(CreateDoctorModel model,List<String> errors){
+	public List<String> registerDoctorImpl(CreateDoctorModel model,List<String> errors,UserDetails ud){
 		Utils u = new Utils();
 		Date startTime,endTime;
 		try{
@@ -199,6 +201,13 @@ public class ContentInsertController {
 			d.setSpeciality(model.getSpeciality());
 			
 			Slot s = new Slot();
+			try{
+				Clinic c = userDao.getClinicByUserName(ud.getUsername());
+				s.setClinic(c);
+			}
+			catch(Exception ex){
+				logger.debug("Exception is : "+ ex);
+			}
 			s.setDoctor(d);
 			s.setStartTime(startTime);
 			s.setEndTime(endTime);

@@ -122,6 +122,7 @@ public class UserDAOImpl implements UserDAO{
 		logger.debug("save clinic end" );
 	}
 	
+		
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<ClinicModel> getLabs(String speciality, String location){
@@ -351,11 +352,22 @@ public class UserDAOImpl implements UserDAO{
 				.setParameter("username", username)
 				.list();
 		if(userList == null || userList.size() <= 0){
-//			logger.debug("Not Found : " + username);
-//			throw new Exception("Not Found : " + username);
 			return null;
 		}
 		return userList.get(0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Clinic getClinicByUserName(String username){
+		Session session = this.getSession();
+		List<User> userList = session.createQuery("from User where username=:username")
+				.setParameter("username", username)
+				.list();
+		if(userList == null || userList.size() <= 0){
+			return null;
+		}
+		return userList.get(0).getClinic();
 	}
 
 	public void RandomTypeFill() throws Exception {
@@ -371,16 +383,5 @@ public class UserDAOImpl implements UserDAO{
 			return user.get(0);
 		return null;
 	}
-	@Transactional
-	public User findByid(Integer userId) {
-		// TODO Auto-generated method stub
-		Session session=this.getSession();
-		List<User> user=session.createQuery("from User u where u.id=?").setParameter(0, userId).list();
-		if(user!=null && user.size() > 0)
-			return user.get(0);
-		
-		return null;
-	}
-	
 
 }
