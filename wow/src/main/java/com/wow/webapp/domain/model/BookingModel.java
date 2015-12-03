@@ -5,7 +5,8 @@ import java.util.Date;
 public class BookingModel {
 	
 	private String slotTime;
-	private String userName;
+	private UserModel user;
+	
 	private ClinicModel clinic;
 	private DoctorModel doctor;
 	public String getSlotTime() {
@@ -27,14 +28,14 @@ public class BookingModel {
 	public void setDoctor(DoctorModel doctor) {
 		this.doctor = doctor;
 	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 	
 	
+	public UserModel getUser() {
+		return user;
+	}
+	public void setUser(UserModel user) {
+		this.user = user;
+	}
 	
 	
 	

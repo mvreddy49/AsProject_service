@@ -228,9 +228,24 @@ public class BookingApiController {
 	private boolean checkSlotTimings(Slot slot, String slot_time) {
 		// TODO Auto-generated method stub
 		try {
-			Date slotTime = new Utils().convertStringToDate(slot_time);
+			Utils utils=new Utils();
+			
+			Date slotTime=utils.getTimeFromDate(utils.convertStringToDate(slot_time));
+			Date startTime =utils.getTimeFromDate(slot.getStartTime());
+			Date endTime=utils.getTimeFromDate(slot.getEndTime());
+			System.out.println("times are ::slotTime::"+slotTime.toString()+" ::::startTime::"+startTime+" ::: endtime::"+endTime);
+			/*if (slotTime.after(endTime) && slotTime.before(startTime)) {
+				logger.info("slot checking is true");
+				return true;
+		    }
+			else
+			{
+				logger.info("slot checking is false");
+				return false;
+			}
 			Date startTime = slot.getStartTime();
 			Date endTime = slot.getEndTime();
+			*/
 			int comp = startTime.compareTo(slotTime);
 			int comp1 = endTime.compareTo(slotTime);
 			if ((comp == -1 || comp == 0) && (comp1 == 0 || comp1 == 1)) {

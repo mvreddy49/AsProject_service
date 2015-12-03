@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
+import com.wow.webapp.domain.model.UserModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Utils;
 
 public class BookingDAOImpl implements BookingDAO {
 
@@ -77,16 +79,34 @@ public class BookingDAOImpl implements BookingDAO {
 			for(Booking b:bookings)
 			{
 				BookingModel bm=new BookingModel();
-				bm.setSlotTime(b.getBooking_time().toString());
-				bm.setUserName(b.getUser().getUsername());
+				String time=new Utils().convertDateToUTCFormat(b.getBooking_time());
+				logger.info("booking time in utc format:::"+time);
+				bm.setSlotTime(time);
+				
+				/* userinfo */
+				UserModel userModel=new UserModel();
+				User u=b.getUser();
+				userModel.setUsername(u.getUsername());
+				userModel.setMobile(u.getMobile());
+				bm.setUser(userModel);
+				
+				/* clinic info */
 				ClinicModel clinicModel=new ClinicModel();
-				clinicModel.setClinicName(b.getClinic().getName());
+				Clinic c=b.getClinic();
+				clinicModel.setId(c.getId());
+				clinicModel.setClinicName(c.getName());
+				clinicModel.setClinicDesc(c.getDescription());
+				clinicModel.setClinicAddress(c.getAddresses().toString());
+				clinicModel.setClinicPhones(c.getPhoneNos().toString());
 				bm.setClinic(clinicModel);
+				
+				/* doctor info */
 				DoctorModel doctorModel=new DoctorModel();
 				doctorModel.setName(b.getDoctor().getName());
 				doctorModel.setMobile(b.getDoctor().getMobile());
 				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
 				bm.setDoctor(doctorModel);
+				
 				bookingModel.add(bm);
 			}
 		}

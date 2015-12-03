@@ -41,6 +41,7 @@ public class Booking {
 	private User user;
 	
 	@DateTimeFormat(iso = ISO.DATE_TIME)
+	
 	//@Temporal(TemporalType.DATE)
 	private Date booking_time;
 	
