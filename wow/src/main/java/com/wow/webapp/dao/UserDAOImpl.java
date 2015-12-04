@@ -367,6 +367,7 @@ public class UserDAOImpl implements UserDAO{
 		if(userList == null || userList.size() <= 0){
 			return null;
 		}
+		logger.debug("Before clinics :"+ userList.get(0));
 		return userList.get(0).getClinic();
 	}
 
