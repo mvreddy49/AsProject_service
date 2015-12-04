@@ -53,6 +53,13 @@ public class ContentDAOImpl implements ContentDAO{
 		logger.debug("save clinic end" );
 	}
 	
+	@Transactional
+	public void save(Slot s){
+		Session session = this.getSession();
+		session.saveOrUpdate(s);
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<ClinicModel> getClinics(String speciality, String location){
@@ -125,6 +132,7 @@ public class ContentDAOImpl implements ContentDAO{
 				doctorModel.setId(d.getId());
 				doctorModel.setName(d.getName());
 				doctorModel.setMobile(d.getMobile());
+				doctorModel.setSpeciality(s.getDoctor().getSpeciality());
 				
 				/*Clinic Info */ 
 				
@@ -188,6 +196,18 @@ public class ContentDAOImpl implements ContentDAO{
 			return null;
 		}
 		return doctorList.get(0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c){
+		Session session = this.getSession();
+		logger.debug("Before");
+		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor")
+				.setParameter("clinic", c).setParameter("doctor", d).list();
+		logger.debug("after");
+		if(slots == null || slots.size() <= 0) return null;
+		return slots.get(0);
 	}
 
 }

@@ -15,15 +15,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 
 @Entity
-@Table(name = "Slots")
+@Table(name = "Slots",
+uniqueConstraints = { @UniqueConstraint( columnNames = { "clinic_id", "doctor_id" } ) })
 public class Slot {
 
 	@Id

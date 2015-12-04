@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.wow.webapp.entitymodel.User;
 
@@ -24,15 +25,13 @@ public class Utils {
 		return null;
 	}
 	
-	public User getUserSession(){
-		User user = null;
+	public static final UserDetails getUserSession(){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth instanceof AnonymousAuthenticationToken){
+			return null;
 		}
-		else{
-			
-		}
-		return user;
+		UserDetails ud = (UserDetails)auth.getPrincipal();
+		return ud;
 	}
 	
 	public String convertDateToUTCFormat(Date date)
