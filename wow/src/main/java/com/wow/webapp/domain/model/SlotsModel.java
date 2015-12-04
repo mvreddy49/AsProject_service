@@ -1,9 +1,18 @@
 package com.wow.webapp.domain.model;
 
+import java.util.List;
+
 public class SlotsModel {
 	private Integer id;
 	private String startTime;
 	private String endTime;
+	private List<String> slots;
+	public List<String> getSlots() {
+		return slots;
+	}
+	public void setSlots(List<String> slots) {
+		this.slots = slots;
+	}
 	public Integer getId() {
 		return id;
 	}

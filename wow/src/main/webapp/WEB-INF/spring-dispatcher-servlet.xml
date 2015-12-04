@@ -19,8 +19,8 @@
 	<tx:annotation-driven />
 	<mvc:view-controller path="/" view-name="HomeOne"/>
 	
-<!-- 	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<!--  <bean	
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/WEB-INF/pages/</value>
 		</property>
@@ -48,7 +48,7 @@
       <property name="order" value="1" />
       <!--  <property name="viewNames" value="*.html,*.xhtml" />-->
  	</bean>
-  
+   
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>

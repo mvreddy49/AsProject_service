@@ -72,8 +72,15 @@ public class BookingDAOImpl implements BookingDAO {
 		// TODO Auto-generated method stub
 		Session session = this.getSession();
 		User user=new User(userName);
-		List<BookingModel> bookingModel=new ArrayList<BookingModel>();
+		List<BookingModel> bookingModel=null;
 		List<Booking> bookings=session.createQuery("from Booking b where b.user=?").setParameter(0,user).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+	}
+
+	private List<BookingModel> getBookings(List<Booking> bookings)
+	{
+		List<BookingModel> bookingModel=new ArrayList<BookingModel>();
 		if(bookings!=null&&bookings.size()>0)
 		{
 			for(Booking b:bookings)
@@ -110,6 +117,17 @@ public class BookingDAOImpl implements BookingDAO {
 				bookingModel.add(bm);
 			}
 		}
+		return bookingModel;
+	}
+	
+	@Transactional
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic) {
+		// TODO Auto-generated method stub
+		
+		Session session = this.getSession();
+		List<BookingModel> bookingModel=null;
+		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=?").setParameter(0,clinic).list();
+		bookingModel=getBookings(bookings);
 		return bookingModel;
 	}
 

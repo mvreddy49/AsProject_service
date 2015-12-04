@@ -15,6 +15,6 @@ public interface BookingDAO {
 	public List<Booking> findBookings(Clinic clinic,Doctor doctor);
 	public void save(Booking b);
 	public List<BookingModel> findBookingsOnUser(String userName);
-	
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic);
 	
 }
