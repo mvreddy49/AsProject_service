@@ -20,6 +20,7 @@ import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Utils;
 
 public class ContentDAOImpl implements ContentDAO{
 
@@ -106,6 +107,7 @@ public class ContentDAOImpl implements ContentDAO{
 	@Transactional
 	public List<DoctorModel> getDoctorsInfo(String speciality, String location){
 		logger.debug("getDoctorsInfo start");
+		Utils utils=new Utils();
 		List<DoctorModel> list = new ArrayList<DoctorModel>();
 		Session session = this.getSession();
 		List<Clinic> clinics = session.createQuery("from Clinic where type=:paramType")
@@ -148,9 +150,10 @@ public class ContentDAOImpl implements ContentDAO{
 				
 				SlotsModel slotModel = new SlotsModel();
 				slotModel.setId(s.getId());
-				logger.debug(s.getEndTime().toString());
-				slotModel.setStartTime("");
-				slotModel.setEndTime("");
+				logger.debug("startTime:::"+utils.convertDateToUTCFormat(s.getStartTime()));
+				slotModel.setStartTime(utils.convertDateToUTCFormat(s.getStartTime()));
+				slotModel.setEndTime(utils.convertDateToUTCFormat(s.getEndTime()));
+				slotModel.setSlots(utils.getRangeTimes(s.getStartTime(),s.getEndTime()));
 				
 				doctorModel.setSlot(slotModel);
 				
@@ -164,7 +167,7 @@ public class ContentDAOImpl implements ContentDAO{
 				for(Booking b:bookings)
 				{
 					BookingModel bookingModel=new BookingModel();
-					bookingModel.setSlotTime(b.getBooking_time().toString());
+					bookingModel.setSlotTime(utils.convertDateToUTCFormat(b.getBooking_time()));
 					bookingsList.add(bookingModel);
 				}
 				doctorModel.setBooking(bookingsList);

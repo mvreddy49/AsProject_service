@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,16 +49,21 @@ public class BookingApiController {
 	public ApiReturnModel myBookings(HttpServletRequest request) {
 		ApiReturnModel returnModel = null;
 		List<String> errors = new ArrayList<String>();
+		UserDetails ud=null;
 		try {
-			Authentication auth = SecurityContextHolder.getContext()
-					.getAuthentication();
-			if (auth instanceof AnonymousAuthenticationToken) {
+			ud=Utils.getUserSession();
+			if (ud == null) {
 				returnModel = new ApiBookingReturnModel(
 						Responses.USER_NOTLOGGEDIN, Responses.SUCCESS_STATUS,
 						"user not logged in,please login");
 			} else {
-				String userName = auth.getName();
-				returnModel = getBookingsOnUser(userName);
+				logger.debug("Authorities : "+ ud.getAuthorities());
+				String userName = ud.getUsername();
+				User user=userDao.findByUserName(userName);
+				if(user!=null && user.getClinic()!=null)
+					returnModel=getBookingsOnclinic(user.getClinic());
+				else
+					returnModel = getBookingsOnUser(userName);
 			}
 
 		} catch (Exception e) {
@@ -69,10 +75,27 @@ public class BookingApiController {
 		return returnModel;
 	}
 
+	private ApiReturnModel getBookingsOnclinic(Clinic clinic) {
+		// TODO Auto-generated method stub
+		
+		ApiReturnModel returnModel = null;
+		List<BookingModel> bookings = bookingDao.findBookingsOnClinic(clinic);
+		// User user=userDao.findByid(Integer.parseInt(userId));
+		returnModel=commonReturnBookingModel(bookings);
+		return returnModel;
+	}
+
 	private ApiReturnModel getBookingsOnUser(String userName) {
 		ApiReturnModel returnModel = null;
 		List<BookingModel> bookings = bookingDao.findBookingsOnUser(userName);
 		// User user=userDao.findByid(Integer.parseInt(userId));
+		returnModel=commonReturnBookingModel(bookings);
+		return returnModel;
+	}
+
+	private ApiReturnModel commonReturnBookingModel(List<BookingModel> bookings)
+	{
+		ApiReturnModel returnModel = null;
 		ApiBookingReturnModel bookingReturnModel = new ApiBookingReturnModel(
 				Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
 				Responses.SUCCESS_MSG);
@@ -80,7 +103,7 @@ public class BookingApiController {
 		returnModel = bookingReturnModel;
 		return returnModel;
 	}
-
+	
 	@RequestMapping(value = "/anonymousBookings")
 	public ApiReturnModel anonymousBookings(
 			@RequestParam("mobile") String mobile) {
@@ -111,6 +134,8 @@ public class BookingApiController {
 			HttpServletRequest request) {
 
 		ApiReturnModel retunModel = null;
+		Utils utils=new Utils();
+		UserDetails ud=null;
 		List<String> errors = new ArrayList<String>();
 		logger.info("enter into slotBooking, params are::::slot_id::" + slot_id
 				+ " slot_time is::" + slot_time);
@@ -141,11 +166,10 @@ public class BookingApiController {
 
 				if (slotTimimgsStatus && bookingStatus) {
 
-					Authentication auth = SecurityContextHolder.getContext()
-							.getAuthentication();
+					
 					String userName = null;
-
-					if (auth instanceof AnonymousAuthenticationToken) {
+					ud=Utils.getUserSession();
+					if (ud == null) {
 						String name = request.getParameter("name");
 						String mobile = request.getParameter("mobile");
 						if (name != null && mobile != null) {
@@ -158,8 +182,7 @@ public class BookingApiController {
 								u.setEnabled(true);
 								u.setMobile(mobile);
 								u.setUsername(mobile);
-								BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-								u.setPassword(passwordEncoder.encode(mobile));
+								u.setPassword(utils.getEncryptedPassword(mobile));
 								userDao.save(u);
 
 								userName = u.getUsername();
@@ -179,14 +202,14 @@ public class BookingApiController {
 
 					}
 					else
-						userName = auth.getName();
+						userName = ud.getUsername();
 					logger.info("userName:::::" + userName);
 					User user = new User(userName);
 					Booking booking = new Booking();
 					booking.setClinic(clinic);
 					booking.setDoctor(doctor);
 					booking.setUser(user);
-					Date slotTime = new Utils().convertStringToDate(slot_time);
+					Date slotTime = utils.convertStringToDate(slot_time);
 					booking.setBooking_time(slotTime);
 					booking.setUpdated_on(slotTime);
 
