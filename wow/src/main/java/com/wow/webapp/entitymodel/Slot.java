@@ -22,7 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 
 @Entity
-@Table(name = "Slots",
+@Table(name = "slot",
 uniqueConstraints = { @UniqueConstraint( columnNames = { "clinic_id", "doctor_id" } ) })
 public class Slot {
 
