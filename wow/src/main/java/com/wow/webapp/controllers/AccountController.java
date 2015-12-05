@@ -95,6 +95,25 @@ public class AccountController {
 		return mv;
 	}
 
+	//Adding home-clinic for custom screen for clinic
+	@RequestMapping(value = "/home-clinic", method = RequestMethod.GET)
+	public ModelAndView home_clinic(){
+		logger.debug("home_clinic get start");
+		ModelAndView mv = new ModelAndView("home-clinic");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		logger.debug(auth.toString());
+		logger.debug(auth.getPrincipal().toString());
+		logger.debug(auth.getAuthorities().toString());
+		logger.debug(auth.getName());
+		if(auth.getPrincipal() instanceof UserDetails){
+			UserDetails ud = (UserDetails)auth.getPrincipal();
+			logger.debug(ud.toString());			
+		}
+		logger.debug("home_clinic get end");
+		return mv;
+	}
+	
 	@RequestMapping(value = "/register-clinic", method = RequestMethod.GET)
 	public ModelAndView register(){
 		logger.debug("register get start");

@@ -35,7 +35,7 @@ public class User {
 	@Column(name="enabled", nullable = false)
 	private boolean enabled;
 	
-	@Column(name="mobile", unique = true ,length=20, nullable=true)
+	@Column(name="mobile" ,length=20, nullable=true)
 	private String mobile;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL})
