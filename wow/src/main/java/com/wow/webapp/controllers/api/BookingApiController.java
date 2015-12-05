@@ -257,25 +257,25 @@ public class BookingApiController {
 			Date startTime =utils.getTimeFromDate(slot.getStartTime());
 			Date endTime=utils.getTimeFromDate(slot.getEndTime());
 			System.out.println("times are ::slotTime::"+slotTime.toString()+" ::::startTime::"+startTime+" ::: endtime::"+endTime);
-			/*if (slotTime.after(endTime) && slotTime.before(startTime)) {
-				logger.info("slot checking is true");
-				return true;
-		    }
-			else
-			{
-				logger.info("slot checking is false");
-				return false;
-			}
-			Date startTime = slot.getStartTime();
-			Date endTime = slot.getEndTime();
-			*/
+			
 			int comp = startTime.compareTo(slotTime);
 			int comp1 = endTime.compareTo(slotTime);
 			if ((comp == -1 || comp == 0) && (comp1 == 0 || comp1 == 1)) {
-				logger.info("slot checking is true");
-				return true;
+				logger.info("slot timings checking is true");
+				
+				List<String> timeRanges=utils.getRangeTimes(slot.getStartTime(),slot.getEndTime());
+				Date slotTime1 = utils.convertStringToDate(slot_time);
+				if(timeRanges.contains(slotTime1))
+				{	
+					logger.info("slot time is  validating in time period");
+					return true;
+				
+				}else{
+					logger.info("slot time is  not validating in time period");
+					return false;
+				}
 			} else {
-				logger.info("slot checking is false");
+				logger.info("slot timings checking is false");
 				return false;
 			}
 		} catch (Exception e) {
