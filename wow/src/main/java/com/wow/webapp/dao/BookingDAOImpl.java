@@ -73,7 +73,7 @@ public class BookingDAOImpl implements BookingDAO {
 		Session session = this.getSession();
 		User user=new User(userName);
 		List<BookingModel> bookingModel=null;
-		List<Booking> bookings=session.createQuery("from Booking b where b.user=?").setParameter(0,user).list();
+		List<Booking> bookings=session.createQuery("from Booking b where b.user=? order by booking_time desc").setParameter(0,user).list();
 		bookingModel=getBookings(bookings);
 		return bookingModel;
 	}
@@ -126,7 +126,7 @@ public class BookingDAOImpl implements BookingDAO {
 		
 		Session session = this.getSession();
 		List<BookingModel> bookingModel=null;
-		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=?").setParameter(0,clinic).list();
+		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? order by booking_time desc").setParameter(0,clinic).list();
 		bookingModel=getBookings(bookings);
 		return bookingModel;
 	}

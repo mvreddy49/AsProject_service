@@ -17,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="clinics")
+@Table(name="clinic")
 public class Clinic {	
 	public Integer getId() {
 		return id;
