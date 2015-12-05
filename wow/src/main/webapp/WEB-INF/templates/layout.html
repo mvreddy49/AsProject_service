@@ -96,6 +96,9 @@
 						<li sec:authorize="hasRole('ROLE_USER')">
 							<a th:href="@{/home-user}">Me</a>
 						</li>
+						<li sec:authorize="hasRole('ROLE_CLINIC')">
+							<a th:href="@{/home-clinic}">Me</a>
+						</li>
 <!-- 						<li><a th:href="@{/tests}">Tests</a></li> -->
 <!-- 						<li><a th:href="@{/clinics}">Clinics</a></li> -->
 						<li sec:authorize="hasRole('ROLE_ADMIN')">
