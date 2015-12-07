@@ -1,73 +1,335 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout">
 <head>
+<link th:href="@{/resources/custom/styles.css}" rel="stylesheet" />
 
-	<title>AboutUS</title>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<title>About Us</title>
+
+
+	<style>
+	
+</style>
+
+
+<script type="text/javascript">
+
+function showfunction1(){
+	$('#tab-two2').hide();
+	$('#tab-two3').hide();
+	$('#tab-two4').hide();
+	$('#tab-two5').hide();
+	$('#tab-two6').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two1').show();
+
+}
+function showfunction2(){
+	$('#tab-two1').hide();
+	$('#tab-two3').hide();
+	$('#tab-two4').hide();
+	$('#tab-two5').hide();
+	$('#tab-two6').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two2').show();
+
+}
+function showfunction3(){
+	$('#tab-two2').hide();
+	$('#tab-two1').hide();
+	$('#tab-two4').hide();
+	$('#tab-two5').hide();
+	$('#tab-two6').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two3').show();
+
+}
+function showfunction4(){
+	$('#tab-two2').hide();
+	$('#tab-two3').hide();
+	$('#tab-two1').hide();
+	$('#tab-two5').hide();
+	$('#tab-two6').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two4').show();
+
+}
+function showfunction5(){
+	$('#tab-two2').hide();
+	$('#tab-two3').hide();
+	$('#tab-two4').hide();
+	$('#tab-two1').hide();
+	$('#tab-two6').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two5').show();
+
+}
+function showfunction6(){
+
+	$('#tab-two2').hide();
+	$('#tab-two3').hide();
+	$('#tab-two4').hide();
+	$('#tab-two5').hide();
+	$('#tab-two1').hide();
+	$('#tab-two7').hide();
+	$('#tab-two8').hide();
+	$('#tab-two9').hide();
+	$('#tab-two10').hide();
+	$('#tab-two6').show();
+
+}
+</script>
+<style type="text/css">
+.image_left1{
+	
+	
+}
+</style>
 </head>
 <body>
-
 	<section layout:fragment="content">
-	<br/>
-	  <h1>About Us</h1>
-	  
-      <div class="row">
-      	<div class="col-md-4">
-      		<h4 class="style-heading">Vision</h4>
-      		<ul>
-      			<li>Leader in healthcare</li>
-      			<li>Excellent Health for the Nation</li>
-      		</ul>
-      	</div>
-      	<div class="col-md-4">
-      		<h4 class="style-heading">Mission</h4>
-      		<ul>
-      			<li>Provide Better, Safer and Affordable Care</li>
-      			<li>Nurture Generations of Healthcare Professionals</li>
-      		</ul>
-      	</div>
-      	<div class="col-md-4">
-      		<h4 class="style-heading">Core Values</h4>
-      		<ul>
-      			<li>Compassion</li>
-      			<li>Collaboration</li>
-      			<li>Integrity</li>
-      		</ul>
-      	</div>
-      </div>
-      
-      <div class="row">
-      	<div class="mybox">
-		  <p>Akkurate health, being established in 2015 will rapidly emerge as one of the most technologically advanced healthcare and diagnostic centres. Headquartered in Hyderabad at Manikonda region and being the urban diagnostics is uniquely placed to become the premier diagnostic centre for doctors and patients.</p>
-	    
-	      <p>Being founded by group of highly qualified entrepreneurial professionals including Doctors with diversified experience and also cross cultural exposure have designed an extraordinary and an ultramodern healthcare destination. </p>
-	      <p>The company is one of the few healthcare and diagnostics which has on its panel a large team of fully qualified Pathologists, clinical Biochemists, MD Physicians, Gynaecologists, and Paediatricians and qualified Technologists and support staff who ensure quick turnaround time.</p>
-	      <p>The company has been continuously investing in large clinic spaces, advanced diagnostic equipment’s sourced from world experts in their respective fields. Not to mention, our timely investments in advanced IT systems to facilitate across the board access of cases and facilities for online reporting.</p>
-	      <p>The centre have well trained receptionists and managers who make it their mission in making patients feel comfortable and at ease at the reception desk.</p>
-	      <p>Keeping in mind that in India quality healthcare services are still not affordable or either not reachable easily to many.</p>
-	      <p>Akkurate Diagnostics continues to raise the bar to achieve optimum accuracy and precision, besides constantly endeavouring to propagate wellness and preventive healthcare through series of health check-up packages and patient care initiatives.</p>
-      	</div>
-      </div>
-      
-      <div class="row">
-      	<div class="col-md-6">
-      		<h4 class="style-heading">Our Quality Priorities</h4>
-      		<p><strong>Safety</strong>: Providing a safe and secure environment for our patients, their families and all staff</p>
-      		<p><strong>Professionalism</strong>: Doing job to the best of our ability and doing our best as a team</p>
-      		<p><strong>Respect</strong>: Valuing the dignity, privacy, needs and contributions of all we work with and serve.</p>
-      		<p><strong>Experience</strong>: Putting ourselves in the shoes of those we serve and work with to consistently deliver the best possible experience</p>
-      		<p><strong>Efficiency</strong>: Making full use of resources to improve processes and outcomes</p>
-      	</div>
-      	<div class="col-md-6">
-      		<h4 class="style-heading">OBJECTIVES</h4>
-      		<p><strong>Focus</strong>: Our main focus is to provide a comprehensive healthcare solution to all our patients</p>
-      		<p><strong>Team</strong>: the continuous effort of our excellent, hardworking and passionate and highly qualified and experienced team enables us to endeavor the best and world class facilities</p>
-      		<p><strong>Quality</strong>: we maintain and run our organization according to the quality norms and standards and regular monitoring is done by the quality team in every step of our services</p>
-      		<p><strong>Goal</strong>: To achieve and strive our level best in making quality healthcare services reachable and available at an affordable price to all the people</p>
-      	</div>
-      </div>
-      
-    </section>
+
+<br/><br/><br/>
+		<div class="container">
+
+
+			<div class="">
+
+				<div class="col-md-3 ">
+					<h3><strong>AboutUs</strong></h3>
+					<div class="list-group">
+						<a href="#" class="list-group-item ">
+							<p class="list-group-item-text" onclick="showfunction1()">About Us</p>
+						</a> <a href="#" class="list-group-item">
+
+							<p class="list-group-item-text" onclick="showfunction2()">Vision</p>
+						</a> <a href="#" class="list-group-item">
+
+							<p class="list-group-item-text" onclick="showfunction3()">Mission</p>
+						</a> <a href="#" class="list-group-item">
+
+							<p class="list-group-item-text" onclick="showfunction4()">Core Values</p>
+						</a> <a href="#" class="list-group-item">
+
+							<p class="list-group-item-text" onclick="showfunction5()">Our Quality Priorities</p>
+						</a> <a href="#" class="list-group-item">
+
+							<p class="list-group-item-text" onclick="showfunction6()"> Objectives</p>
+						</a> </div>
+            </div>
+			
+
+
+
+			<div class="col-md-9 ">
+				<br /> <br />
+				<div class="content_fullwidth">
+					<div id="tab-two1">
+						
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="img-responsive" id="image_left1" align="left"/>
+					
+						<h4>
+						About Us
+						</h4>
+						
+				
+			
+			<p> Astra health, being established in 2015 will rapidly
+					emerge as one of the most technologically advanced healthcare and
+					diagnostic centers. Head quartered in Hyderabad at Manikonda region
+					and being the urban diagnostics is uniquely placed to become the
+					premier diagnostic centre for doctors and patients.</p>
+					
+				<p>Being founded by group of highly qualified entrepreneurial
+					professionals including Doctors with diversified experience......
+					</p>
+				
+						
+					<!-- Trigger the modal with a button -->
+					<div align="right">
+					<button type="button" class="btn btn-default btn-sm"
+						data-toggle="modal" data-target="#myModal0">More</button></div>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal0" role="dialog">
+						<div class="modal-dialog">
+
+							<!-- Modal content-->
+							<div class="modal-content">
+
+								<div class="style-heading2" >
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">About Us</h4>
+								</div>
+								<div class="modal-body">
+								<p> Astra health, being established in 2015 will rapidly
+					emerge as one of the most technologically advanced healthcare and
+					diagnostic centers. Head quartered in Hyderabad at Manikonda region
+					and being the urban diagnostics is uniquely placed to become the
+					premier diagnostic centre for doctors and patients.</p>
+
+				<p>Being founded by group of highly qualified entrepreneurial
+					professionals including Doctors with diversified experience and
+					also cross cultural exposure have designed an extraordinary and an
+					ultramodern healthcare destination.</p>
+				<p>The company is one of the few healthcare and diagnostics
+					which has on its panel a large team of fully qualified
+					Pathologists, clinical Biochemists, MD Physicians, Gynaecologists,
+					and Paediatricians and qualified Technologists and support staff
+					who ensure quick turnaround time.</p>
+				<p>The company has been continuously investing in large clinic
+					spaces, advanced diagnostic equipment’s sourced from world experts
+					in their respective fields. Not to mention, our timely investments
+					in advanced IT systems to facilitate across the board access of
+					cases and facilities for online reporting.</p>
+				<p>The centre have well trained receptionists and managers who
+					make it their mission in making patients feel comfortable and at
+					ease at the reception desk.</p>
+				<p> Keeping in mind that in India quality healthcare services are
+					still not affordable or either not reachable easily to many.</p>
+				<p> Astra Diagnostics continues to raise the bar to achieve
+					optimum accuracy and precision, besides constantly endeavouring to
+					propagate wellness and preventive healthcare through series of
+					health check-up packages and patient care initiatives.</p>
+								
+								
+								
+								
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default btn-sm"
+										data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+			
+					
+					<div id="tab-two2" style="display: none;">
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="img-responsive" id="image_left1" align="left"/>
+						<h4>
+						Vision 
+						</h4>
+						<ul>
+					<li>Leader in healthcare</li>
+					<li>Excellent Health for the Nation</li>
+				</ul>
+					</div>
+
+					<div id="tab-two3" style="display: none;">
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="image_left1" align="left"/>
+						<h4>
+							Mission
+						</h4>
+						<ul>
+					<li>Leader in healthcare</li>
+					<li>Excellent Health for the Nation</li>
+				</ul>
+					</div>
+
+					<div id="tab-two4" style="display: none;">
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="img-responsive" id="image_left1" align="left"/>
+						<h4>
+							Core Values 
+						</h4>
+						<ul>
+					<li>Compassion</li>
+					<li>Collaboration</li>
+					<li>Integrity</li>
+				</ul>
+					</div>
+
+					<div id="tab-two5" style="display: none;">
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="img-responsive" id="image_left1" align="left"/>
+						<h4>
+						Our Quality Priorities 
+						</h4>
+						<p>
+					<strong>Safety</strong>: Providing a safe and secure environment
+					for our patients, their families and all staff
+				</p>
+				
+			<p>	<strong>Professionalism</strong>: Doing job to the best of our
+					ability and doing our best as a team
+				</p>
+				<p>
+					<strong>Respect</strong>: Valuing the dignity, privacy, needs and
+					contributions of all we work with and serve.
+				</p>
+				<p>
+					<strong>Experience</strong>: Putting ourselves in the shoes of
+					those we serve and work with to consistently deliver the best
+					possible experience
+				</p>
+				<p>
+					<strong>Efficiency</strong>: Making full use of resources to
+					improve processes and outcomes
+				</p>
+
+					</div>
+					<!-- end tab single section -->
+
+
+					<div id="tab-two6" style="display: none;">
+						<img th:src="@{/resources/img/healthcare.jpg}" alt=""
+							class="img-responsive" id="image_left1" align="left"/>
+						<h4>
+							Objectives
+						</h4>
+					<p>	<strong>Focus</strong>: Our main focus is to provide a
+					comprehensive healthcare solution to all our patients
+				</p>
+					<p>
+					<strong>Team</strong>: the continuous effort of our excellent,
+					hard working and passionate and highly qualified and experienced
+					team enables us to endeavor the best and world class facilities
+				</p>
+				<p>
+					<strong>Quality</strong>: we maintain and run our organization
+					according to the quality norms and standards and regular monitoring
+					is done by the quality team in every step of our services
+				</p>
+				<p>
+					<strong>Goal</strong>: To achieve and strive our level best in
+					making quality health care services reachable and available at an
+					affordable price to all the people
+				</p>
+
+					</div>
+				</div>
+			</div>
+		</div>
+    
+
+</div>
+
+
+
+
+	</section>
 </body>
 </html>

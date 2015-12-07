@@ -1,6 +1,10 @@
 div.mytile {
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
   width: 220px; 
-  height: 190px;
+  height: 150px;
   overflow: hidden;
   display: block;
   float: left;
@@ -10,23 +14,36 @@ div.mytile {
   cursor: pointer;
   position: relative;
   text-align : center;
+	bottom:0px;
+	z-index:999;
   
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+     
+    x;
+}
+          
 }
 div.mytile:hover {
-  outline: #999999 solid 3px;
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.new:hover {
+  outline:6px solid #4390df;
 /*   height: 220px; */
 }
 
 
+
 .style-heading{
-  border-top: 4px solid #000080; /* mid green */
-  background-color: #8080ff;     /* pale green */
-  color: #050;                /* dark green */
+  border-top: 4px solid #0050ef; /* mid green */  
+  background-color:#4390df;     /* pale green   #efe*/
+  color: block;                /* dark green */
 }
+
 
 .mybox {
 	padding: 10px;	
@@ -34,7 +51,7 @@ div.mytile:hover {
 
 .nav.navbar-nav>li>a:hover {
 	background-color: #ff8000;
-	 color : white;
+	color : white;
 }
 
 div.mytile:active {
@@ -47,25 +64,255 @@ div.mytile.no-outline {
 
 
 div.mytile p+a {
-    top:20%;
+    top:10%;
     color : block;
 }
 
 div.mytile p:first-child {
 	position: relative;
-    top:20%;
+    top:30%;
     text-align: center;
     color: white;
     font-size: x-large;
     
   }
 
-.top-buffer {
-	margin-top:50px;
+div.mytile2 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 170px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0;
+ z-index:994;
+	vertical-align:bottom;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile2:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
 }
 
+div.mytile3 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 190px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0;
+ vertical-align:bottom;
+ z-index:992;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile3:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile4 {
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 170px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0px;
+ z-index:991;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile4:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile5 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 150px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+  bottom:0px;
+  z-index:990;
+ 
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile5:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile2:active {
+  outline: 0;
+}
+
+div.mytile2.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile2 p+a {
+    top:20%;
+    color : block;
+}
+
+div.mytile2 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile3:active {
+  outline: 0;
+}
+
+div.mytile3.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile3 p+a {
+    top:20%;
+    color : block;
+}
+
+div.mytile3 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile4:active {
+  outline: 0;
+}
+
+div.mytile4.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile4 p+a {
+    top:30%;
+    color : block;
+}
+
+div.mytile4 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile5:active {
+  outline: 0;
+}
+
+div.mytile5.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile5 p+a {
+    top:30%;
+    color : block;
+}
+
+div.mytile5 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+
+
+.top-buffer {
+	margin-top:50px;
+	margin-left: 0px;
+
+	}
+
 .round-corner {
-	border-radius: 20px;
+	border-radius: 25px;
 }
 
 .bg-black {
@@ -73,12 +320,12 @@ div.mytile p:first-child {
 }
 .bg-green {
 	
-	 background: #00B800!important;
+	background: #00B800!important;
 }
 
 .bg-DarkOrchid {
 	
-	 background: #CC66FF !important;
+	background: #CC66FF !important;
 }
 
 .bg-MediumSlateBlue {
@@ -86,7 +333,7 @@ div.mytile p:first-child {
 }
 
 
-.bg-DODGERBLUE§ {
+.bg-DODGERBLUE {
   background: #2090FF !important;
 }
 
@@ -94,7 +341,7 @@ div.mytile p:first-child {
   background: #40B070 !important;
 }
 
-.bg-SALMON§ {
+.bg-SALMON {
   background:#F08070 !important;
 }
 .bg-MEDIUMTURQUOISE {
@@ -105,9 +352,9 @@ div.mytile p:first-child {
   background:#403880 !important;
 }
 
-
-
-
+.bg-GHOSTWHITE{
+  background:#F0F7FF !important;
+}
 
 
 
@@ -142,7 +389,7 @@ div.mytile p:first-child {
   background: #a4c400 !important;
 }
 
-.bg-MEDIUMORCHID§ {
+.bg-MEDIUMORCHID {
   background: #B050D0 !important;
 }
 .bg-green {
@@ -296,9 +543,6 @@ div.mytile p:first-child {
   background: #00aff0 !important;
 }
 
-.bg-malli {
-  background: #111111 !important;
-}
 
 .fg-black {
   color: #000000 !important;
@@ -461,6 +705,101 @@ div.mytile p:first-child {
 }
 
 .carousel-inner .item img{
-	background-color: lime;
-	height: 0px;
+	
+	height: 400px;
+	
 }
+.
+.myButton {
+	background-color:#44c767;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:12px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+	.overlap1 {
+	top: -40px;
+}
+
+.overlap2 {
+	top: -60px;
+}
+
+.overlap3 {
+	top: -80px;
+}
+
+.overlap4 {
+	top: -60px;
+}
+
+.overlap5 {
+	top: -40px;
+}
+
+.overlap6 {
+	background-color: #6600FF;
+	width: 100%;
+	height: 250px;
+	position: relative;
+	top: -130px;
+}
+.overlap7{
+	background-color: orange;
+	position: relative;
+	height: 90px;
+	top: -60px;}
+#myCarousel{
+	
+	width: 100%;
+	height: 400px;
+}
+#myCarouseltxt{
+	height: 80px; 
+	width: 100%;
+	
+}
+.sheading{
+	/* background-color:#4390df; */
+	
+	padding-left:10px;
+	padding-top: 20px;
+	color: green;
+	
+}
+.service1{
+	width: 170px;
+	height: 180px;
+	background-color: #bf80ff ;
+	border-top-left-radius:25px;
+border-top-right-radius:25px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:0px;
+	padding-left: 10px;
+}
+
+
+.service2{
+	
+	width: 170px;
+	height: 180px;
+	background-color: #bf80ff ;
+	border-top-left-radius:0px;
+border-top-right-radius:0px;
+border-bottom-right-radius:25px;
+border-bottom-left-radius:25px;
+	padding-left: 10px;
+}
+.servicestyles{
+	border:2px solid #6600FF;
+	
+	}
+	

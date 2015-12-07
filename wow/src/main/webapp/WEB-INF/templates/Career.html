@@ -1,16 +1,21 @@
-<html xmlns:th="http://www.thymeleaf.org" 
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	layout:decorator="layout">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorator="layout">
 <head>
-	<title>Career</title>
+<title>Career</title>
 </head>
 <body>
-	<section layout:fragment="content">
-	 
-	  <img th:src="@{/resources/img/careers.jpg}" alt="Partner With Us"/>
-	  <br/><br/><br/>
-	  <p>If you are looking to work with a truly global organization, Akkurate Health
-	   is where you should be. With a culturally diverse and a truly international team, we can provide a solid foundation for building a fulfilling professional career.</p>
-    </section>
+<section layout:fragment="content">
+<div class="container">
+<br/>
+ <!-- <h2>Career</h2> -->
+<br/>
+ <img   class="img-responsive" th:src="@{/resources/img/careers.jpg}" alt="Careers"/>
+ <br/>
+ <p>If you are looking to work with a truly global organization, Akkurate Health
+  is where you should be. With a culturally diverse and a truly international team, we can provide a solid foundation for building a fulfilling professional career.</p>
+ 
+  </div>
+   </section>
 </body>
-</html>
+</html> 

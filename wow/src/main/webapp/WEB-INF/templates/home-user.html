@@ -1,34 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout">
 <head>
-	<title>Home</title>
+<title>Home</title>
 </head>
 <body>
 	<section layout:fragment="content">
-	<div ng-app="userApp"  ng-controller="userAppCtrl">
-	  <div class="row" style="margin:500">
-	  	<span sec:authentication="name" class="pull-right"></span>
-	  </div>
-	  <div class="row">
-	  	<div class="col-md-2">
-	  		<button class="btn btn-primary" ng-click="OnMyBookingsClick()">My Bookings</button>
-	  	</div>
-	  	<div class="col-md-10">
-	  	
-	  		<table class="table table-striped">
-	  			<tr ng-repeat="booking in current_bookings">
-	  				<td>{{booking.id}}</td>
-	  				<td>{{booking.test_name}}</td>
-	  				<td>{{booking.clinic_name}}</td>
-	  			</tr>
-	  		</table>
-	  	
-	  	</div>
-	  </div>
-	</div>
-	  <script th:inline="javascript">
+		<div ng-app="userApp" ng-controller="userAppCtrl">
+			<div class="row" style="margin: 500">
+				<span sec:authentication="name" class="pull-right"></span>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<button class="btn btn-primary" ng-click="OnMyBookingsClick()">My
+						Bookings</button>
+				</div>
+				<div class="col-md-10">
+
+					<table class="table table-striped">
+						<tr ng-repeat="booking in current_bookings">
+							<td>{{booking.id}}</td>
+							<td>{{booking.test_name}}</td>
+							<td>{{booking.clinic_name}}</td>
+						</tr>
+					</table>
+
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
 		/*<![CDATA[*/
 		var userApp = angular.module('userApp', []);
 		userApp.controller('userAppCtrl', function ($scope,$http) {
@@ -64,7 +65,7 @@
 		});
 		/*]]>*/
 	  </script>
-	  
-    </section>
+
+	</section>
 </body>
 </html>

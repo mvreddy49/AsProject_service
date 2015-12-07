@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.hibernate.engine.query.spi.ReturnMetadata;
 import org.slf4j.Logger;
@@ -16,14 +17,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiReturnModel;
+import com.wow.webapp.domain.model.ApiReturnModelClinics;
+import com.wow.webapp.domain.model.ApiReturnModelUserBookings;
 import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
@@ -257,25 +263,25 @@ public class BookingApiController {
 			Date startTime =utils.getTimeFromDate(slot.getStartTime());
 			Date endTime=utils.getTimeFromDate(slot.getEndTime());
 			System.out.println("times are ::slotTime::"+slotTime.toString()+" ::::startTime::"+startTime+" ::: endtime::"+endTime);
-			/*if (slotTime.after(endTime) && slotTime.before(startTime)) {
-				logger.info("slot checking is true");
-				return true;
-		    }
-			else
-			{
-				logger.info("slot checking is false");
-				return false;
-			}
-			Date startTime = slot.getStartTime();
-			Date endTime = slot.getEndTime();
-			*/
+			
 			int comp = startTime.compareTo(slotTime);
 			int comp1 = endTime.compareTo(slotTime);
 			if ((comp == -1 || comp == 0) && (comp1 == 0 || comp1 == 1)) {
-				logger.info("slot checking is true");
-				return true;
+				logger.info("slot timings checking is true");
+				
+				List<String> timeRanges=utils.getRangeTimes(startTime,endTime);
+				
+				if(timeRanges.contains(slotTime))
+				{	
+					logger.info("slot time is  validating in time period");
+					return true;
+				
+				}else{
+					logger.info("slot time is  not validating in time period");
+					return false;
+				}
 			} else {
-				logger.info("slot checking is false");
+				logger.info("slot timings checking is false");
 				return false;
 			}
 		} catch (Exception e) {
@@ -304,4 +310,5 @@ public class BookingApiController {
 		return false;
 	}
 
+	
 }
