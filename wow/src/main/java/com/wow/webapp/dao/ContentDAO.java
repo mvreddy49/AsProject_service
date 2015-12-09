@@ -15,7 +15,7 @@ public interface ContentDAO {
 	
 	public Doctor findDoctorByMobile(String mobile) throws Exception;
 	public List<ClinicModel> getClinics(String speciality, String location);
-	public List<DoctorModel> getDoctorsInfo(String speciality, String location);
+	public List<DoctorModel> getDoctorsInfo(String speciality, String location,String type);
 	
 	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c);
 }

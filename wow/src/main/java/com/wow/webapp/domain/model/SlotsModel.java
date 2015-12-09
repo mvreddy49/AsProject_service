@@ -1,12 +1,14 @@
 package com.wow.webapp.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlotsModel {
 	private Integer id;
 	private String startTime;
 	private String endTime;
-	private List<String> slots;
+	private List<String> slots=new ArrayList<String>();
+	private List<String> bookedSlots=new ArrayList<String>();
 	public List<String> getSlots() {
 		return slots;
 	}
@@ -30,5 +32,11 @@ public class SlotsModel {
 	}
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+	public List<String> getBookedSlots() {
+		return bookedSlots;
+	}
+	public void setBookedSlots(List<String> bookedSlots) {
+		this.bookedSlots = bookedSlots;
 	}
 }

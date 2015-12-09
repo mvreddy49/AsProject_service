@@ -19,7 +19,7 @@
 	<jackson-databind.version>2.6.1</jackson-databind.version>
 	<spring.security.version>4.0.2.RELEASE</spring.security.version>
 	<hibernate.version>4.3.11.Final</hibernate.version>
-	<mysql-connector-java.version>5.1.36</mysql-connector-java.version>
+	<mysql-connector-java.version>5.1.37</mysql-connector-java.version>
 	<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 	<thymeleaf-version>2.1.4.RELEASE</thymeleaf-version>
   </properties>

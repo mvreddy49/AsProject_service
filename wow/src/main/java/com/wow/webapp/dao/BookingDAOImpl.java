@@ -1,6 +1,7 @@
 package com.wow.webapp.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -109,6 +110,7 @@ public class BookingDAOImpl implements BookingDAO {
 				
 				/* doctor info */
 				DoctorModel doctorModel=new DoctorModel();
+				doctorModel.setId(b.getDoctor().getId());
 				doctorModel.setName(b.getDoctor().getName());
 				doctorModel.setMobile(b.getDoctor().getMobile());
 				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
@@ -127,6 +129,38 @@ public class BookingDAOImpl implements BookingDAO {
 		Session session = this.getSession();
 		List<BookingModel> bookingModel=null;
 		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? order by booking_time desc").setParameter(0,clinic).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+	}
+	@Transactional
+	public List<Booking> findBookings(Clinic clinic, Doctor doctor, String date) {
+		
+		Session session = this.getSession();
+		logger.info("enter into findbookings with date");
+		String dateAdded="b.booking_time like '%"+date+"%'";
+		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=:clinic and b.doctor=:doctor and "+dateAdded+"").setParameter("clinic",clinic).setParameter("doctor", doctor).list();
+		return bookings;
+	}
+
+	@Transactional
+	public List<BookingModel> findBookingsOnId(Integer id) {
+		// TODO Auto-generated method stub
+		Session session = this.getSession();
+		
+		List<BookingModel> bookingModel=null;
+		List<Booking> bookings=session.createQuery("from Booking b where b.id=?").setParameter(0,id).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+		
+	}
+	
+	@Transactional
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic, String date) {
+		Session session = this.getSession();
+		logger.info("enter into findbookings with date");
+		List<BookingModel> bookingModel=null;
+		String dateAdded="b.booking_time like '%"+date+"%'";
+		List<Booking> bookings=session.createQuery("from Booking b where b.clinic=:clinic  and "+dateAdded+"").setParameter("clinic",clinic).list();
 		bookingModel=getBookings(bookings);
 		return bookingModel;
 	}

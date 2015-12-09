@@ -53,6 +53,11 @@ public class CreateAccountModel {
 	@NotEmpty(message="clinicPhone1 Number Can not be empty")
 	@Size(min=10, max=10)
 	private String clinicPhone1;
+	
+	@NotEmpty(message="type Can not be empty")
+	@Size(max=20)
+	private String type;
+	
 
 	public String getClinicName() {
 		return clinicName;
@@ -125,5 +130,11 @@ public class CreateAccountModel {
 	}
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}	
 }

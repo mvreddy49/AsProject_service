@@ -151,6 +151,7 @@ public class ContentInsertController {
 			c.setName(model.getClinicName());
 			c.setDescription(model.getClinicDesc());
 			c.setEnabled(true);
+			c.setType(model.getType());
 			
 			Set<Authority> authorities = new HashSet<Authority>();
 			//authorities.add(new Authority(u, "ROLE_USER"));

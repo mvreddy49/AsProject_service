@@ -1,41 +1,32 @@
 package com.wow.webapp.controllers.api;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
-import org.hibernate.engine.query.spi.ReturnMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.UserDAO;
-import com.wow.webapp.domain.model.ApiReturnModel;
-import com.wow.webapp.domain.model.ApiReturnModelClinics;
-import com.wow.webapp.domain.model.ApiReturnModelUserBookings;
-import com.wow.webapp.domain.model.BookingModel;
-import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
+import com.wow.webapp.domain.model.ApiReturnModel;
+import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
 
@@ -64,11 +55,19 @@ public class BookingApiController {
 						"user not logged in,please login");
 			} else {
 				logger.debug("Authorities : "+ ud.getAuthorities());
+				Set<Authority> authority=(Set<Authority>)ud.getAuthorities();
 				String userName = ud.getUsername();
-				User user=userDao.findByUserName(userName);
-				if(user!=null && user.getClinic()!=null)
-					returnModel=getBookingsOnclinic(user.getClinic());
-				else
+				//User user=userDao.findByUserName(userName);
+				String role=null;
+				for(Authority a:authority)
+					role=a.getRole();
+				if(role!=null && role.contains(Constants.ROLE_CLINIC))
+				{	
+					User user=userDao.findByUserName(userName);
+					//if clinic wants to date by bookings
+					String requestedDate=request.getParameter("date");
+					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
+				}else
 					returnModel = getBookingsOnUser(userName);
 			}
 
@@ -81,11 +80,17 @@ public class BookingApiController {
 		return returnModel;
 	}
 
-	private ApiReturnModel getBookingsOnclinic(Clinic clinic) {
+	private ApiReturnModel getBookingsOnclinic(Clinic clinic,String date) {
 		// TODO Auto-generated method stub
-		
+		Utils utils=new Utils();
 		ApiReturnModel returnModel = null;
-		List<BookingModel> bookings = bookingDao.findBookingsOnClinic(clinic);
+		List<BookingModel> bookings=null;
+		
+		if(date!=null){
+			Date bookingByDate=utils.convertStringToDateOnly(date);
+			bookings = bookingDao.findBookingsOnClinic(clinic,utils.convertStringToDateOnly(bookingByDate));
+		}else
+			bookings = bookingDao.findBookingsOnClinic(clinic);
 		// User user=userDao.findByid(Integer.parseInt(userId));
 		returnModel=commonReturnBookingModel(bookings);
 		return returnModel;
@@ -223,9 +228,14 @@ public class BookingApiController {
 					logger.info("new booking saved");
 					String msg = "Requested slot is booked success::: slot time is ::"
 							+ slot_time;
-					retunModel = new ApiBookingReturnModel(
+					ApiBookingReturnModel  api= new ApiBookingReturnModel(
 							Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
 							msg);
+					
+					List<BookingModel> bookingModel=bookingDao.findBookingsOnId(booking.getId());
+					api.setBookings(bookingModel);
+					
+					retunModel=api;
 
 				} else {
 
@@ -270,8 +280,8 @@ public class BookingApiController {
 				logger.info("slot timings checking is true");
 				
 				List<String> timeRanges=utils.getRangeTimes(startTime,endTime);
-				
-				if(timeRanges.contains(slotTime))
+				logger.info("time ranges are:::"+timeRanges.toString());
+				if(timeRanges.contains(utils.convertDateToUTCFormat(slotTime)))
 				{	
 					logger.info("slot time is  validating in time period");
 					return true;
@@ -309,6 +319,8 @@ public class BookingApiController {
 		}
 		return false;
 	}
+	
+	
 
 	
 }
