@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +23,7 @@ import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.CreateBookingModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
@@ -140,18 +144,25 @@ public class BookingApiController {
 	}
 
 	@RequestMapping(value = "/slotBooking")
-	public ApiReturnModel slotBooking(@RequestParam("slotId") String slot_id,
-			@RequestParam("slotTime") String slot_time,
-			HttpServletRequest request) {
+	public ApiReturnModel slotBooking(@Valid CreateBookingModel createBookingModel,BindingResult bindingResult) {
 
 		ApiReturnModel retunModel = null;
 		Utils utils=new Utils();
 		UserDetails ud=null;
 		List<String> errors = new ArrayList<String>();
-		logger.info("enter into slotBooking, params are::::slot_id::" + slot_id
-				+ " slot_time is::" + slot_time);
+		
+		if(bindingResult.hasFieldErrors()){
+			for(FieldError e : bindingResult.getFieldErrors()){
+				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
+				errors.add(e.getDefaultMessage());
+			}
+			retunModel=new ApiBookingReturnModel(
+					Responses.CUSTOM_CODE, Responses.SUCCESS_STATUS,
+					Responses.ERROR_MSG, errors);
+			return retunModel;
+		}
 		try {
-			Slot slot = bookingDao.findSlot(Integer.parseInt(slot_id));
+			Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
 
 			if (slot != null) {
 				Clinic clinic = new Clinic(slot.getClinic().getId());
@@ -159,7 +170,7 @@ public class BookingApiController {
 
 				boolean bookingStatus = false;
 				boolean slotTimimgsStatus = false;
-
+				String slot_time=createBookingModel.getSlotTime();
 				if (checkSlotTimings(slot, slot_time)) {
 					slotTimimgsStatus = true;
 					List<Booking> bookings = bookingDao.findBookings(clinic,
@@ -181,8 +192,8 @@ public class BookingApiController {
 					String userName = null;
 					ud=Utils.getUserSession();
 					if (ud == null) {
-						String name = request.getParameter("name");
-						String mobile = request.getParameter("mobile");
+						String name = createBookingModel.getName();
+						String mobile =createBookingModel.getMobile();
 						if (name != null && mobile != null) {
 							User user = userDao.findByUserMobile(mobile);
 							if (user != null) {
