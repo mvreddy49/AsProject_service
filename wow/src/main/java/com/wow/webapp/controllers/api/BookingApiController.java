@@ -1,6 +1,7 @@
 package com.wow.webapp.controllers.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -59,12 +62,10 @@ public class BookingApiController {
 						"user not logged in,please login");
 			} else {
 				logger.debug("Authorities : "+ ud.getAuthorities());
-				Set<Authority> authority=(Set<Authority>)ud.getAuthorities();
 				String userName = ud.getUsername();
-				//User user=userDao.findByUserName(userName);
 				String role=null;
-				for(Authority a:authority)
-					role=a.getRole();
+				for(GrantedAuthority auth :ud.getAuthorities())
+					role=auth.getAuthority();
 				if(role!=null && role.contains(Constants.ROLE_CLINIC))
 				{	
 					User user=userDao.findByUserName(userName);
@@ -174,12 +175,20 @@ public class BookingApiController {
 				if (checkSlotTimings(slot, slot_time)) {
 					slotTimimgsStatus = true;
 					List<Booking> bookings = bookingDao.findBookings(clinic,
-							doctor);
+							doctor,utils.convertStringToDateOnly(utils.convertStringToDateOnly(slot_time)));
 					if (bookings != null && bookings.size() > 0) {
-						if (checkBookingTimings(slot_time, bookings))
-							bookingStatus = true;
-						else
-							bookingStatus = false;
+						//if type is a labs , don't check to  checkBookingTimings
+						if(slot.getClinic().getType().equalsIgnoreCase(Constants.CLINIC_TYPE))
+						{	
+							//size limit of the users booking of given time
+							if(bookings.size() >= 10)
+								bookingStatus = false;
+							else 
+								bookingStatus = true;
+						
+						}else
+							bookingStatus=checkBookingTimings(slot_time, bookings);
+							
 					} else
 						bookingStatus = true;
 
