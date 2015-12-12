@@ -27,6 +27,7 @@ import com.wow.webapp.domain.model.LoginModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.Utils;
 
 @RestController
 public class AccountApiController {
@@ -76,8 +77,9 @@ public class AccountApiController {
 			catch(Exception e){
 				User u = new User();
 				u.setUsername(model.getUsername());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				u.setPassword(passwordEncoder.encode(model.getPassword()));
+				//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				//u.setPassword(passwordEncoder.encode(model.getPassword()));
+				u.setPassword(new Utils().getEncryptedPassword(model.getPassword()));
 				u.setEnabled(true);
 				u.setMobile("1212");
 				Set<Authority> authorities = new HashSet<Authority>();

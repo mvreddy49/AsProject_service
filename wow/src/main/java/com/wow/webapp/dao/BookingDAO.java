@@ -1,5 +1,6 @@
 package com.wow.webapp.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.wow.webapp.domain.model.BookingModel;
@@ -16,5 +17,8 @@ public interface BookingDAO {
 	public void save(Booking b);
 	public List<BookingModel> findBookingsOnUser(String userName);
 	public List<BookingModel> findBookingsOnClinic(Clinic clinic);
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic,String date);
+	public List<BookingModel> findBookingsOnId(Integer id);
+	public List<Booking> findBookings(Clinic clinic,Doctor doctor,String date);
 	
 }

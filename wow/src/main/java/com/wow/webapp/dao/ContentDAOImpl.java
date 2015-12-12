@@ -10,16 +10,12 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
-import com.wow.webapp.domain.model.SlotsModel;
-import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
-import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Utils;
 
 public class ContentDAOImpl implements ContentDAO{
@@ -105,13 +101,13 @@ public class ContentDAOImpl implements ContentDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<DoctorModel> getDoctorsInfo(String speciality, String location){
+	public List<DoctorModel> getDoctorsInfo(String speciality, String location,String type){
 		logger.debug("getDoctorsInfo start");
 		Utils utils=new Utils();
 		List<DoctorModel> list = new ArrayList<DoctorModel>();
 		Session session = this.getSession();
 		List<Clinic> clinics = session.createQuery("from Clinic where type=:paramType")
-				.setParameter("paramType", "clinic")
+				.setParameter("paramType", type)
 				.list();
 		for(  Clinic c : clinics){
 			boolean addressMatch = false;
@@ -146,7 +142,7 @@ public class ContentDAOImpl implements ContentDAO{
 				clinicModel.setClinicPhones(c.getPhoneNos().toString());
 				doctorModel.setClinic(clinicModel);
 				
-				/* Slots info */
+				/* Slots info 
 				
 				SlotsModel slotModel = new SlotsModel();
 				slotModel.setId(s.getId());
@@ -159,7 +155,7 @@ public class ContentDAOImpl implements ContentDAO{
 				
 				
 				
-				/* Booked slots info*/
+				 Booked slots info
 				List<BookingModel> bookingsList=new ArrayList<BookingModel>();
 				
 				List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? and b.doctor=?").setParameter(0, c)
@@ -170,7 +166,7 @@ public class ContentDAOImpl implements ContentDAO{
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(b.getBooking_time()));
 					bookingsList.add(bookingModel);
 				}
-				doctorModel.setBooking(bookingsList);
+				doctorModel.setBooking(bookingsList);*/
 				list.add(doctorModel);
 				
 			}

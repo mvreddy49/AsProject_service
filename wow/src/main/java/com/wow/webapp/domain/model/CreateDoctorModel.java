@@ -27,6 +27,7 @@ public class CreateDoctorModel {
 	@Size(max=20)
 	private String endTime;
 	
+		
 	public String getName() {
 		return name;
 	}
