@@ -68,10 +68,10 @@ public class ContentInsertController {
 			
 			logger.debug("Persisting");
 			try {
-				User user = userDao.findByUserName(model.getEmail());
+				User user = userDao.findByUserName(model.getClinicPhone1());
 				logger.debug("After retriving user");
 				if(user != null){
-					throw new Exception("Not Found : " + model.getEmail());
+					throw new Exception("Not Found : " + model.getClinicPhone1());
 				}
 				errors = registerClinicImpl(model,errors);
 			} catch (Exception e) {
@@ -141,10 +141,9 @@ public class ContentInsertController {
 		
 		try{
 			User u = new User();
-			u.setUsername(model.getEmail());
+			u.setUsername(model.getClinicPhone1());
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			u.setPassword(passwordEncoder.encode(model.getPasswd()));
-			u.setMobile(model.getClinicPhone1());
 			u.setEnabled(true);
 			
 			Clinic c = new Clinic();

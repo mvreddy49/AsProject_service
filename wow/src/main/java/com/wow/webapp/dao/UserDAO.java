@@ -25,8 +25,6 @@ public interface UserDAO {
 	
 	public User findByUserName(String username) throws Exception;
 	
-	public User findByUserMobile(String mobile) throws Exception;
-	
 	public Clinic findByClinicName(String clinicname);
 	
 	public void AddTestToClinic(String clinicname, ClinicTest t) ;

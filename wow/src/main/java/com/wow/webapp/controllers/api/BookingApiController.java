@@ -3,6 +3,7 @@ package com.wow.webapp.controllers.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -127,7 +128,7 @@ public class BookingApiController {
 		List<String> errors = new ArrayList<String>();
 		try {
 
-			User user = userDao.findByUserMobile(mobile);
+			User user = userDao.findByUserName(mobile);
 			if (user != null)
 				returnModel = getBookingsOnUser(user.getUsername());
 			else
@@ -181,7 +182,7 @@ public class BookingApiController {
 						if(slot.getClinic().getType().equalsIgnoreCase(Constants.CLINIC_TYPE))
 						{	
 							//size limit of the users booking of given time
-							if(bookings.size() >= 10)
+							if(bookings.size() >= Constants.LABS_BOOKING_LIMIt)
 								bookingStatus = false;
 							else 
 								bookingStatus = true;
@@ -204,18 +205,19 @@ public class BookingApiController {
 						String name = createBookingModel.getName();
 						String mobile =createBookingModel.getMobile();
 						if (name != null && mobile != null) {
-							User user = userDao.findByUserMobile(mobile);
+							User user = userDao.findByUserName(mobile);
 							if (user != null) {
 								logger.info("user is already availble in user table as a anonymous user");
 								userName = user.getUsername();
-							} else {
+							} else { 
 								User u = new User();
 								u.setEnabled(true);
-								u.setMobile(mobile);
 								u.setUsername(mobile);
 								u.setPassword(utils.getEncryptedPassword(mobile));
+								Set<Authority> authorities = new HashSet<Authority>();
+								authorities.add(new Authority(u, "ROLE_USER"));
+								u.setUserRole(authorities);
 								userDao.save(u);
-
 								userName = u.getUsername();
 								logger.info("user saved sucess::userName::"
 										+ userName);

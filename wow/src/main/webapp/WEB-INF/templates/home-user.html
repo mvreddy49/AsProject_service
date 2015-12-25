@@ -20,9 +20,8 @@
 
 					<table class="table table-striped">
 						<tr ng-repeat="booking in current_bookings">
-							<td>{{booking.id}}</td>
-							<td>{{booking.test_name}}</td>
-							<td>{{booking.clinic_name}}</td>
+							<td>{{booking.slotTime}}</td>
+							<td>{{booking.doctor.name}}</td>
 						</tr>
 					</table>
 
@@ -38,7 +37,7 @@
 			$scope.OnMyBookingsClick = function(){
 				$http({
 					  method: 'GET',
-					  url: 'api/protected/bookings',
+					  url: 'api/bookings/myBookings',
 					}).then(function successCallback(response) {
 						if(response.data.status == "OK"){
 							console.log("OK Response");

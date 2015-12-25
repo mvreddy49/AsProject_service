@@ -124,6 +124,16 @@ public class AccountController {
 		return mv;
 	}
 
+	@RequestMapping(value = "/register-doctor", method = RequestMethod.GET)
+	public ModelAndView register_doctor(){
+		logger.debug("register get start");
+		CreateDoctorModel model= new CreateDoctorModel();
+		ModelAndView mv = new ModelAndView("register-doctor");
+		mv.addObject("model", model);
+		mv.addObject("errors", new ArrayList<String>());
+		return mv;
+	}
+	
 	@RequestMapping(value = "/register-user", method = RequestMethod.GET)
 	public ModelAndView register_user(){
 		logger.debug("register-user get start");
@@ -193,11 +203,12 @@ public class AccountController {
 					c.setEnabled(true);
 					
 					User u = new User();
-					u.setUsername(row.getCell(1).toString());
+					//u.setUsername(row.getCell(1).toString());
+					u.setUsername(row.getCell(3).toString());
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					u.setPassword(passwordEncoder.encode(row.getCell(2).toString()));
 					u.setEnabled(true);
-					u.setMobile(row.getCell(3).toString());
+					//u.setMobile(row.getCell(3).toString());
 					Set<Authority> authorities = new HashSet<Authority>();
 					//authorities.add(new Authority(u, "ROLE_USER"));
 					authorities.add(new Authority(u, "ROLE_CLINIC"));
@@ -353,7 +364,7 @@ public class AccountController {
 			logger.debug("Persisting");
 			
 			try {
-				userDao.findByUserName(model.getEmail());
+				userDao.findByUserName(model.getClinicPhone1());
 			} catch (Exception e) {
 				ModelAndView mv = new ModelAndView("register-clinic");	
 				mv.addObject("model", model);
@@ -367,11 +378,12 @@ public class AccountController {
 			c.setEnabled(true);
 
 			User u = new User();
-			u.setUsername(model.getEmail());
+			//u.setUsername(model.getEmail());
+			u.setUsername(model.getClinicPhone1());
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			u.setPassword(passwordEncoder.encode(model.getPasswd()));
 			u.setEnabled(true);
-			u.setMobile(model.getClinicPhone1());
+			//u.setMobile(model.getClinicPhone1());
 			Set<Authority> authorities = new HashSet<Authority>();
 			//authorities.add(new Authority(u, "ROLE_USER"));
 			authorities.add(new Authority(u, "ROLE_CLINIC"));

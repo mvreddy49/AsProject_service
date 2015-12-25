@@ -19,11 +19,9 @@ public class CreateDoctorModel {
 	@Size(max=12)
 	private String mobile;
 	
-	@NotEmpty(message="startTime Can not be empty")
 	@Size(max=20)
 	private String startTime;
 	
-	@NotEmpty(message="endTime Can not be empty")
 	@Size(max=20)
 	private String endTime;
 	
