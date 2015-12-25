@@ -1,21 +1,37 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorator="layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 <head>
-<title>Career</title>
+<base href="http://demos.telerik.com/kendo-ui/datetimepicker/index"/>
+    <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
+    <title></title>
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css" />
+
+    <script src="//kendo.cdn.telerik.com/2015.3.1111/js/jquery.min.js"></script>
+    <script src="//kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
+    <script>
+                $(document).ready(function () {
+                    // create DateTimePicker from input HTML element
+                    $("#datetimepicker").kendoDateTimePicker({
+                        value:new Date()
+                    });
+                });
+            </script>
 </head>
 <body>
-<section layout:fragment="content">
-<div class="container">
-<br/>
- <!-- <h2>Career</h2> -->
-<br/>
- <img   class="img-responsive" th:src="@{/resources/img/careers.jpg}" alt="Careers"/>
- <br/>
- <p>If you are looking to work with a truly global organization, Akkurate Health
-  is where you should be. With a culturally diverse and a truly international team, we can provide a solid foundation for building a fulfilling professional career.</p>
- 
-  </div>
-   </section>
+	<section layout:fragment="content">
+		
+            
+            <div class="demo-section k-content">
+                <h4>Remind me on</h4>
+                <input id="datetimepicker" style="width: 100%;" />
+            </div>
+            
+            
+            
+
+	</section>
 </body>
-</html> 
+</html>

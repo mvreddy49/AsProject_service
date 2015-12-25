@@ -1,6 +1,5 @@
 package com.wow.webapp.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import com.wow.webapp.domain.model.BookingModel;
@@ -8,7 +7,6 @@ import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
-import com.wow.webapp.entitymodel.User;
 
 public interface BookingDAO {
 

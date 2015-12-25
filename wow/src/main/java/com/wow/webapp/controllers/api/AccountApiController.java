@@ -81,7 +81,7 @@ public class AccountApiController {
 				//u.setPassword(passwordEncoder.encode(model.getPassword()));
 				u.setPassword(new Utils().getEncryptedPassword(model.getPassword()));
 				u.setEnabled(true);
-				u.setMobile("1212");
+				
 				Set<Authority> authorities = new HashSet<Authority>();
 				authorities.add(new Authority(u, "ROLE_USER"));
 				u.setUserRole(authorities);

@@ -33,7 +33,7 @@ private static final Logger logger = LoggerFactory.getLogger(SeedDatabase.class)
 					u.setUsername(adminUserName);
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					u.setPassword(passwordEncoder.encode("password@1234"));
-					u.setMobile("1212121");
+					//u.setMobile("1212121");
 					u.setEnabled(true);
 					Set<Authority> authorities = new HashSet<Authority>();
 					authorities.add(new Authority(u, "ROLE_USER"));
