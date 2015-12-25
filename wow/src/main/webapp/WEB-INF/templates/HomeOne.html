@@ -4,22 +4,28 @@
 	layout:decorator="layout">
 <head>
 <title>Home</title>
+<style>
+h3{
+color:white;
+}
+
+</style>
 </head>
 <body>
 	<section layout:fragment="content">
 		<div class="row">
 		<br/><br/>
-			<div id="myCarousel" class="carousel slide" data-ride="carousel"
+		<!-- 	<div id="myCarousel" class="carousel slide" data-ride="carousel"
 				data-interval="5000">
 				<div class="carousel-inner" role="listbox">
 					<div class="item">
-						<img th:src="@{/resources/img/Health.jpg}" alt=" " />
+						<img th:src="@{/resources/img/home1.jpg}" alt=" " style="height: 900px;"/>
 					</div>
 					<div class="item">
-						<img th:src="@{/resources/img/Health2.jpg}" alt=" " />
+						<img th:src="@{/resources/img/home1.jpg}" alt=" " style="height: 900px;"/>
 					</div>
 					<div class="item active">
-						<img th:src="@{/resources/img/Health3.jpg}" alt=" " />
+						<img th:src="@{/resources/img/home1.jpg}" alt=" " style="height: 900px;"/>
 					</div>
 
 				</div>
@@ -33,67 +39,78 @@
 					class="glyphicon glyphicon-chevron-right" aria-hidden="false"></span>
 					<span class="sr-only">Next</span>
 				</a>
-			</div>
+			</div>   -->
 			
+			 
+			<img class="img-responsive" th:src="@{/resources/img/imageForHome.jpg}" alt=""/>
 			
 			<div class="overlap6 bg-darkViolet" >
 		
 				<div class="row top-buffer " style="margin-left: 10px;">
+				
 					<div class="mytile overlap1 bg-MEDIUMORCHID" >
-						<p>Clinics</p>
+					<img th:src="@{/resources/img/cli.jpg}" alt=" " style="margin-top: 12px;" />
+						<h3  style="margin-top: 8px;">Clinics</h3>
+						
 						<a th:href="@{/clinic-booking}"
-							class="btn btn-default round-corner" style="margin-top: 50px;">Book
+							class="btn btn-default round-corner" style="margin-top: -1px;">Book
 							Appointment</a>
 					</div>
 
 					<div class="mytile2 overlap2 bg-DODGERBLUE">
-						<p>Diagnostics</p>
+					<img th:src="@{/resources/img/dlh.jpg}" alt=" " style="margin-top: 12px;"/>
+						<h3>Diagnostics</h3>
 						<a th:href="@{/diagnostics-booking}"
-							class="btn btn-default round-corner" style="margin-top: 60px;">Book
+							class="btn btn-default round-corner" style="margin-top: 9px;">Book
 							your Test</a>
 					</div>
 
-					<div class="mytile3 overlap3 bg-MEDIUMSEAGREEN">
-						<p>Pharmacy</p>
+					<div class="mytile3 overlap3 bg-MEDIUMSEAGREEN"> 
+					<img th:src="@{/resources/img/phy.jpg}" alt=" "  style="margin-top: 12px;"/>
+						<h3>Pharmacy</h3>
 						<a th:href="@{/pharmacy-booking}"
-							class="btn btn-default round-corner" style="margin-top: 70px;">Book
+							class="btn btn-default round-corner" style="margin-top: 24px;">Book
 							your Medicine</a>
 					</div>
 
-					<div class="mytile4 overlap4 bg-SALMON">
-						<p>CorporateHealth</p>
+					<div class="mytile4 overlap4 bg-SALMON"> 
+					
+					<img th:src="@{/resources/img/cor1.jpg}" alt=" " style="margin-top: 12px;" /> 
+					
+						<h3>CorporateHealth</h3>
+						
 						<a th:href="@{/CarporateHealth-booking}"
-							class="btn btn-default round-corner" style="margin-top: 60px;">Book
+							class="btn btn-default round-corner" style="margin-top: 6px;">Book
 							an Appointment</a>
 					</div>
 
 					<div class="mytile5 overlap5 bg-MEDIUMTURQUOISE">
+					<img th:src="@{/resources/img/sec.jpg}" alt=" " style="margin-top: 12px;" />
 
-						<p>Second Opinion</p>
+						<h3 style="margin-top: 8px;">Second Opinion</h3>
 
 
 						<a th:href="@{/SecondOpinion-talk}"
-							class="btn btn-default round-corner" style="margin-top: 50px;">
+							class="btn btn-default round-corner"  style="margin-top: 4px;">
 							Talk</a>
 					</div>
 
 
 				</div>
+				
+				
 				<div class="overlap7 ">
+				
 					<div class="container">
 						<section>
+			 <button type="button" class="btn btn-default" style="margin-left: 39.20%; margin-top:-20px; orange; Vertical-Size: 7px; Horizontal-Size: 11px; Border-Radius: 24px; border-size: 3px;">Medical And Health News</button>			
 		<div id="myCarouseltxt" class="carousel slide" data-ride="carousel" data-interval="5000">
 				<div class="carousel-inner" role="listbox">
 					<div class="item">
 										<div class="container" align="center">
-											<p>
-												<strong style="color: red; font-size: medium;"><h2>Tolerant
-														immune system may be a risk factor for some cancers -</h2> </strong>
-											</p>
-											<p>New research suggests that a tolerant immune system
-												may be an independent risk factor for the development of
-												lung, colorectal and ER-negative breast cancers.</p>
-
+											<p><strong >Tolerant immune system may be a risk factor for some cancers - </strong>
+					New research suggests that a tolerant immune system may be an independent risk factor for</p>
+												<p> the development of lung, colorectal and ER-negative breast cancers. </p>
 
 
 
@@ -102,12 +119,9 @@
 									<div class="item" align="center">
 
 										<p>
-											<strong style="color: yellow; font-size: medium;"><h2>Tolerant
-													immune system may be a risk factor for some cancers -</h2> </strong>
-										</p>
-										<p>New research suggests that a tolerant immune system may
-											be an independent risk factor for the development of lung,
-											colorectal and ER-negative breast cancers.</p>
+											<strong >Tolerant immune system may be a risk factor for some cancers - </strong>
+											New research suggests that a tolerant immune system may be an independent risk factor for </p> 
+												 <p> the development of lung, colorectal and ER-negative breast cancers.</p>
 
 
 
@@ -116,26 +130,19 @@
 										<div class="container" align="center">
 
 											<p>
-												<strong style="color: #dc4fad; font-size: medium;"><h2>Tolerant
-														immune system may be a risk factor for some cancers -</h2> </strong>
-											</p>
-											<p>New research suggests that a tolerant immune system
-												may be an independent risk factor for the development of
-												lung, colorectal and ER-negative breast cancers.</p>
+												<strong >Tolerant immune system may be a risk factor for some cancers - </strong>
+										New research suggests that a tolerant immune system may be an independent risk factor for </p>
+										 <p> the development of lung, colorectal and ER-negative breast cancers.</p>
 
 										</div>
 
 									</div>
 								</div>
-								<a class="left carousel-control" href="#myCarouseltxt"
-									role="button" data-slide="prev"> <span
-									class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+								
 									<span class="sr-only">Previous</span>
-								</a> <a class="right carousel-control" href="#myCarouseltxt"
-									role="button" data-slide="next"> <span
-									class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+								
 									<span class="sr-only">Next</span>
-								</a>
+								
 
 							</div>
 						</section>

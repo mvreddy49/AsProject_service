@@ -706,7 +706,7 @@ div.mytile5 p:first-child {
 
 .carousel-inner .item img{
 	
-	height: 400px;
+	height: 100px;
 	
 }
 
@@ -759,7 +759,7 @@ div.mytile5 p:first-child {
 #myCarousel{
 	
 	width: 100%;
-	height: 400px;
+	height: 100px;
 }
 #myCarouseltxt{
 	height: 80px; 

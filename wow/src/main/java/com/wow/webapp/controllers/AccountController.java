@@ -124,6 +124,16 @@ public class AccountController {
 		return mv;
 	}
 
+	@RequestMapping(value = "/register-doctor", method = RequestMethod.GET)
+	public ModelAndView register_doctor(){
+		logger.debug("register get start");
+		CreateDoctorModel model= new CreateDoctorModel();
+		ModelAndView mv = new ModelAndView("register-doctor");
+		mv.addObject("model", model);
+		mv.addObject("errors", new ArrayList<String>());
+		return mv;
+	}
+	
 	@RequestMapping(value = "/register-user", method = RequestMethod.GET)
 	public ModelAndView register_user(){
 		logger.debug("register-user get start");
