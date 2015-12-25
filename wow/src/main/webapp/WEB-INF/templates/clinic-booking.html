@@ -4,266 +4,277 @@
 
 <head>
 <title>Clinic Booking</title>
-<script type="text/javascript" src="resources/custom/jquery-1.11.3.js"></script>
-<script type="text/javascript" src="resources/custom/lakshman.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css" />
 
-
-<style>
-.col-md-offset-3 {
-	margin-left: 10%;
-}
-
-.col-md-2 img:hover {
-	opacity: .5;
-}
-
-.myButton {
-	padding: 10px 16px;
-	margin-left: 10%;
-	margin-bottom: 2%;
-}
-</style>
 <script>
 	$(function() {
 		var speciality = 'not set';
 		var location = 'not set';
-
+		var doctorId = '';
+		var slotId='';
+		
+		var date = new Date();
 		console.log(speciality);
+		$('#form').hide();
 
-		$(".clinicspeciality").click(function() {
-			speciality = $(this).context.id;
-			console.log(speciality);
+		$('#submitbtn').click(function(){
+			$.ajax({
+				url : "api/bookings/slotBooking",
+				data : {
+					"slotId" : slotId,
+					"slotTime" : $('#slotsDropdown').val(),
+					"name" : $('#name').val(),
+					"mobile" : $('#mobile').val()
+				},
+				success : function(result) {
+					console.log(result);
+
+					if (result.status == "OK") {
+		alert("Booking completed");
+						
+
+					}
+				}
 		});
-
-		$("#clinicSearchBtn").click(
+		});
+		
+		$("#datebtn").click(
 				function() {
-					console.log("In search btn click ");
-					console.log(speciality);
-					location = $("#location").val();
-					console.log(location);
+					date = $('#datetimepicker').val();
+					doctorId = $('input[name=doctor]:checked', '#displayArea').val();
+					$('#form').show();
 
-					console.log("sending ajax req");
 					$.ajax({
-						url : "api/clinics",
+						url : "api/slotsByDate",
 						data : {
-							"speciality" : speciality,
-							"location" : location
+							"clinicId" : "10",
+							"doctorId" : doctorId,
+							"date" : date
 						},
 						success : function(result) {
 							console.log(result);
+
 							if (result.status == "OK") {
-								$('#displayArea').html('');
-								if (result.clinics.length == 0) {
-									$('#displayArea').append(
-											'<center><h3 class="style-heading" >No records to display for '
-													+ speciality + ' in '
-													+ location
-													+ ' </h3></center>');
-								}
-								$.each(result.clinics, function(index, item) {
 
-									var htmlContent = '<div class="col-md-4">';
-									htmlContent = htmlContent
-											+ '<h3 class="style-heading">'
-											+ item.clinicName + "</h3>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicDesc + "</p>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicAddress + "</p>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicPhones + "</p>";
-
-									console.log(index + " => "
-											+ item.clinicName);
-									htmlContent = htmlContent + "</div>";
-									$('#displayArea').append(htmlContent);
+								//$('#slotsDropdown')
+								$('#slotsDropdown').find('option').remove();
+								$('#slotdisplayArea').html('');
+								slotId=result.slotModel.id;
+								$.each(result.slotModel.slots, function(index, slot) {
+									console.log(slot);
+									$('#slotsDropdown').append($('<option></option>', { 
+								        value: slot,
+								        text : slot
+								    }));
+									//$('#slotsDropdown').append('<option></option>').val(slot);
 								});
-							}
-							document.getElementById("location").value = "";
-						}
-					});
-					console.log("ajax req sent");
+								
 
+								/* $('#slotdisplayArea').append(slotContent); */
+								$('#slotbookingArea').show();
+
+							}
+
+						} // End Success : function
+					}); // End Ajax
 				});
 
+		$(".clinicspeciality").click(function() {
+							$('#slotbookingArea').hide();
+							$('#dateArea').hide();
+							$('#form').hide();
+							console.log("In search btn click ");
+							console.log(speciality);
+							speciality = $(this).context.id;
+							console.log(speciality);
+							location = "hyderabad";
+							type = "clinic";
+							console.log(location);
+							console.log("sending ajax req");
+							$.ajax({
+										url : "api/doctor",
+										data : {
+											"speciality" : speciality,
+											"location" : location,
+											"type" : type
+										},
+										success : function(result) {
+											console.log(result);
+											if (result.status == "OK") {
+												$('#displayArea').html('');
+												if (result.doctors.length == 0) {
+													$('#displayArea')
+															.append(
+																	'<center><h3 class="style-heading" >No Doctors availale  for '
+																			+ speciality
+																			+ ' in '
+																			+ location
+																			+ ' </h3></center>');
+												}
+												$.each(result.doctors,function(index,item) {
+																	var htmlContent = '';
+																	htmlContent = htmlContent
+																			+ "<h3>"
+																			+ '<input type="radio"  name="doctor" value="'+  item.id  + '"  class="doctor"  />'
+																			+ item.name
+																			+ "</h3>";
+
+																	console.log(index+ " => "+ item.name);
+																	$('#displayArea').append(htmlContent);
+																}); // End $.each
+											} // End STatus OK
+												$(".doctor").click(function() {
+												$('#slotsDropdown').find('option').remove();
+												$('#dateArea').show();
+											})
+										} // End Success : function
+									}); // End Ajax
+							console.log("ajax req sent");
+						});
+						$("#bookbtn").click(function() {
+							$('#form').show();
+						})
 	});
 </script>
-
 </head>
-
 <body>
 	<section layout:fragment="content">
-		<div class="row">
-			<div class="col-md-8 col-md-offset-3 col-sm-8 col-sm-offset-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
-				<div>
-					<h2>Clinic Booking</h2>
-				</div>
-
-			</div>
-
-		</div>
-
-		<div class="row">
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-
-					<img id="Gynecolagist" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/gynecolagist.jpg}" /> <br />
-					Gynecolagist
-				</div>
-			</div>
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-
-					<img id="Pediatrician" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/pediatrician.jpg}" /> <br />
-					Pediatrician
-				</div>
-			</div>
-
-
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Orthopaedician" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/ortho.jpg}" /> <br /> Orthopaedician
+					<div>
+						<h2>Clinic Booking</h2>
+					</div>
 
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<ul class="nav">
+						<li id="Gynecolagist" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="1">
+								<p id="li1" class="list-group-item-text">Gynecolagist</p>
+						</a></li>
+						<li id="Orthopaedician" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="2">
+								<p class="list-group-item-text">Orthopaedician</p>
+						</a></li>
+						<li id="Cardiologist" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="3">
+								<p class="list-group-item-text">Cardiologist Checks</p>
+						</a></li>
+						<li id="Pediatrician" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="4">
 
-
-
-
-
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Ent Surgeon" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/ent.jpg}" /> <br /> Ent Surgeon
-
-
+								<p class="list-group-item-text">Pediatrician</p>
+						</a></li>
+						<li id="Ent Surgeon" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="5">
+								<p class="list-group-item-text">Ent Surgeon</p>
+						</a></li>
+						<li id="Endocrinologist" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="6">
+								<p class="list-group-item-text">Endocrinologist</p>
+						</a></li>
+						<li id="Nephrologist" class="clinicspeciality"><a href="#"
+							class="list-group-item  liststyles"
+							data-target="#custom_carousel" data-slide-to="7">
+								<p id="li1" class="list-group-item-text">Nephrologist</p>
+						</a></li>
+						<li id="Neurosurgeon" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="8"><p class="list-group-item-text">Neurosurgeon</p>
+						</a></li>
+						<li id="Neuro Physician" class="clinicspeciality"><a href="#"
+							class="list-group-item liststyles" data-target="#custom_carousel"
+							data-slide-to="9"><p class="list-group-item-text">Neuro
+									Physician</p> </a></li>
+					</ul>
 				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Cardiologist" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/heart.jpg}" /> <br /> Cardiologist
-
+				<div class="col-md-3">
+					<div class="displaystyle">
+						<div id="displayArea" style="background-color: cyan;"></div>
+					</div>
 				</div>
-			</div>
+				<div class="col-md-3">
+					<div id="example">
+						<div id="dateArea" style="display: none;">
+							Preferred Date And Time <input id="datetimepicker"
+								style="width: 80%;" />
+							<div class=" controls">
+								<button id="datebtn" class="btn btn-success">
+									<i class="glyphicon glyphicon-send"></i>Get Slot
+								</button>
+
+							</div>
+							<div>
+								<select id="slotsDropdown"></select>
+							</div>
+						</div>
+						
+						<div id="slotbookingArea" style="display: none;">
+							
+							<div id="slotdisplayArea" style="background-color: cyan;"></div>
+							<div class=" controls">
+								<button id="bookbtn" class="btn btn-success">
+									<i class="glyphicon glyphicon-send"></i>Book
+								</button>
+
+							</div>
+
+							<script>
+								$(function() {
+									$("#datetimepicker").datepicker({
+										dateFormat : "yy-mm-dd"
+									});
+
+								});
+							</script>
+
+						</div>
 
 
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Endocrinologist" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/endo.jpg}" /> <br /> Endocrinologist
-
-				</div>
-			</div>
-		</div>
-
-
-		<div class="row">
-
-
-
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Nephrologist" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/nef.jpg}" /> <br /> Nephrologist
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Neurosurgeon" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/neura.gif}" /> <br /> Neurosurgeon
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Neuro Physician" class="clinicspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/physician.jpg}" /> <br /> Neuro
-					Physician
-
-				</div>
-			</div>
-
-		</div>
-
-
-
-
-		<br /> <br />
-
-		<!--	<div id="loc">
-			<span> <strong>Location:</strong>
-			</span> <input id="location" class="btn btn-default round-squre" /> <a
-				href="#" id="clinicSearchBtn" class="myButton">SEARCH</a>
-		</div>  -->
-
-		<div class="row">
-			<div class="col-md-12">
-				<center>
-					<div class="input-group col-md-2 pull-center">
-
-
-						<input id="location" type="text" class="form-control"
-							placeholder="Location..." name="srch-term" /> <span
-							class="input-group-btn">
-							<button id="clinicSearchBtn" class="btn btn-warning"
-								type="button">
-								<i class="glyphicon glyphicon-search"></i>
-							</button>
-						</span>
 
 					</div>
-				</center>
-			</div>
+				</div>
+
+				
+					
+				<div class="col-md-3" sec:authorize="isAnonymous()"><div id="form">
+					<span for="name" class="blocklabel">Name</span><br /> <input
+						name="name" type="text" id="name" style="width: 280px;" />
+					<br/>
+					<span for="mobile" class="blocklabel">Mobile</span> <br /> <input
+						name="mobile" type="text" id="mobile" style="width: 280px;"/>
+					<br/>
+					<span for="age" class="blocklabel">Age</span> <br />
+					<input name="age" type="text" id="age" style="width: 280px;"/><br/>
+
+				<br/>
+					<button id="submitbtn" type="submit"
+						class="btn btn-primary btn-md">Submit</button>
+				</div><br/>
+				<br/>
+				
 		</div>
+<button id="submitbtn" type="submit"
+						class="btn btn-primary btn-md">Submit</button>
+					</div>
+				</div>
 
+		
 
-
-
-
-		<br /> <br />
-
-
-
-
-
-
-
-
-
-		<div class="row">
-			<div id="displayArea"></div>
-		</div>
 
 	</section>
 </body>

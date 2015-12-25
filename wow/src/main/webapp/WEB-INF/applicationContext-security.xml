@@ -19,6 +19,7 @@
 		<security:logout delete-cookies="JSESSIONID" />
 		<security:intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
 		<security:intercept-url pattern="/home-user" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/home-clinic" access="hasRole('ROLE_CLINIC')" />
 		<security:intercept-url pattern="/api/protected/**" access="hasRole('ROLE_USER')" />
 		<security:csrf disabled="true"/>
 	</security:http>
@@ -37,7 +38,7 @@
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
     	<property name="username" value="root"/>
-    	<property name="password" value="root"/>
+    	<property name="password" value="apalya01"/>
 	</bean>
 	
 	<bean id="authSuccessHandler" class="com.wow.webapp.security.AuthenticationSuccessHandlerImpl"/>

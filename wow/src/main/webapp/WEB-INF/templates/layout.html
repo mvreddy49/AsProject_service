@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="assets/css/bootstrap-responsive.css" rel="stylesheet"/>
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
 <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
@@ -13,6 +14,11 @@
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 
 <!-- Bootstrap -->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/css/bootstrap.css" rel="stylesheet" media="screen"/>
+
+    
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
 
 <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/slate/bootstrap.min.css" rel="stylesheet" integrity="sha256-JcgoO7qVianjbv43Z5KinReHzk9/rEZg5m6z/ZZy3DI= sha512-rYMbEYJa5+7VkGdfAypdYHqwIdCNEBKh8lhKUNIv58tgHQuHHzXC/Bzf66BFDkTjq970Lc6OIEpgllKINGDCKQ==" crossorigin="anonymous" /> -->
 
@@ -46,7 +52,6 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-		
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <!-- Bootstrap -->
 <script
@@ -56,88 +61,53 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	
-	<!-- <script>
-				$(function(){
-				$("#searchbtn").click(
-							function(){
-								document.getElementById("search").value = "";
-					
-					$('#displayArea').html('');
-						
-					var htm="";
-					htm=htm+"no records to display";
-					$('#displayArea').append(htm);
-				});
-				});
-	</script> -->
 <style>
+
 .navbar-default .navbar-nav>li>a {
 	color: #FFF;
-}
-.imgleft{
-	margin-left: 35px;
-}
-.errorstyle1{
-color: green;
-
-}
-
+} 
 </style>
 </head>
 <body>
-	<br/>
+	
 	<div class="col-md-9">
-		<a th:href="@{/HomeOne}"> <img 
-			th:src="@{/resources/img/astra.jpg}" alt="Akkurate Health" class="imgleft"/>
+		<a th:href="@{/HomeOne}"> <img
+			th:src="@{/resources/img/astraLogo.gif}" alt="Astra Health" />
 		</a>
 	</div>
 	<div></div>
 	<br/>
-			
-	
 	<div class="input-group col-md-2 pull-center">
-	
-			 
+
+
 		<input type="text" class="form-control" placeholder="Search ..."
-			name="srch-term" id="search" /> <span class="input-group-btn">
-			<a th:href="@{/search}">
-			<button id="searchbtn" class="btn btn-warning" type="button">
+			name="srch-term" id="srch-term" /> <span class="input-group-btn">
+			<button class="btn btn-warning" type="button">
 				<i class="glyphicon glyphicon-search"></i>
-					
 			</button>
-			</a>
 		</span>
-		
 	</div>
-		
-		
-	<!-- 	
-	
-		<div class="row">
-			<div id="displayArea" class="errorstyle1"></div>
-		</div>
-		
-		<div id="searcherror"></div> -->
-										
 	<!-- Wrap all page content here -->
-	<div id="wrap">
+	<!-- <div id="wrap"> -->
 		<!-- Fixed navbar -->
 		<div
-			class="navbar navbar-default navbar-fixed-bottom bg-DARKSLATEBLUE">
-			<div class="container">
+			 class="navbar navbar-default navbar-fixed-bottom bg-darkViolet">
+			<div class="container" >
 				<div class="navbar-header">
+	
 					<button type="button" class="navbar-toggle" data-toggle="collapse"
 						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						<span class="icon-bar"></span> <span class="icon-bar" ></span> <span                                    
 							class="icon-bar"></span>
 					</button>
-					<a style="color: #FFF;" class="navbar-brand" th:href="@{/HomeOne}">Home</a>
+					<a style="color: #FFF; margin-left:100px;"  class="navbar-brand" th:href="@{/HomeOne}">Home</a>
 				</div>
-				<div class="collapse navbar-collapse">
+				<div class="collapse navbar-collapse" style="margin-left:150px;" >
 					<ul class="nav navbar-nav">
 						<li sec:authorize="hasRole('ROLE_USER')"><a
 							th:href="@{/home-user}">Me</a></li>
+							<li sec:authorize="hasRole('ROLE_CLINIC')"><a
+							th:href="@{/home-clinic}">Me</a></li>
 						<!-- 						<li><a th:href="@{/tests}">Tests</a></li> -->
 						<!-- 						<li><a th:href="@{/clinics}">Clinics</a></li> -->
 						<li sec:authorize="hasRole('ROLE_ADMIN')"><a
@@ -150,10 +120,7 @@ color: green;
 						<li><a th:href="@{/Career}">Careers</a></li>
 						<li><a th:href="@{/MedicalTourism}">MedicalTourism</a></li>
 						<li><a th:href="@{/Contact}">Contact</a></li>
-					</ul>
-
-
-					<ul class="nav navbar-nav navbar-right">
+					
 						<li class="dropdown" sec:authorize="isAnonymous()"><a
 							href="#" class="dropdown-toggle" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="false">Register
@@ -182,13 +149,11 @@ color: green;
 		<!-- Begin page content -->
 		<div class="container">
 			<section layout:fragment="content">
-			
-		
-				<p>Page content goes here</p>
+				
 			</section>
 		</div>
 
-	</div>
+	<!-- </div> -->
 
 	<!-- 	<div id="footer">
 		<div class="container">
@@ -197,8 +162,7 @@ color: green;
 			</p>
 		</div>
 	</div> -->
-		
-		
+
 
 </body>
 </html>

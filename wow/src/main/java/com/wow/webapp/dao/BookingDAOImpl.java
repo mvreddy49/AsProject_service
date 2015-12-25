@@ -95,7 +95,6 @@ public class BookingDAOImpl implements BookingDAO {
 				UserModel userModel=new UserModel();
 				User u=b.getUser();
 				userModel.setUsername(u.getUsername());
-				userModel.setMobile(u.getMobile());
 				bm.setUser(userModel);
 				
 				/* clinic info */

@@ -35,8 +35,6 @@ public class User {
 	@Column(name="enabled", nullable = false)
 	private boolean enabled;
 	
-	@Column(name="mobile" ,length=20, nullable=true)
-	private String mobile;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL})
 	private Set<Authority> userRole = new HashSet<Authority>(0);
@@ -157,13 +155,6 @@ public class User {
 		this.userRole = userRole;
 	}
 
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	
+		
 	
 }

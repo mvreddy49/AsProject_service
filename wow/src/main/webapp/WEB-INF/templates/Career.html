@@ -1,21 +1,243 @@
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorator="layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 <head>
+
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css" />
+
+    <script src="//kendo.cdn.telerik.com/2015.3.1111/js/jquery.min.js"></script>
+    <script src="//kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
+    
+
+<script type="text/javascript">
+	$(document).ready(
+			function(ev) {
+				$('#custom_carousel').on(
+						'slide.bs.carousel',
+						function(evt) {
+							$('#custom_carousel .controls li.active')
+									.removeClass('active');
+							$(
+									'#custom_carousel .controls li:eq('
+											+ $(evt.relatedTarget).index()
+											+ ')').addClass('active');
+						})
+			});
+</script>
+<style type="text/css">
+body {
+	padding-top: 20px
+}
+
+#custom_carousel .item {
+	color: #000;
+	padding: 20px 0;
+}
+
+#custom_carousel .controls {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0;
+	margin: 0;
+	white-space: nowrap;
+	text-align: center;
+	position: relative;
+	background: #ddd;
+}
+
+#custom_carousel .controls li {
+	display: table-cell;
+	width: 10%;
+	max-width: 90px;
+}
+
+#custom_carousel .controls li.active {
+	background-color: #eee;
+	border-top: 3px solid orange;
+}
+
+#custom_carousel .controls a small {
+	overflow: hidden;
+	display: block;
+	font-size: 10px;
+	margin-top: 5px;
+	font-weight: bold
+}
+
+#custom_carousel .controls img {
+	width: 600px;
+	height: 500px;
+}
+</style>
 <title>Career</title>
 </head>
 <body>
-<section layout:fragment="content">
-<div class="container">
-<br/>
- <!-- <h2>Career</h2> -->
-<br/>
- <img   class="img-responsive" th:src="@{/resources/img/careers.jpg}" alt="Careers"/>
- <br/>
- <p>If you are looking to work with a truly global organization, Akkurate Health
-  is where you should be. With a culturally diverse and a truly international team, we can provide a solid foundation for building a fulfilling professional career.</p>
- 
-  </div>
-   </section>
+	<section layout:fragment="content">
+		<br /> <br /> <br />
+		<div>
+		
+		<input type="datetime-local" />
+		</div>
+		<div class="row">
+
+			<div class="col-md-2">
+
+				<div class="controls">
+					<div class="list-group">
+						<ul class="nav">
+
+							<li><a href="#" class="list-group-item active liststyles"
+								data-target="#custom_carousel" data-slide-to="0">
+									<p id="li1" class="list-group-item-text">Speciality</p>
+							</a></li>
+							<li><a href="#" class="list-group-item liststyles"
+								data-target="#custom_carousel" data-slide-to="1">
+
+									<p class="list-group-item-text">ENT</p>
+							</a></li>
+							<li><a href="#" class="list-group-item liststyles"
+								data-target="#custom_carousel" data-slide-to="2">
+
+									<p class="list-group-item-text">Sugar</p>
+							</a></li>
+							<a href="#" class="list-group-item liststyles"
+								data-target="#custom_carousel" data-slide-to="3">
+
+								<p class="list-group-item-text">Heart</p>
+							</a>
+							<li><a href="#" class="list-group-item liststyles"
+								data-target="#custom_carousel" data-slide-to="4">
+
+									<p class="list-group-item-text">Liver</p>
+							</a></li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="container-fluid">
+					<div id="custom_carousel" class="carousel slide"
+						data-ride="carousel" data-interval="9999999999999">
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner">
+							<div class="item active">
+								<div class="container-fluid">
+									
+								</div>
+							</div>
+							<div class="item">
+								<div class="container-fluid">
+									
+										
+										<div class="col-md-7">
+											<h4>Available doctors</h4>
+										<form style="margin-right:10px;"><h3>
+ 						     <input type="radio" name="doctor" value="Sehwag" />Sehwag
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Virat" />Viart
+ 							 
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Surya" />Surya
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Anand" />Anand
+									</h3></form>
+																			
+										</div>
+								
+								</div>
+							</div>
+							<div class="item">
+								<div class="container-fluid">
+									<div class="row">
+										
+										<div class="col-md-9">
+											<h4>Available doctors</h4>
+										<form style="margin-right:10px;"><h3>
+ 						     <input type="radio" name="doctor" value="Sehwag"/>Sehwag
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Virat" />Viart
+ 							 
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Surya" />Surya
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Anand"/>Anand
+									</h3></form>			
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="container-fluid">
+									<div class="row">
+										
+										<div class="col-md-9">
+											<h4>Available doctors</h4>
+										<form style="margin-right:10px;"><h3>
+ 						     <input type="radio" name="doctor" value="Sehwag" />Sehwag
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Virat" />Viart
+ 							 
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Surya" />Surya
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Anand" />Anand
+									</h3></form>			
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="container-fluid">
+									<div class="row">
+										
+										<div class="col-md-9">
+											<h4>Available doctors</h4>
+										<form style="margin-right:10px;"><h3>
+ 						     <input type="radio" name="doctor" value="Sehwag"/>Sehwag
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Virat" />Viart
+ 							 
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Surya" />Surya
+ 							 <br/>
+ 							 <input type="radio" name="doctor" value="Anand" />Anand
+									</h3></form>			
+										</div>
+									</div>
+								</div>
+							</div>
+					
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				
+				<div id="example">
+            
+            <div class="demo-section k-content">
+                <h4>Preferred Date And Time</h4>
+                <input id="datetimepicker" style="width: 80%;" />
+            </div>
+            
+            <script>
+                $(document).ready(function () {
+                    // create DateTimePicker from input HTML element
+                    $("#datetimepicker").kendoDateTimePicker({
+                        value:new Date()
+                    });
+                });
+            </script>
+            
+        </div>
+	
+			</div>
+		
+		</div>
+
+	</section>
 </body>
-</html> 
+</html>

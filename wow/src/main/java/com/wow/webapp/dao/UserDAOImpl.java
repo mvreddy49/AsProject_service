@@ -375,7 +375,7 @@ public class UserDAOImpl implements UserDAO{
 		
 		
 	}
-	@Transactional
+	/*@Transactional
 	public User findByUserMobile(String mobile) throws Exception {
 		// TODO Auto-generated method stub
 		Session session=this.getSession();
@@ -383,6 +383,6 @@ public class UserDAOImpl implements UserDAO{
 		if(user!=null && user.size() > 0)
 			return user.get(0);
 		return null;
-	}
+	}*/
 
 }

@@ -7,9 +7,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class CreateAccountModel {
 	
-	@NotEmpty(message="email Can not be empty")
+	/*@NotEmpty(message="email Can not be empty")
 	@Email
-	private String email;
+	private String email;*/
 	
 	@NotEmpty(message="passwd Can not be empty")
 	@Size(min=10, max=50)
@@ -119,12 +119,12 @@ public class CreateAccountModel {
 	public void setClinicPhone1(String clinicPhone1) {
 		this.clinicPhone1 = clinicPhone1;
 	}
-	public String getEmail() {
+	/*public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
+	}*/
 	public String getPasswd() {
 		return passwd;
 	}
