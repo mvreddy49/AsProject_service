@@ -168,7 +168,7 @@ public class BookingApiController {
 
 			if (slot != null) {
 				Clinic clinic = new Clinic(slot.getClinic().getId());
-				Doctor doctor = new Doctor(slot.getDoctor().getId());
+				Doctor doctor = new Doctor();
 
 				boolean bookingStatus = false;
 				boolean slotTimimgsStatus = false;
@@ -292,8 +292,8 @@ public class BookingApiController {
 			Utils utils=new Utils();
 			
 			Date slotTime=utils.getTimeFromDate(utils.convertStringToDate(slot_time));
-			Date startTime =utils.getTimeFromDate(slot.getStartTime());
-			Date endTime=utils.getTimeFromDate(slot.getEndTime());
+			Date startTime =utils.getTimeFromDate(new Date());
+			Date endTime=utils.getTimeFromDate(new Date());
 			System.out.println("times are ::slotTime::"+slotTime.toString()+" ::::startTime::"+startTime+" ::: endtime::"+endTime);
 			
 			int comp = startTime.compareTo(slotTime);
@@ -301,7 +301,7 @@ public class BookingApiController {
 			if ((comp == -1 || comp == 0) && (comp1 == 0 || comp1 == 1)) {
 				logger.info("slot timings checking is true");
 				
-				List<String> timeRanges=utils.getRangeTimes(startTime,endTime);
+				List<String> timeRanges=utils.getRangeTimes(startTime,endTime,30);
 				logger.info("time ranges are:::"+timeRanges.toString());
 				if(timeRanges.contains(utils.convertDateToUTCFormat(slotTime)))
 				{	

@@ -17,97 +17,114 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
 
 @Entity
-@Table(name = "slot",
-uniqueConstraints = { @UniqueConstraint( columnNames = { "clinic_id", "doctor_id" } ) })
+@Table(name = "slot")
+
 public class Slot {
 
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "clinic_id", nullable = true)
+	@JoinColumn(name = "clinic_id", nullable = false)
 	private Clinic clinic;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "doctor_id", nullable = false)
 	private Doctor doctor;
-	
-	@DateTimeFormat(iso = ISO.DATE_TIME)
-	public Date startTime;
 
-	@DateTimeFormat(iso = ISO.DATE_TIME)
-	public Date endTime;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "userName",nullable=true)
+	private User user;
+
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name="date")
+	public Date Date;
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="time")
+	public Date time;
+
+	@Column(name="enabled")
+	public boolean enabled;
+	
+	@Column(name="status")
+	public boolean status;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "updated_on", updatable = true, insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
-	private Date modified_on;
-	 
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	//@Column(name = "inserted_on", updatable = false,insertable = false,columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP") 
-	@Column(name = "inserted_on", updatable = false,insertable = false)
+ 	@Column(name = "inserted_on")
 	private Date inserted_on;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated_on")
+	private Date modified_on;
 
 	public Integer getId() {
 		return id;
 	}
 
-	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Clinic getClinic() {
 		return clinic;
 	}
-
 
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
 
-
 	public Doctor getDoctor() {
 		return doctor;
 	}
-
 
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
 
-
-	public void setId(int id) {
-		this.id = id;
+	public User getUser() {
+		return user;
 	}
 
-
-	public Date getStartTime() {
-		return startTime;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public Date getDate() {
+		return Date;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public void setDate(Date date) {
+		Date = date;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public Date getTime() {
+		return time;
 	}
 
-	public Date getModified_on() {
-		return modified_on;
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
-	public void setModified_on(Date modified_on) {
-		this.modified_on = modified_on;
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	public Date getInserted_on() {
@@ -117,4 +134,15 @@ public class Slot {
 	public void setInserted_on(Date inserted_on) {
 		this.inserted_on = inserted_on;
 	}
+
+	public Date getModified_on() {
+		return modified_on;
+	}
+
+	public void setModified_on(Date modified_on) {
+		this.modified_on = modified_on;
+	}
+	 
+	
+		
 }

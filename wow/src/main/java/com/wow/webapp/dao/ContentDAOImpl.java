@@ -16,6 +16,7 @@ import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
+import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Utils;
 
 public class ContentDAOImpl implements ContentDAO{
@@ -36,7 +37,8 @@ public class ContentDAOImpl implements ContentDAO{
 		// TODO Auto-generated method stub
 		System.out.println("enter into save bookings");
 		Session session = this.getSession();
-		session.persist(d);
+		session.saveOrUpdate(d.getUser());
+		session.saveOrUpdate(d);
 		
 		
 	}
@@ -53,7 +55,7 @@ public class ContentDAOImpl implements ContentDAO{
 	@Transactional
 	public void save(Slot s){
 		Session session = this.getSession();
-		session.saveOrUpdate(s);
+		session.save(s);
 		
 	}
 	
@@ -129,7 +131,7 @@ public class ContentDAOImpl implements ContentDAO{
 				Doctor d = s.getDoctor();
 				doctorModel.setId(d.getId());
 				doctorModel.setName(d.getName());
-				doctorModel.setMobile(d.getMobile());
+				//doctorModel.setMobile(d.getMobile());
 				doctorModel.setSpeciality(s.getDoctor().getSpeciality());
 				
 				/*Clinic Info */ 
@@ -179,15 +181,23 @@ public class ContentDAOImpl implements ContentDAO{
 	@Transactional
 	public Doctor findDoctorByMobile(String mobile) throws Exception {
 		logger.debug("findDoctorByMobile start " + mobile);
-		Doctor d = this.findDoctorByMobile(this.getSession(), mobile);
-		logger.debug("findDoctorByMobile end ");
-		return d;
+		Session session=this.getSession();
+		User user=new User(mobile);
+		List<Doctor> doctorList = session.createQuery("from Doctor where user=:user")
+				.setParameter("user", user)
+				.list();
+		if(doctorList == null || doctorList.size() <= 0){
+		logger.info("username is not availble in doctor table");
+			return null;
+		}
+		return doctorList.get(0);
 	}
 	
-	private Doctor findDoctorByMobile(Session session ,String mobile) throws Exception{
+	/*private Doctor findDoctorByMobile(Session session ,String mobile) throws Exception{
 		@SuppressWarnings("unchecked")
-		List<Doctor> doctorList = session.createQuery("from Doctor where mobile=:mobile")
-				.setParameter("mobile", mobile)
+		
+		List<Doctor> doctorList = session.createQuery("from Doctor where User=:user")
+				.setParameter("user", user)
 				.list();
 		if(doctorList == null || doctorList.size() <= 0){
 //			logger.debug("Not Found : " + username);
@@ -195,7 +205,7 @@ public class ContentDAOImpl implements ContentDAO{
 			return null;
 		}
 		return doctorList.get(0);
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	@Transactional

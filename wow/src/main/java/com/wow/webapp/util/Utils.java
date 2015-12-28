@@ -84,7 +84,7 @@ public class Utils {
 		return null;
 	}
 
-	public List<String> getRangeTimes(Date startTime, Date endTime) {
+	public  List<String> getRangeTimes(Date startTime, Date endTime,Integer duration) {
 		List<String> times = null;
 		try {
 			times = new ArrayList<String>();
@@ -101,6 +101,7 @@ public class Utils {
 		}
 		return times;
 	}
+	
 	
 	public Date addDateAndTime(Date date,Date time)
 	{
