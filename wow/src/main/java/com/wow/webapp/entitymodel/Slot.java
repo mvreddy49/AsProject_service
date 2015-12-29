@@ -17,6 +17,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 
 @Entity
 @Table(name = "slot")
@@ -40,12 +43,11 @@ public class Slot {
 	@JoinColumn(name = "userName",nullable=true)
 	private User user;
 
+	@Column(name="source")
+	public String source;
+
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name="date")
-	public Date Date;
-	
-	@Temporal(TemporalType.TIME)
+	@DateTimeFormat(iso=ISO.DATE_TIME)
 	@Column(name="time")
 	public Date time;
 
@@ -95,13 +97,7 @@ public class Slot {
 		this.user = user;
 	}
 
-	public Date getDate() {
-		return Date;
-	}
-
-	public void setDate(Date date) {
-		Date = date;
-	}
+	
 
 	public Date getTime() {
 		return time;
@@ -141,6 +137,14 @@ public class Slot {
 
 	public void setModified_on(Date modified_on) {
 		this.modified_on = modified_on;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 	 
 	
