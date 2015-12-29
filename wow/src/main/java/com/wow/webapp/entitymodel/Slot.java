@@ -43,7 +43,9 @@ public class Slot {
 	@JoinColumn(name = "userName",nullable=true)
 	private User user;
 
-	
+	@Column(name="source")
+	public String source;
+
 	
 	@DateTimeFormat(iso=ISO.DATE_TIME)
 	@Column(name="time")
@@ -135,6 +137,14 @@ public class Slot {
 
 	public void setModified_on(Date modified_on) {
 		this.modified_on = modified_on;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 	 
 	

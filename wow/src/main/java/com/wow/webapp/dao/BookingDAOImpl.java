@@ -109,7 +109,7 @@ public class BookingDAOImpl implements BookingDAO {
 				/* doctor info */
 				DoctorModel doctorModel=new DoctorModel();
 				doctorModel.setId(b.getDoctor().getId());
-				doctorModel.setName(b.getDoctor().getName());
+				//doctorModel.setName(b.getDoctor().getName());
 				//doctorModel.setMobile(b.getDoctor().getMobile());
 				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
 				bm.setDoctor(doctorModel);

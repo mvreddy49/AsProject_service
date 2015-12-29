@@ -318,7 +318,7 @@ public class AccountController {
 			endTime = u.convertStringToDate(model.getEndTime());
 			Doctor d = new Doctor();
 			//d.setMobile(model.getMobile());
-			d.setName(model.getName());
+			//d.setName(model.getName());
 			d.setSpeciality(model.getSpeciality());
 			
 			Slot s = new Slot();

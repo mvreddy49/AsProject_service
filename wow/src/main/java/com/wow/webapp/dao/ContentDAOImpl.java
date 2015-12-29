@@ -131,7 +131,7 @@ public class ContentDAOImpl implements ContentDAO{
 				DoctorModel doctorModel = new DoctorModel();
 				Doctor d = s.getDoctor();
 				doctorModel.setId(d.getId());
-				doctorModel.setName(d.getName());
+				//doctorModel.setName(d.getName());
 				//doctorModel.setMobile(d.getMobile());
 				doctorModel.setSpeciality(s.getDoctor().getSpeciality());
 				
@@ -226,7 +226,7 @@ public class ContentDAOImpl implements ContentDAO{
 		{
 			Session session = this.getSession();
 			logger.debug("Before");
-			List<Doctor> doctor = session.createQuery("from Doctor where id:id").setParameter("id", id).list();
+			List<Doctor> doctor = session.createQuery("from Doctor where id=:id").setParameter("id", id).list();
 			logger.debug("after");
 			if(doctor == null || doctor.size() <= 0) return null;
 			return doctor.get(0);
@@ -249,7 +249,7 @@ public class ContentDAOImpl implements ContentDAO{
 			Session session=this.getSession();
 			list=new ArrayList<String>();
 			
-			List<Slot> slots=session.createQuery("from Slot WHERE time BETWEEN :startDate AND :endDate").list();
+			List<Slot> slots=session.createQuery("from Slot WHERE time BETWEEN :startDate AND :endDate").setParameter("startDate", startTime).setParameter("endDate", endTime).list();
 			if(slots!=null && slots.size()>0)
 			{
 				for(Slot slot:slots)

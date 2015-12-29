@@ -31,8 +31,10 @@ import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.ClinicPhoneNo;
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
 
@@ -223,7 +225,7 @@ public class ContentInsertController {
 		try{
 			
 			Doctor d = new Doctor();
-			d.setName(model.getName());
+			
 			d.setSpeciality(model.getSpeciality());
 			d.setEnabled(true);
 			Integer duration=Integer.parseInt(model.getDuration());
@@ -233,8 +235,13 @@ public class ContentInsertController {
 			user.setUsername(model.getMobile());
 			user.setPassword(u.getEncryptedPassword(model.getMobile()));
 			Set<Authority> authorities = new HashSet<Authority>();
-			authorities.add(new Authority(user, "ROLE_DOCTOR"));
+			authorities.add(new Authority(user, Constants.ROLE_DOCTOR));
 			user.setUserRole(authorities);
+			
+			Profile userProfile =  new Profile(user, model.getName());
+			
+			user.setUserProfile(userProfile);
+			
 			
 			d.setUser(user);
 			
@@ -308,17 +315,6 @@ public class ContentInsertController {
 		}
 		else
 			errors.add("must be endtime greater then or equal to start time");
-		/*List<String> list=utils.getRangeTimes(startTime,endTime,d.getDuation());
-		logger.info("getRange time between startTime and EndTime :::"+startTime+":::"+endTime+":::duration::"+d.getDuation());
-		logger.info(list.toString());
-		if(list!=null && list.size()>0)
-			for(String str:list)
-			{
-				Date time=utils.convertStringToDate(str);
-				s.setTime(time);
-				
-				contentDao.save(s);
-			}*/
 			
 		}
 		catch(Exception ex){
