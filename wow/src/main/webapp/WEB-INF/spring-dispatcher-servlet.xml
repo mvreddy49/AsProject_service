@@ -95,6 +95,11 @@
     <bean id="seedDb" class="com.wow.webapp.seeddb.SeedDatabase">
     	<constructor-arg>
         	<ref bean="userDao" />
-    	</constructor-arg>    </bean>
+    	</constructor-arg> 
+    	<constructor-arg>
+        	<ref bean="contentDao" />
+    	</constructor-arg>  
+    	   </bean>
+    
     
 </beans>
