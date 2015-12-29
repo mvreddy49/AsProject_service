@@ -21,7 +21,9 @@ public interface ContentDAO {
 	
 	public Doctor getDoctorById(Integer id);
 	
-	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c);
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,Date date);
 	
 	public List<String> findSlotsByStartAndEndTimes(Date startTime,Date endTime);
+	
+	
 }
