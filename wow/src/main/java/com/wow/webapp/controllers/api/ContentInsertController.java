@@ -11,7 +11,6 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.dao.UserDAO;
-
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.CreateAccountModel;
 import com.wow.webapp.domain.model.CreateDoctorModel;
-
+import com.wow.webapp.domain.model.CreateSlotModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
@@ -35,7 +33,6 @@ import com.wow.webapp.entitymodel.ClinicPhoneNo;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
-
 import com.wow.webapp.util.Responses;
 import com.wow.webapp.util.Utils;
 
@@ -136,6 +133,38 @@ public class ContentInsertController {
 	}
 	
 	
+	@RequestMapping(value="/addSlots",method=RequestMethod.POST)
+	public ApiReturnModel addSlots(@Valid CreateSlotModel createSlotModel,BindingResult bindingResult)
+	{
+		
+		logger.info("enter into addslots");
+		List<String> errors=new ArrayList<String>();
+		ApiReturnModel apiReturnModel=null;
+		if(bindingResult.hasFieldErrors()){
+			logger.debug("Invalid Data");
+			for(FieldError e : bindingResult.getFieldErrors()){
+				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
+				errors.add(e.getDefaultMessage());
+			}	
+		}
+		else{
+			Integer id=Integer.parseInt(createSlotModel.getDoctorId());
+			Doctor d=contentDao.getDoctorById(id);
+			if(d!=null)
+				errors=addSlots(createSlotModel.getStartTime(),createSlotModel.getEndTime(),d);
+			else
+				errors.add("doctor not found");
+		}
+		if(errors.size() != 0){
+			apiReturnModel=new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"slots creation failed",errors);
+		}
+		else{
+			apiReturnModel=new ApiReturnModel(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,"slots creation success",errors);
+			
+		}
+		return apiReturnModel;
+	}
+	
 	/*Register clinic Implementation */
 	
 	public List<String> registerClinicImpl(CreateAccountModel model,List<String> errors){
@@ -214,31 +243,8 @@ public class ContentInsertController {
 			if(model.getStartTime()!=null && !model.getStartTime().isEmpty() && model.getEndTime()!=null && !model.getEndTime().isEmpty())
 			{
 				logger.info("start time and endtime is there to addd doctor");
-				Slot s = new Slot();
-				try{
-					Clinic c = userDao.getClinicByUserName("9999999999");
-					s.setClinic(c);
-				}
-				catch(Exception ex){
-					logger.debug("Exception is : "+ ex);
-				}
-				s.setDoctor(d);
-				s.setEnabled(true);
-				Utils utils=new Utils();
-				Date startTime=utils.convertStringToDate(model.getStartTime());
-				Date endTime=utils.convertStringToDate(model.getEndTime());
-				List<String> list=utils.getRangeTimes(startTime,endTime,duration);
-				logger.info("getRange time between startTime and EndTime :::"+startTime+":::"+endTime+":::duration::"+duration);
-				logger.info(list.toString());
-				if(list!=null && list.size()>0)
-					for(String str:list)
-					{
-						Date time=utils.convertStringToDate(str);
-						s.setDate(time);
-						s.setTime(time);
-						
-						contentDao.save(s);
-					}
+				List<String> errors1=addSlots(model.getStartTime(),model.getEndTime(),d);
+				logger.info("add slots status :::"+errors1.toString());
 					
 			}
 			else
@@ -254,6 +260,70 @@ public class ContentInsertController {
 		catch(Exception ex){
 			ex.printStackTrace();
 			errors.add("Mobile number is already registered");
+		}
+		return errors;
+	}
+	
+	
+	public List<String> addSlots(String starttime,String endtime,Doctor d)
+	{
+		List<String> errors=new ArrayList<String>();
+		Slot s = new Slot();
+		try{
+			Clinic c = userDao.getClinicByUserName("9999999999");
+			s.setClinic(c);
+	
+		s.setDoctor(d);
+		s.setEnabled(true);
+		Utils utils=new Utils();
+		Date startTime=utils.convertStringToDate(starttime);
+		Date endTime=utils.convertStringToDate(endtime);
+		int comp = startTime.compareTo(endTime);
+		logger.info("dates comparsion checking is :::start::"+startTime+":::end:::"+endTime+"::results are:::"+comp);
+		if(comp == 0 || comp == -1)
+		{
+			List<String> existedList=contentDao.findSlotsByStartAndEndTimes(startTime, endTime);
+			logger.info("existedList are ::: "+existedList.toString());
+			List<String> list=utils.getRangeTimes(startTime,endTime,d.getDuation());
+			List<String> insertedList=null;
+			if(existedList!=null && existedList.size()>0)
+			{
+				insertedList = new ArrayList<String>(list);
+				insertedList.removeAll(existedList);
+			}
+			else
+				insertedList=list;
+			
+			logger.info("inserted list are:::"+insertedList.toString());
+			logger.info("doctor duration is :::"+d.getDuation());
+			if(insertedList!=null && insertedList.size()>0)
+				for(String str:insertedList)
+				{
+					Date time=utils.convertStringToDate(str);
+					s.setTime(time);
+					
+					contentDao.save(s);
+				}
+
+		}
+		else
+			errors.add("must be endtime greater then or equal to start time");
+		/*List<String> list=utils.getRangeTimes(startTime,endTime,d.getDuation());
+		logger.info("getRange time between startTime and EndTime :::"+startTime+":::"+endTime+":::duration::"+d.getDuation());
+		logger.info(list.toString());
+		if(list!=null && list.size()>0)
+			for(String str:list)
+			{
+				Date time=utils.convertStringToDate(str);
+				s.setTime(time);
+				
+				contentDao.save(s);
+			}*/
+			
+		}
+		catch(Exception ex){
+			logger.debug("Exception is : "+ ex);
+			errors.add("exception occurs:::"+ex.toString());
 		}
 		return errors;
 	}

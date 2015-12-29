@@ -1,6 +1,7 @@
 package com.wow.webapp.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -217,6 +218,53 @@ public class ContentDAOImpl implements ContentDAO{
 		logger.debug("after");
 		if(slots == null || slots.size() <= 0) return null;
 		return slots.get(0);
+	}
+
+	@Transactional
+	public Doctor getDoctorById(Integer id) {
+		try
+		{
+			Session session = this.getSession();
+			logger.debug("Before");
+			List<Doctor> doctor = session.createQuery("from Doctor where id:id").setParameter("id", id).list();
+			logger.debug("after");
+			if(doctor == null || doctor.size() <= 0) return null;
+			return doctor.get(0);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.info("exception occurs while getting doctor by id:::"+e.toString());
+		}
+		return null;
+	}
+
+	@Transactional
+	public List<String> findSlotsByStartAndEndTimes(Date startTime,
+			Date endTime) {
+		List<String> list=null;
+		Utils utils=new Utils();
+		try
+		{
+			Session session=this.getSession();
+			list=new ArrayList<String>();
+			
+			List<Slot> slots=session.createQuery("from Slot WHERE time BETWEEN :startDate AND :endDate").list();
+			if(slots!=null && slots.size()>0)
+			{
+				for(Slot slot:slots)
+				{
+					String time=utils.convertDateToUTCFormat(slot.getTime());
+					list.add(time);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.info("exception while getting slots information using start and endtimes:::"+e.toString());
+		}
+		return list;
 	}
 
 }
