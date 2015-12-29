@@ -19,6 +19,7 @@ public class Responses {
 	public static final String INVALIED_SESSION_MSG = "INVALIED_SESSION";
 
 	public static final String SUCCESS_STATUS="OK";
+	public static final String ERROR_STATUS="ERROR";
 	
 	
 	

@@ -92,11 +92,11 @@ public class ContentInsertController {
 	}
 	
 	
-	@RequestMapping(value = "/register-doctor", method = RequestMethod.POST)
+	@RequestMapping(value = "/addDoctor", method = RequestMethod.POST)
 	public ApiReturnModel registerDoctor(@Valid CreateDoctorModel model, BindingResult bindingResult){
-		logger.debug("register get start");
-		UserDetails ud = Utils.getUserSession();
-		if(ud == null) return Responses.invaliedSession();
+		logger.debug("add doctor start");
+		//UserDetails ud = Utils.getUserSession();
+		//if(ud == null) return Responses.invaliedSession();
 		List<String> errors = new ArrayList<String>();
 		ApiReturnModel apiReturnModel= new ApiReturnModel();
 		if(bindingResult.hasFieldErrors()){
@@ -110,13 +110,15 @@ public class ContentInsertController {
 			
 			logger.debug("Persisting");
 			try {
+				
 				Doctor doctor = contentDao.findDoctorByMobile(model.getMobile());
 				if(doctor != null){
-					errors = registerDoctorImpl(model,errors,ud,doctor);
-					//throw new Exception("Not Found : " + model.getMobile());
+					//errors = registerDoctorImpl(model,errors,ud,doctor);
+					errors.add("Mobile number already registered");
+					
 				}
 				else
-					errors = registerDoctorImpl(model,errors,ud);
+					errors = registerDoctorImpl(model,errors,null);
 			} catch (Exception e) {
 				logger.debug("Exception is :" + e.toString());
 				errors.add("Doctor Already registered");
@@ -125,8 +127,7 @@ public class ContentInsertController {
 		}
 		logger.debug(errors.toString());
 		if(errors.size() != 0){
-			apiReturnModel.setErrors(errors);
-			apiReturnModel.setMessage("Doctor Registration unsuccessfullty");
+			apiReturnModel=new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"Doctor Registration unsuccessfullty",errors);
 		}
 		else{
 			apiReturnModel.setMessage("Doctor Registration successfullty");
@@ -189,34 +190,69 @@ public class ContentInsertController {
 	/* Doctor Implementation for new doctor to a clinic */
 	public List<String> registerDoctorImpl(CreateDoctorModel model,List<String> errors,UserDetails ud){
 		Utils u = new Utils();
-		Date startTime,endTime;
+		logger.info("enter into registerdoctorImpl");
 		try{
 			
-			startTime= u.convertStringToDate(model.getStartTime());
-			endTime = u.convertStringToDate(model.getEndTime());
 			Doctor d = new Doctor();
-			d.setMobile(model.getMobile());
 			d.setName(model.getName());
 			d.setSpeciality(model.getSpeciality());
+			d.setEnabled(true);
+			Integer duration=Integer.parseInt(model.getDuration());
+			d.setDuation(duration);
 			
-			Slot s = new Slot();
-			try{
-				Clinic c = userDao.getClinicByUserName(ud.getUsername());
-				s.setClinic(c);
-			}
-			catch(Exception ex){
-				logger.debug("Exception is : "+ ex);
-			}
-			s.setDoctor(d);
-			s.setStartTime(startTime);
-			s.setEndTime(endTime);
+			User user=new User();
+			user.setUsername(model.getMobile());
+			user.setPassword(u.getEncryptedPassword(model.getMobile()));
+			Set<Authority> authorities = new HashSet<Authority>();
+			authorities.add(new Authority(user, "ROLE_DOCTOR"));
+			user.setUserRole(authorities);
 			
-			d.getSlots().add(s);
+			d.setUser(user);
+			
 			contentDao.save(d);
 			
-			logger.debug("StaetTime :"+startTime);
+			if(model.getStartTime()!=null && !model.getStartTime().isEmpty() && model.getEndTime()!=null && !model.getEndTime().isEmpty())
+			{
+				logger.info("start time and endtime is there to addd doctor");
+				Slot s = new Slot();
+				try{
+					Clinic c = userDao.getClinicByUserName("9999999999");
+					s.setClinic(c);
+				}
+				catch(Exception ex){
+					logger.debug("Exception is : "+ ex);
+				}
+				s.setDoctor(d);
+				s.setEnabled(true);
+				Utils utils=new Utils();
+				Date startTime=utils.convertStringToDate(model.getStartTime());
+				Date endTime=utils.convertStringToDate(model.getEndTime());
+				List<String> list=utils.getRangeTimes(startTime,endTime,duration);
+				logger.info("getRange time between startTime and EndTime :::"+startTime+":::"+endTime+":::duration::"+duration);
+				logger.info(list.toString());
+				if(list!=null && list.size()>0)
+					for(String str:list)
+					{
+						Date time=utils.convertStringToDate(str);
+						s.setDate(time);
+						s.setTime(time);
+						
+						contentDao.save(s);
+					}
+					
+			}
+			else
+			{
+				logger.info("no slot times ,only insert doctor only");
+				
+			}
+				
+			
+			logger.info("add dctor done");
+			
 		}
 		catch(Exception ex){
+			ex.printStackTrace();
 			errors.add("Mobile number is already registered");
 		}
 		return errors;
@@ -245,8 +281,8 @@ public class ContentInsertController {
 			catch(Exception ex){
 				logger.debug("Exception is : "+ ex);
 			}
-			s.setStartTime(startTime);
-			s.setEndTime(endTime);
+			//s.setStartTime(startTime);
+			//s.setEndTime(endTime);
 			contentDao.save(s);
 		}
 		catch(Exception ex){

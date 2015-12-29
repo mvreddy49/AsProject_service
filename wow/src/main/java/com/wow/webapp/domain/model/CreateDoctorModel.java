@@ -19,6 +19,10 @@ public class CreateDoctorModel {
 	@Size(max=12)
 	private String mobile;
 	
+	@NotEmpty(message="duration Can not be empty")
+	@Size(max=2)
+	private String duration;
+	
 	@Size(max=20)
 	private String startTime;
 	
@@ -64,5 +68,13 @@ public class CreateDoctorModel {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
 	}
 }
