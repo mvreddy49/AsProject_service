@@ -12,7 +12,6 @@ public class LoginModel {
 	@NotEmpty(message="Password Can not be empty")
 	private String password;
 	
-	
 	public LoginModel() {
 		
 	}

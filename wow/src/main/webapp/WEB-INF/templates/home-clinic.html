@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Career</title>
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="col-md-4">
+		<a th:href="@{/register-doctor}"><button type="submit"
+						class="btn btn-primary btn-md">Add Doctor</button></a>
+		</div>
+
+	</section>
+</body>
+
+</html>

@@ -9,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.ClinicTestModel;
-import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.ClinicTest;
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 
@@ -44,15 +43,17 @@ public class UserDAOImpl implements UserDAO{
 	@Transactional
 	public void save(User u) {
 		Session session = this.getSession();
-        session.persist(u);
+        session.saveOrUpdate(u);
 	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<User> list() {
 		Session session = this.getSession();
 		
-		List<User> list = session.createQuery("from User").list();
+		List<User> list = session.createQuery("from User order by modified_on desc").list();
 		for(User usr : list){
 			logger.debug("User : " + usr.getUsername() + ":" + usr.getPassword() + ":" + usr.isEnabled());
 		}
