@@ -22,6 +22,7 @@ public class Responses {
 
 	public static final String SUCCESS_STATUS="OK";
 	public static final String FAILURE_STATUS="FAIL";
+	public static final String ERROR_STATUS="ERROR";
 	
 	
 	

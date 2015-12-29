@@ -317,7 +317,7 @@ public class AccountController {
 			startTime= u.convertStringToDate(model.getStartTime());
 			endTime = u.convertStringToDate(model.getEndTime());
 			Doctor d = new Doctor();
-			d.setMobile(model.getMobile());
+			//d.setMobile(model.getMobile());
 			d.setName(model.getName());
 			d.setSpeciality(model.getSpeciality());
 			
@@ -330,8 +330,8 @@ public class AccountController {
 				logger.debug("Exception is : "+ ex);
 			}
 			s.setDoctor(d);
-			s.setStartTime(startTime);
-			s.setEndTime(endTime);
+			//s.setStartTime(startTime);
+			//s.setEndTime(endTime);
 			
 			d.getSlots().add(s);
 			contentDao.save(d);

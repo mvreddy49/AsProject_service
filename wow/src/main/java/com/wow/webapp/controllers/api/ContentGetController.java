@@ -86,7 +86,7 @@ public class ContentGetController {
 		ApiReturnModel returnValue = null;
 		try
 		{
-			Doctor doctor=new Doctor(Integer.parseInt(doctorId));
+			Doctor doctor=new Doctor();
 			Clinic clinic=new Clinic(Integer.parseInt(clinicId));
 			Slot slot=contentDao.findSlotsByClinicAndDoctor(doctor,clinic);
 			if(slot!=null)
@@ -103,9 +103,9 @@ public class ContentGetController {
 				/* slots info */
 				SlotsModel slotModel=new SlotsModel();
 				slotModel.setId(slot.getId());
-				slotModel.setStartTime(utils.convertDateToUTCFormat(slot.getStartTime()));
-				slotModel.setEndTime(utils.convertDateToUTCFormat(slot.getEndTime()));
-				slotModel.setSlots(utils.getRangeTimes(utils.addDateAndTime(slotDate,slot.getStartTime()),utils.addDateAndTime(slotDate, slot.getEndTime())));
+				//slotModel.setStartTime(utils.convertDateToUTCFormat(slot.getStartTime()));
+				//slotModel.setEndTime(utils.convertDateToUTCFormat(slot.getEndTime()));
+				//slotModel.setSlots(utils.getRangeTimes(utils.addDateAndTime(slotDate,slot.getStartTime()),utils.addDateAndTime(slotDate, slot.getEndTime())));
 				slotModel.setBookedSlots(bookedSlots);
 				
 				returnValue=new ApiReturnSlotModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG, slotModel);
