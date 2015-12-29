@@ -1,7 +1,6 @@
 package com.wow.webapp.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,10 +10,10 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wow.webapp.domain.account.UserModel;
 import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
-import com.wow.webapp.domain.model.UserModel;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;

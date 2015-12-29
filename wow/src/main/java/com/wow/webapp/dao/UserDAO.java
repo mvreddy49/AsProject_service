@@ -16,6 +16,7 @@ public interface UserDAO {
 	public void save(Clinic c);
 	public void save(Doctor d);
 	public void save(Slot s);
+	
 	public List<User> list();
 	
 	public List<ClinicModel> getLabs(String speciality, String location);

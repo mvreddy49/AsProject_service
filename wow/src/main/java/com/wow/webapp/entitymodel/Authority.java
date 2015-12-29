@@ -18,7 +18,7 @@ public class Authority {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "username", nullable = true)
 	private User user;
 	
@@ -32,7 +32,13 @@ public class Authority {
 		this.user = user;
 		this.authority = authority;
 	}
-
+	
+	public Authority(User user, String authority, int id) {
+		this.user = user;
+		this.authority = authority;
+		this.id = id;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

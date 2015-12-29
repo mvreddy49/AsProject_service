@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.entitymodel.Authority;
+import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.User;
 
 public class SeedDatabase {
@@ -37,9 +38,10 @@ private static final Logger logger = LoggerFactory.getLogger(SeedDatabase.class)
 			u.setPassword(passwordEncoder.encode("password@1234"));
 			u.setEnabled(true);
 			Set<Authority> authorities = new HashSet<Authority>();
-			authorities.add(new Authority(u, "ROLE_USER"));
+			//authorities.add(new Authority(u, "ROLE_USER"));
 			authorities.add(new Authority(u, "ROLE_ADMIN"));
 			u.setUserRole(authorities);
+		
 			userDao.save(u);
 		}		
 		logger.debug("SeedDatabase end");

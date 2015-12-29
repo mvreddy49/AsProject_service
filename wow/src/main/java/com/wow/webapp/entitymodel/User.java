@@ -8,12 +8,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,12 +37,14 @@ public class User {
 	private boolean enabled;
 	
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	private Set<Authority> userRole = new HashSet<Authority>(0);
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = { CascadeType.ALL})
 	private Set<Booking> bookings = new HashSet<Booking>(0);
 	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = { CascadeType.ALL})
+	private Profile userProfile = new Profile();
 	
 	public Set<Booking> getBookings() {
 		return bookings;
@@ -154,6 +157,16 @@ public class User {
 	public void setUserRole(Set<Authority> userRole) {
 		this.userRole = userRole;
 	}
+
+	public Profile getUserProfile() {
+		return userProfile;
+	}
+
+	public void setUserProfile(Profile userProfile) {
+		this.userProfile = userProfile;
+	}
+
+	
 
 		
 	

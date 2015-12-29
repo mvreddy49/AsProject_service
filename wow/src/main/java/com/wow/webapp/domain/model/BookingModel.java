@@ -1,6 +1,6 @@
 package com.wow.webapp.domain.model;
 
-import java.util.Date;
+import com.wow.webapp.domain.account.UserModel;
 
 public class BookingModel {
 	
