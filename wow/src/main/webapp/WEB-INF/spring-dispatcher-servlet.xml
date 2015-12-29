@@ -18,18 +18,19 @@
 	<mvc:resources mapping="/resources/**" location="/resources/" cache-period="31556926"/>
 	<tx:annotation-driven />
 	<mvc:view-controller path="/" view-name="HomeOne"/>
-	 <!--
- 	 <bean	
-			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+<!-- 
+  <bean	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/WEB-INF/pages/</value>
 		</property>
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
-	</bean>
-	 -->
-	 <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+	</bean> -->
+
+<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+
  	  <property name="prefix" value="/WEB-INF/templates/" />
   	  <property name="suffix" value=".html" />
   	  <property name="templateMode" value="HTML5" />
@@ -48,10 +49,11 @@
  	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
       <property name="templateEngine" ref="templateEngine" />
       <property name="order" value="1" />
+
        <!--<property name="viewNames" value="*.html,*.xhtml" />  -->
+
  	</bean>
-    
-	
+   
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
