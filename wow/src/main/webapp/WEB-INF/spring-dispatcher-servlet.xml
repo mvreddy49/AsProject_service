@@ -28,7 +28,7 @@
 			<value>.jsp</value>
 		</property>
 	</bean> -->
-<!-- 
+
  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
 
  	  <property name="prefix" value="/WEB-INF/templates/" />
@@ -50,15 +50,15 @@
       <property name="templateEngine" ref="templateEngine" />
       <property name="order" value="1" />
 
-       <property name="viewNames" value="*.html,*.xhtml" /> 
+       <!--  <property name="viewNames" value="*.html,*.xhtml" /> -->
 
  	</bean>
- -->   
+ 
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
     	<property name="username" value="root"/>
-    	<property name="password" value="root"/>
+    	<property name="password" value="apalya01"/>
 	</bean>
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

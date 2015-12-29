@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.BookingDAO;
+import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModel;
@@ -49,6 +50,8 @@ public class BookingApiController {
 	private BookingDAO bookingDao;
 	@Autowired
 	private UserDAO userDao;
+	@Autowired
+	private ContentDAO contentDao;
 
 	@RequestMapping(value = "/myBookings")
 	public ApiReturnModel myBookings(HttpServletRequest request) {
@@ -67,14 +70,18 @@ public class BookingApiController {
 				String role=null;
 				for(GrantedAuthority auth :ud.getAuthorities())
 					role=auth.getAuthority();
-				if(role!=null && role.contains(Constants.ROLE_CLINIC))
+				if(role!=null && role.contains(Constants.ROLE_RECP))
 				{	
+					logger.debug("In role recp"+userName);
 					User user=userDao.findByUserName(userName);
 					//if clinic wants to date by bookings
 					String requestedDate=request.getParameter("date");
+					logger.debug("Before calling getCookings on clinic");
 					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
-				}else
+				}
+				else{
 					returnModel = getBookingsOnUser(userName);
+				}
 			}
 
 		} catch (Exception e) {
@@ -88,23 +95,25 @@ public class BookingApiController {
 
 	private ApiReturnModel getBookingsOnclinic(Clinic clinic,String date) {
 		// TODO Auto-generated method stub
+		logger.debug("In get bookings on clinic");
 		Utils utils=new Utils();
 		ApiReturnModel returnModel = null;
 		List<BookingModel> bookings=null;
 		
 		if(date!=null){
 			Date bookingByDate=utils.convertStringToDateOnly(date);
-			bookings = bookingDao.findBookingsOnClinic(clinic,utils.convertStringToDateOnly(bookingByDate));
+			bookings = contentDao.findBookingsOnClinic(clinic,utils.convertStringToDateOnly(bookingByDate));
 		}else
-			bookings = bookingDao.findBookingsOnClinic(clinic);
+			bookings = contentDao.findBookingsOnClinic(clinic);
 		// User user=userDao.findByid(Integer.parseInt(userId));
 		returnModel=commonReturnBookingModel(bookings);
 		return returnModel;
 	}
+	
 
 	private ApiReturnModel getBookingsOnUser(String userName) {
 		ApiReturnModel returnModel = null;
-		List<BookingModel> bookings = bookingDao.findBookingsOnUser(userName);
+		List<BookingModel> bookings = contentDao.findBookingsOnUser(userName);
 		// User user=userDao.findByid(Integer.parseInt(userId));
 		returnModel=commonReturnBookingModel(bookings);
 		return returnModel;
