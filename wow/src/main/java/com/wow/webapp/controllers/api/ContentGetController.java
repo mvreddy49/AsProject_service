@@ -64,9 +64,10 @@ public class ContentGetController {
 	
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
 	public ApiReturnModel doctors(@RequestParam("speciality") String speciality,
-			@RequestParam("location") String location,@RequestParam("type") String type){
+			@RequestParam(required=false) String location,@RequestParam("type") String type){
 		ApiReturnModel returnValue = null;
 		try {
+			location = "Hyderabad";
 			List<DoctorModel> doctors = contentDao.getDoctorsInfo(speciality, location,type);
 			returnValue = new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
 			returnValue.setMessage("Location : " + location + "," + "Speciality : " + speciality);

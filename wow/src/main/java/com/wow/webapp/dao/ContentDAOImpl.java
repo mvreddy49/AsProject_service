@@ -124,7 +124,7 @@ public class ContentDAOImpl implements ContentDAO{
 			}
 			logger.debug("addressMatch Match : " + addressMatch);
 			if(!addressMatch) continue;
-			List<Slot> slots = session.createQuery("from Slot where clinic=:paramType")
+			List<Slot> slots = session.createQuery("from Slot where clinic=:paramType group by doctor,clinic")
 					.setParameter("paramType", c)
 					.list();
 			if(slots.size() == 0) continue;
@@ -134,8 +134,8 @@ public class ContentDAOImpl implements ContentDAO{
 				DoctorModel doctorModel = new DoctorModel();
 				Doctor d = s.getDoctor();
 				doctorModel.setId(d.getId());
-				//doctorModel.setName(d.getName());
-				//doctorModel.setMobile(d.getMobile());
+				doctorModel.setName(d.getUser().getUserProfile().getName());
+				doctorModel.setMobile(d.getUser().getUsername());
 				doctorModel.setSpeciality(s.getDoctor().getSpeciality());
 				
 				/*Clinic Info */ 
@@ -148,31 +148,6 @@ public class ContentDAOImpl implements ContentDAO{
 				clinicModel.setClinicPhones(c.getPhoneNos().toString());
 				doctorModel.setClinic(clinicModel);
 				
-				/* Slots info 
-				
-				SlotsModel slotModel = new SlotsModel();
-				slotModel.setId(s.getId());
-				logger.debug("startTime:::"+utils.convertDateToUTCFormat(s.getStartTime()));
-				slotModel.setStartTime(utils.convertDateToUTCFormat(s.getStartTime()));
-				slotModel.setEndTime(utils.convertDateToUTCFormat(s.getEndTime()));
-				slotModel.setSlots(utils.getRangeTimes(s.getStartTime(),s.getEndTime()));
-				
-				doctorModel.setSlot(slotModel);
-				
-				
-				
-				 Booked slots info
-				List<BookingModel> bookingsList=new ArrayList<BookingModel>();
-				
-				List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? and b.doctor=?").setParameter(0, c)
-						.setParameter(1, d).list();
-				for(Booking b:bookings)
-				{
-					BookingModel bookingModel=new BookingModel();
-					bookingModel.setSlotTime(utils.convertDateToUTCFormat(b.getBooking_time()));
-					bookingsList.add(bookingModel);
-				}
-				doctorModel.setBooking(bookingsList);*/
 				list.add(doctorModel);
 				
 			}
@@ -334,8 +309,8 @@ public class ContentDAOImpl implements ContentDAO{
 				/* doctor info */
 				DoctorModel doctorModel=new DoctorModel();
 				doctorModel.setId(b.getDoctor().getId());
-				//doctorModel.setName(b.getDoctor().getName());
-				//doctorModel.setMobile(b.getDoctor().getMobile());
+				doctorModel.setName(b.getDoctor().getUser().getUserProfile().getName());
+				doctorModel.setMobile(b.getDoctor().getUser().getUsername());
 				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
 				bm.setDoctor(doctorModel);
 				

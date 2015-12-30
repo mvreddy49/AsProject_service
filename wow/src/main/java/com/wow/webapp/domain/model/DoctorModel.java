@@ -9,8 +9,6 @@ public class DoctorModel {
 	private String mobile;
 	private String speciality;
 	private ClinicModel clinic;
-	private SlotsModel slot;
-	private List<BookingModel> booking;
 	
 	public String getName() {
 		return name;
@@ -42,17 +40,6 @@ public class DoctorModel {
 	public void setClinic(ClinicModel clinic) {
 		this.clinic = clinic;
 	}
-	public SlotsModel getSlot() {
-		return slot;
-	}
-	public void setSlot(SlotsModel slot) {
-		this.slot = slot;
-	}
-	public List<BookingModel> getBooking() {
-		return booking;
-	}
-	public void setBooking(List<BookingModel> booking) {
-		this.booking = booking;
-	}
+	
 	
 }
