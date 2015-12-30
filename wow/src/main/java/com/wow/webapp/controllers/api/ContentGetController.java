@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.ContentDAO;
+import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModelClinics;
 import com.wow.webapp.domain.model.ApiReturnModelDoctor;
@@ -43,6 +44,8 @@ public class ContentGetController {
 	@Autowired
 	private BookingDAO bookingDao;
 	
+	@Autowired
+	private UserDAO userDao;
 	
 	@RequestMapping(value = "/clinics", method = RequestMethod.GET)
 	public ApiReturnModel clinics(@RequestParam("speciality") String speciality,
@@ -81,37 +84,34 @@ public class ContentGetController {
 	}
 	
 	@RequestMapping(value="/slotsByDate", method=RequestMethod.GET)
-	public ApiReturnModel slots(@RequestParam("clinicId") String clinicId,@RequestParam("doctorId") String doctorId,@RequestParam("date") String date)
+	public ApiReturnModel slots(@RequestParam("doctorId") String doctorId,@RequestParam("date") String date)
 	{
 		Utils utils=new Utils();
 		ApiReturnModel returnValue = null;
 		try
 		{
-			Doctor doctor=new Doctor();
-			Clinic clinic=new Clinic(Integer.parseInt(clinicId));
-			Slot slot=contentDao.findSlotsByClinicAndDoctor(doctor,clinic);
-			if(slot!=null)
+			Clinic clinic = userDao.getClinicByUserName("9999999999");
+			Doctor doctor=new Doctor(Integer.parseInt(doctorId));
+			//Date time=utils.convertStringToDateOnly(date);
+			List<Slot> slots=contentDao.findSlotsByClinicAndDoctor(doctor,clinic, date); 
+			if(slots!=null && slots.size()>0)
 			{
-				Date slotDate=utils.convertStringToDateOnly(date);
-				List<String> bookedSlots=new ArrayList<String>();
-				List<Booking> bookings=bookingDao.findBookings(clinic, doctor, utils.convertStringToDateOnly(slotDate));
-				if(bookings!=null & bookings.size()>0)
+				List<SlotsModel> list=new ArrayList<SlotsModel>();
+				List<SlotsModel> bookedSlots = new ArrayList<SlotsModel>();
+				for(Slot slot:slots)
 				{
-					for(Booking b:bookings)
-						bookedSlots.add(utils.convertDateToUTCFormat(b.getBooking_time()));
+					SlotsModel slotModel=new SlotsModel();
+					slotModel.setId(slot.getId());
+					slotModel.setTime(utils.convertDateToUTCFormat(slot.getTime()));
+					if(slot.getUser() == null)	list.add(slotModel);
+					else bookedSlots.add(slotModel);
 					
 				}
-				/* slots info */
-				SlotsModel slotModel=new SlotsModel();
-				slotModel.setId(slot.getId());
-				//slotModel.setStartTime(utils.convertDateToUTCFormat(slot.getStartTime()));
-				//slotModel.setEndTime(utils.convertDateToUTCFormat(slot.getEndTime()));
-				//slotModel.setSlots(utils.getRangeTimes(utils.addDateAndTime(slotDate,slot.getStartTime()),utils.addDateAndTime(slotDate, slot.getEndTime())));
-				slotModel.setBookedSlots(bookedSlots);
-				
-				returnValue=new ApiReturnSlotModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG, slotModel);
+				returnValue=new ApiReturnSlotModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG,list,bookedSlots);
 				
 			}
+			else
+				returnValue=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS, "slots not available");
 			
 		}
 		catch(Exception e)

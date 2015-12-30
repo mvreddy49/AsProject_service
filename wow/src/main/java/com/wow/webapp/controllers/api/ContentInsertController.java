@@ -336,13 +336,13 @@ public class ContentInsertController {
 			Slot s = null;
 			try{
 				Clinic c = userDao.getClinicByUserName(ud.getUsername());
-				s = contentDao.findSlotsByClinicAndDoctor(doctor, c);
+				/*s = contentDao.findSlotsByClinicAndDoctor(doctor, c);
 				logger.debug("After getting slot");
 				if(s == null){
 					s = new Slot();
 					s.setClinic(c);
 					s.setDoctor(doctor);
-				}
+				}*/
 			}
 			catch(Exception ex){
 				logger.debug("Exception is : "+ ex);

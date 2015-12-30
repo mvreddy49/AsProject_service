@@ -28,6 +28,17 @@ import org.hibernate.annotations.GenerationTime;
 @Table(name="doctor")
 public class Doctor {
 
+	public Doctor(Integer id) {
+		super();
+		this.id = id;
+	}
+
+
+	public Doctor() {
+		super();
+	}
+
+
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

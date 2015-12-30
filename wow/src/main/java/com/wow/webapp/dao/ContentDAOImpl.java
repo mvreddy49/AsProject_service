@@ -59,7 +59,7 @@ public class ContentDAOImpl implements ContentDAO{
 	@Transactional
 	public void save(Slot s){
 		Session session = this.getSession();
-		session.save(s);
+		session.saveOrUpdate(s);
 		
 	}
 	
@@ -188,14 +188,14 @@ public class ContentDAOImpl implements ContentDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c){
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,String date){
 		Session session = this.getSession();
 		logger.debug("Before");
-		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor")
+		String slotDate="s.time like '%"+date+"%'";
+		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor and "+slotDate)
 				.setParameter("clinic", c).setParameter("doctor", d).list();
 		logger.debug("after");
-		if(slots == null || slots.size() <= 0) return null;
-		return slots.get(0);
+		return slots;
 	}
 
 	@Transactional
@@ -286,7 +286,7 @@ public class ContentDAOImpl implements ContentDAO{
 			for(Slot b:bookings)
 			{
 				BookingModel bm=new BookingModel();
-				String time=new Utils().convertDateToUTCFormat(b.getBooked_time());
+				String time=new Utils().convertDateToUTCFormat(b.getTime());
 				logger.info("booking time in utc format:::"+time);
 				bm.setSlotTime(time);
 				
@@ -294,6 +294,7 @@ public class ContentDAOImpl implements ContentDAO{
 				UserModel userModel=new UserModel();
 				User u=b.getUser();
 				userModel.setUsername(u.getUsername());
+				userModel.setName(u.getUserProfile().getName());
 				bm.setUser(userModel);
 				
 				/* clinic info */
@@ -320,4 +321,5 @@ public class ContentDAOImpl implements ContentDAO{
 		return bookingModel;
 	}
 
+	
 }

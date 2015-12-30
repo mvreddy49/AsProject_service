@@ -33,6 +33,7 @@ import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
@@ -154,6 +155,29 @@ public class BookingApiController {
 		return returnModel;
 	}
 
+	private void addUser(CreateBookingModel createBookingModel)
+	{
+		try
+		{
+		User user=new User();
+		user.setUsername(createBookingModel.getMobile());
+		user.setPassword(new Utils().getEncryptedPassword(createBookingModel.getMobile()));
+		user.setEnabled(true);
+		Set<Authority> authorities = new HashSet<Authority>();
+		authorities.add(new Authority(user, Constants.ROLE_USER));
+		user.setUserRole(authorities);
+		
+		Profile userProfile =  new Profile(user, createBookingModel.getName());
+		
+		user.setUserProfile(userProfile);
+		
+		userDao.save(user);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 	@RequestMapping(value = "/slotBooking")
 	public ApiReturnModel slotBooking(@Valid CreateBookingModel createBookingModel,BindingResult bindingResult) {
 
@@ -167,135 +191,79 @@ public class BookingApiController {
 				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
 				errors.add(e.getDefaultMessage());
 			}
-			retunModel=new ApiBookingReturnModel(
-					Responses.CUSTOM_CODE, Responses.SUCCESS_STATUS,
+			retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
 					Responses.ERROR_MSG, errors);
-			return retunModel;
+			
 		}
-		try {
-			Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
-
-			if (slot != null) {
-				Clinic clinic = new Clinic(slot.getClinic().getId());
-				Doctor doctor = new Doctor();
-
-				boolean bookingStatus = false;
-				boolean slotTimimgsStatus = false;
-				String slot_time=createBookingModel.getSlotTime();
-				if (checkSlotTimings(slot, slot_time)) {
-					slotTimimgsStatus = true;
-					List<Booking> bookings = bookingDao.findBookings(clinic,
-							doctor,utils.convertStringToDateOnly(utils.convertStringToDateOnly(slot_time)));
-					if (bookings != null && bookings.size() > 0) {
-						//if type is a labs , don't check to  checkBookingTimings
-						if(slot.getClinic().getType().equalsIgnoreCase(Constants.CLINIC_TYPE))
-						{	
-							//size limit of the users booking of given time
-							if(bookings.size() >= Constants.LABS_BOOKING_LIMIt)
-								bookingStatus = false;
-							else 
-								bookingStatus = true;
-						
-						}else
-							bookingStatus=checkBookingTimings(slot_time, bookings);
-							
-					} else
-						bookingStatus = true;
-
-				} else
-					slotTimimgsStatus = false;
-
-				if (slotTimimgsStatus && bookingStatus) {
-
+		else
+		{
+			try
+			{
+				Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
+				if (slot != null) {
 					
-					String userName = null;
 					ud=Utils.getUserSession();
+					String role=null;
+					String userName=null;
+					
 					if (ud == null) {
-						String name = createBookingModel.getName();
-						String mobile =createBookingModel.getMobile();
-						if (name != null && mobile != null) {
-							User user = userDao.findByUserName(mobile);
-							if (user != null) {
-								logger.info("user is already availble in user table as a anonymous user");
-								userName = user.getUsername();
-							} else { 
-								User u = new User();
-								u.setEnabled(true);
-								u.setUsername(mobile);
-								u.setPassword(utils.getEncryptedPassword(mobile));
-								Set<Authority> authorities = new HashSet<Authority>();
-								authorities.add(new Authority(u, "ROLE_USER"));
-								u.setUserRole(authorities);
-								userDao.save(u);
-								userName = u.getUsername();
-								logger.info("user saved sucess::userName::"
-										+ userName);
-							}
-
-						} else {
-							logger.info("invalid user parameters");
-							errors.add(Responses.INVALID_USER_PARAM);
-							retunModel = new ApiBookingReturnModel(
-									Responses.INVALID_PARAM_CODE,
-									Responses.SUCCESS_STATUS,
-									Responses.INVALID_PARAMS_MSG, errors);
+						if(createBookingModel.getMobile() == null){
+							retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
+									"Please enter mobile number", errors);
 							return retunModel;
 						}
-
+						User user=userDao.findByUserName(createBookingModel.getMobile());
+						if(user == null){
+							addUser(createBookingModel);
+							userName = createBookingModel.getMobile();
+						}
+						else
+							userName=user.getUsername();
+						slot.setSource("web");
 					}
 					else
-						userName = ud.getUsername();
-					logger.info("userName:::::" + userName);
-					User user = new User(userName);
-					Booking booking = new Booking();
-					booking.setClinic(clinic);
-					booking.setDoctor(doctor);
-					booking.setUser(user);
-					Date slotTime = utils.convertStringToDate(slot_time);
-					booking.setBooking_time(slotTime);
-					booking.setUpdated_on(slotTime);
-
-					bookingDao.save(booking);
-					logger.info("new booking saved");
-					String msg = "Requested slot is booked success::: slot time is ::"
-							+ slot_time;
-					ApiBookingReturnModel  api= new ApiBookingReturnModel(
-							Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
-							msg);
+					{
+						for(GrantedAuthority auth :ud.getAuthorities())
+							role=auth.getAuthority();
+						if(role!=null && role.contains(Constants.ROLE_RECP))
+						{
+							addUser(createBookingModel);
+							userName = createBookingModel.getMobile();
+							slot.setSource("recp");
+						}else
+						{
+							userName=ud.getUsername();
+							slot.setSource("web");
+						}
+							
+					}
+					User user=new User(userName);
+					slot.setUser(user);
+					slot.setStatus(true);
 					
-					List<BookingModel> bookingModel=bookingDao.findBookingsOnId(booking.getId());
-					api.setBookings(bookingModel);
+					contentDao.save(slot);
 					
-					retunModel=api;
-
-				} else {
-
-					logger.info("booking already there");
-					errors.add("Requested slot is booked by another user");
-					retunModel = new ApiBookingReturnModel(
-							Responses.CUSTOM_CODE, Responses.SUCCESS_STATUS,
-							Responses.ERROR_MSG, errors);
-
+					retunModel=new ApiReturnModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
+							"slot ceated success", errors);
+					
 				}
-			} else {
-				logger.info("slot is not availble");
-				errors.add("Requested slot is not availble in slot table");
-				retunModel = new ApiBookingReturnModel(Responses.CUSTOM_CODE,
-						Responses.SUCCESS_STATUS, Responses.ERROR_MSG, errors);
+				else
+					retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
+							"slot is not availble", errors);
 			}
-
-		} catch (Exception e) {
-			logger.info("exception occurs:::" + e.toString());
-			e.printStackTrace();
-			retunModel = new ApiBookingReturnModel(Responses.FAILURE_CODE,
-					Responses.SUCCESS_STATUS, e.getMessage());
-
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				logger.info("exception occurs while slotBooking");
+				retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
+						"slot is not availble", errors);
+			}
 		}
 		return retunModel;
 
 	}
 
-	private boolean checkSlotTimings(Slot slot, String slot_time) {
+	/*private boolean checkSlotTimings(Slot slot, String slot_time) {
 		// TODO Auto-generated method stub
 		try {
 			Utils utils=new Utils();
@@ -350,7 +318,7 @@ public class BookingApiController {
 		}
 		return false;
 	}
-	
+	*/
 	
 
 	

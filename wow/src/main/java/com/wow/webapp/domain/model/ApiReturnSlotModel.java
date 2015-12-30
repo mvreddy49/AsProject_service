@@ -1,26 +1,40 @@
 package com.wow.webapp.domain.model;
 
+import java.util.List;
+
 public class ApiReturnSlotModel extends ApiReturnModel{
 
-	private SlotsModel slotModel;
+	private List<SlotsModel> slotModel;
 
-	public SlotsModel getSlotModel() {
+	private List<SlotsModel> bookedSlots;
+	
+	public ApiReturnSlotModel(){
+		super();
+	}
+	
+	public ApiReturnSlotModel(Integer code,String success,String message,List<SlotsModel> slotModel,List<SlotsModel> bookedSlots) {
+		super(code,success,message);
+		this.slotModel = slotModel;
+		this.bookedSlots = bookedSlots;
+	}
+	
+	public List<SlotsModel> getSlotModel() {
 		return slotModel;
 	}
 
-	public void setSlotModel(SlotsModel slotModel) {
+	public void setSlotModel(List<SlotsModel> slotModel) {
 		this.slotModel = slotModel;
 	}
 
-	public ApiReturnSlotModel() {
-		super();
+	public List<SlotsModel> getBookedSlots() {
+		return bookedSlots;
 	}
 
-	public ApiReturnSlotModel(Integer code,String status,String message, SlotsModel slotModel) {
-		super(code,status,message);
-		this.slotModel = slotModel;
+	public void setBookedSlots(List<SlotsModel> bookedSlots) {
+		this.bookedSlots = bookedSlots;
 	}
 	
-	
+
+		
 	
 }

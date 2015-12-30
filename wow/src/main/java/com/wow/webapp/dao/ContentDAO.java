@@ -22,11 +22,13 @@ public interface ContentDAO {
 	
 	public Doctor getDoctorById(Integer id);
 	
-	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c);
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,String date);
 	
 	public List<String> findSlotsByStartAndEndTimes(Date startTime,Date endTime);
 	
+
 	public List<BookingModel> findBookingsOnClinic(Clinic clinic);
 	public List<BookingModel> findBookingsOnClinic(Clinic clinic,String date);
 	public List<BookingModel> findBookingsOnUser(String userName);
+
 }
