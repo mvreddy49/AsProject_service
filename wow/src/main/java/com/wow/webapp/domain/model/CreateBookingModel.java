@@ -7,7 +7,7 @@ public class CreateBookingModel {
 	 @NotEmpty(message="slotId can not be empty")
 	 private String slotId;
 	 
-	 @NotEmpty(message="slotTime can not be empty")
+	 
 	 private String slotTime;
 	 
 	 private String name;

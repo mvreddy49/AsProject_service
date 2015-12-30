@@ -56,7 +56,7 @@ public class ContentDAOImpl implements ContentDAO{
 	@Transactional
 	public void save(Slot s){
 		Session session = this.getSession();
-		session.save(s);
+		session.saveOrUpdate(s);
 		
 	}
 	
@@ -210,14 +210,13 @@ public class ContentDAOImpl implements ContentDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public Slot findSlotsByClinicAndDoctor(Doctor d,Clinic c){
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,Date date){
 		Session session = this.getSession();
 		logger.debug("Before");
-		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor")
-				.setParameter("clinic", c).setParameter("doctor", d).list();
+		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor and time like :date")
+				.setParameter("clinic", c).setParameter("doctor", d).setParameter("date", date).list();
 		logger.debug("after");
-		if(slots == null || slots.size() <= 0) return null;
-		return slots.get(0);
+		return slots;
 	}
 
 	@Transactional
@@ -267,4 +266,5 @@ public class ContentDAOImpl implements ContentDAO{
 		return list;
 	}
 
+	
 }
