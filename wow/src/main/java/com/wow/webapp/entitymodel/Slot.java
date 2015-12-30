@@ -65,6 +65,10 @@ public class Slot {
 	@Column(name = "updated_on")
 	private Date modified_on;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "booked_time")
+	private Date booked_time;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -145,6 +149,14 @@ public class Slot {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public Date getBooked_time() {
+		return booked_time;
+	}
+
+	public void setBooked_time(Date booked_time) {
+		this.booked_time = booked_time;
 	}
 	 
 	

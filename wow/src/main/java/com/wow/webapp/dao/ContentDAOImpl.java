@@ -11,8 +11,11 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wow.webapp.domain.account.UserModel;
+import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
+import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.ClinicAddress;
 import com.wow.webapp.entitymodel.Doctor;
@@ -121,7 +124,7 @@ public class ContentDAOImpl implements ContentDAO{
 			}
 			logger.debug("addressMatch Match : " + addressMatch);
 			if(!addressMatch) continue;
-			List<Slot> slots = session.createQuery("from Slot where clinic=:paramType")
+			List<Slot> slots = session.createQuery("from Slot where clinic=:paramType group by doctor,clinic")
 					.setParameter("paramType", c)
 					.list();
 			if(slots.size() == 0) continue;
@@ -131,8 +134,8 @@ public class ContentDAOImpl implements ContentDAO{
 				DoctorModel doctorModel = new DoctorModel();
 				Doctor d = s.getDoctor();
 				doctorModel.setId(d.getId());
-				//doctorModel.setName(d.getName());
-				//doctorModel.setMobile(d.getMobile());
+				doctorModel.setName(d.getUser().getUserProfile().getName());
+				doctorModel.setMobile(d.getUser().getUsername());
 				doctorModel.setSpeciality(s.getDoctor().getSpeciality());
 				
 				/*Clinic Info */ 
@@ -145,31 +148,6 @@ public class ContentDAOImpl implements ContentDAO{
 				clinicModel.setClinicPhones(c.getPhoneNos().toString());
 				doctorModel.setClinic(clinicModel);
 				
-				/* Slots info 
-				
-				SlotsModel slotModel = new SlotsModel();
-				slotModel.setId(s.getId());
-				logger.debug("startTime:::"+utils.convertDateToUTCFormat(s.getStartTime()));
-				slotModel.setStartTime(utils.convertDateToUTCFormat(s.getStartTime()));
-				slotModel.setEndTime(utils.convertDateToUTCFormat(s.getEndTime()));
-				slotModel.setSlots(utils.getRangeTimes(s.getStartTime(),s.getEndTime()));
-				
-				doctorModel.setSlot(slotModel);
-				
-				
-				
-				 Booked slots info
-				List<BookingModel> bookingsList=new ArrayList<BookingModel>();
-				
-				List<Booking> bookings=session.createQuery("from Booking b where b.clinic=? and b.doctor=?").setParameter(0, c)
-						.setParameter(1, d).list();
-				for(Booking b:bookings)
-				{
-					BookingModel bookingModel=new BookingModel();
-					bookingModel.setSlotTime(utils.convertDateToUTCFormat(b.getBooking_time()));
-					bookingsList.add(bookingModel);
-				}
-				doctorModel.setBooking(bookingsList);*/
 				list.add(doctorModel);
 				
 			}
@@ -210,11 +188,12 @@ public class ContentDAOImpl implements ContentDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,Date date){
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,String date){
 		Session session = this.getSession();
 		logger.debug("Before");
-		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor and time like :date")
-				.setParameter("clinic", c).setParameter("doctor", d).setParameter("date", date).list();
+		String slotDate="s.time like '%"+date+"%'";
+		List<Slot> slots = session.createQuery("from Slot s where s.clinic=:clinic and s.doctor=:doctor and "+slotDate)
+				.setParameter("clinic", c).setParameter("doctor", d).list();
 		logger.debug("after");
 		return slots;
 	}
@@ -264,6 +243,82 @@ public class ContentDAOImpl implements ContentDAO{
 			logger.info("exception while getting slots information using start and endtimes:::"+e.toString());
 		}
 		return list;
+	}
+	
+	@Transactional
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic) {
+		// TODO Auto-generated method stub
+		logger.debug("In get bookings on clinic");
+		Session session = this.getSession();
+		List<BookingModel> bookingModel=null;
+		List<Slot> bookings=session.createQuery("from Slot b where b.clinic=? and b.user is not null order by booked_time desc").setParameter(0,clinic).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+	}
+	
+	@Transactional
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic, String date) {
+		Session session = this.getSession();
+		logger.info("enter into findbookings with date");
+		List<BookingModel> bookingModel=null;
+		String dateAdded="b.booked_time like '%"+date+"%'";
+		List<Slot> bookings=session.createQuery("from Slot b where b.clinic=:clinic  and user is not null and "+dateAdded+"").setParameter("clinic",clinic).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+	}
+	
+	@Transactional
+	public List<BookingModel> findBookingsOnUser(String userName) {
+		// TODO Auto-generated method stub
+		Session session = this.getSession();
+		User user=new User(userName);
+		List<BookingModel> bookingModel=null;
+		List<Slot> bookings=session.createQuery("from Slot b where b.user=? order by booked_time desc").setParameter(0,user).list();
+		bookingModel=getBookings(bookings);
+		return bookingModel;
+	}
+	
+	private List<BookingModel> getBookings(List<Slot> bookings)
+	{
+		List<BookingModel> bookingModel=new ArrayList<BookingModel>();
+		if(bookings!=null&&bookings.size()>0)
+		{
+			for(Slot b:bookings)
+			{
+				BookingModel bm=new BookingModel();
+				String time=new Utils().convertDateToUTCFormat(b.getTime());
+				logger.info("booking time in utc format:::"+time);
+				bm.setSlotTime(time);
+				
+				/* userinfo */
+				UserModel userModel=new UserModel();
+				User u=b.getUser();
+				userModel.setUsername(u.getUsername());
+				userModel.setName(u.getUserProfile().getName());
+				bm.setUser(userModel);
+				
+				/* clinic info */
+				ClinicModel clinicModel=new ClinicModel();
+				Clinic c=b.getClinic();
+				clinicModel.setId(c.getId());
+				clinicModel.setClinicName(c.getName());
+				clinicModel.setClinicDesc(c.getDescription());
+				clinicModel.setClinicAddress(c.getAddresses().toString());
+				clinicModel.setClinicPhones(c.getPhoneNos().toString());
+				bm.setClinic(clinicModel);
+				
+				/* doctor info */
+				DoctorModel doctorModel=new DoctorModel();
+				doctorModel.setId(b.getDoctor().getId());
+				doctorModel.setName(b.getDoctor().getUser().getUserProfile().getName());
+				doctorModel.setMobile(b.getDoctor().getUser().getUsername());
+				doctorModel.setSpeciality(b.getDoctor().getSpeciality());
+				bm.setDoctor(doctorModel);
+				
+				bookingModel.add(bm);
+			}
+		}
+		return bookingModel;
 	}
 
 	

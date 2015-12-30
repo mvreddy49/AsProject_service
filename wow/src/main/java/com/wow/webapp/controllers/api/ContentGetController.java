@@ -67,9 +67,10 @@ public class ContentGetController {
 	
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
 	public ApiReturnModel doctors(@RequestParam("speciality") String speciality,
-			@RequestParam("location") String location,@RequestParam("type") String type){
+			@RequestParam(required=false) String location,@RequestParam("type") String type){
 		ApiReturnModel returnValue = null;
 		try {
+			location = "Hyderabad";
 			List<DoctorModel> doctors = contentDao.getDoctorsInfo(speciality, location,type);
 			returnValue = new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
 			returnValue.setMessage("Location : " + location + "," + "Speciality : " + speciality);
@@ -91,20 +92,22 @@ public class ContentGetController {
 		{
 			Clinic clinic = userDao.getClinicByUserName("9999999999");
 			Doctor doctor=new Doctor(Integer.parseInt(doctorId));
-			Date time=utils.convertStringToDateOnly(date);
-			List<Slot> slots=contentDao.findSlotsByClinicAndDoctor(doctor,clinic, time); 
+			//Date time=utils.convertStringToDateOnly(date);
+			List<Slot> slots=contentDao.findSlotsByClinicAndDoctor(doctor,clinic, date); 
 			if(slots!=null && slots.size()>0)
 			{
 				List<SlotsModel> list=new ArrayList<SlotsModel>();
+				List<SlotsModel> bookedSlots = new ArrayList<SlotsModel>();
 				for(Slot slot:slots)
 				{
 					SlotsModel slotModel=new SlotsModel();
 					slotModel.setId(slot.getId());
 					slotModel.setTime(utils.convertDateToUTCFormat(slot.getTime()));
-					list.add(slotModel);
+					if(slot.getUser() == null)	list.add(slotModel);
+					else bookedSlots.add(slotModel);
 					
 				}
-				returnValue=new ApiReturnSlotModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG,list);
+				returnValue=new ApiReturnSlotModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG,list,bookedSlots);
 				
 			}
 			else

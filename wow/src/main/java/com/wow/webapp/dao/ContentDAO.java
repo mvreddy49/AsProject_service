@@ -3,6 +3,7 @@ package com.wow.webapp.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Clinic;
@@ -21,9 +22,13 @@ public interface ContentDAO {
 	
 	public Doctor getDoctorById(Integer id);
 	
-	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,Date date);
+	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,String date);
 	
 	public List<String> findSlotsByStartAndEndTimes(Date startTime,Date endTime);
 	
-	
+
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic);
+	public List<BookingModel> findBookingsOnClinic(Clinic clinic,String date);
+	public List<BookingModel> findBookingsOnUser(String userName);
+
 }

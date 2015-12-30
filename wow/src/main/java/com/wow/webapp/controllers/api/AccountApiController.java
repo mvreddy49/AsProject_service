@@ -30,6 +30,7 @@ import com.wow.webapp.domain.model.ClinicTestSearchModel;
 import com.wow.webapp.domain.model.LoginModel;
 import com.wow.webapp.domain.model.ResponseUserModel;
 import com.wow.webapp.entitymodel.Authority;
+import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
@@ -174,6 +175,11 @@ public class AccountApiController {
 				}
 				userDetails.setUserProfile(userProfile);
 				userDetails.setUserRole(authorities);
+				Clinic c = userDao.getClinicByUserName(ud.getUsername());
+				if(model.getRole().equalsIgnoreCase(Constants.ROLE_RECP))
+					userDetails.setClinic(c);
+				if(Constants.ROLE_RECP_ACCESS.contains(model.getRole()))
+					userDetails.setClinic(null);
 				userDao.save(userDetails);
 			} catch (Exception e) {
 				logger.info("exception occurs :::" + e.toString());
