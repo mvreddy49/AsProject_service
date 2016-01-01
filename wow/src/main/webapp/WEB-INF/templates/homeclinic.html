@@ -1,0 +1,244 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>User</title>
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+	$(function() {
+		$('.contentDiv').hide();
+		$('#addresetDiv').show(); 
+		$('.contentSelection').click(function(){
+			$('.contentDiv').hide();
+			$('#' + $(this).attr('id') + 'Div').show();
+		});
+		
+
+	
+
+		
+		
+	});
+	</script>
+		
+		
+	<script>
+	$(function() {
+		
+		$('#passsubmitbtn').click(function(){
+			alert("sms sent successfully");
+			/* $ajax({
+				type : "",
+				url : "",
+				data{
+					
+					
+				},
+				success :function(result){
+					
+				},
+				error : function(){
+					alert("error");
+				}
+				 
+				
+				
+			});
+				 */
+			
+			
+		});
+			
+		});
+		
+	</script>
+	
+	<script>
+		$(function(){
+			$('#proupdatebtn').click(function(){
+				alert("profile update succssfully");
+				
+				/* $ajax({
+					
+					type: "",
+					url : "",
+					data{
+						
+					},
+					success : function(result){
+						
+					},
+					error : function(){
+						alert("errormessage");
+					}
+						
+					
+				}); */
+				
+			});
+		});
+	
+	</script>
+
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="col-md-8">
+		
+		  <div class="panel panel-info">
+    <div class="panel-heading">
+     <div class="panel-title">User Registration</div>
+    </div>
+    <div class="panel-body">
+     <div id="signupform" class="form-horizontal" >
+    
+ <!--    	 
+   	<div class="form-group">
+       Button
+       <div class="col-sm-12 controls">
+       
+        
+       </div>
+      </div> -->
+      
+      
+      <div class="row">
+			<div class="col-md-4">
+				<div class="btn-group-vertical">
+				  
+				  <button id="addreset" type="button" class="btn btn-primary contentSelection">Reset Password</button>
+				  <button id="addDoc" type="button" class="btn btn-primary contentSelection">Edit Profile</button>
+				  <button id="addbook" type="button" class="btn btn-primary contentSelection">MyBookings</button>
+				  </div>
+			</div>
+			
+							<div id="addresetDiv" class="contentDiv">
+					<div id="signupbox"
+			class="mainbox col-md-8 col-sm-2 ">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">Reset Password</div>
+				</div>
+				<div class="panel-body">
+					<div id="signupform" class="form-horizontal">
+					  <div class="form-group">
+       <label for="passwordres" class="col-md-2 control-label"></label>
+       <div class="col-md-9">
+        <input id="name" type="tel"  class="form-control" placeholder="Enter Mobile Number" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+         <button id="passsubmitbtn" class="btn btn-success">
+         <i class="glyphicon glyphicon-send"></i>Send
+        </button>
+       </div>
+      </div>
+        
+      
+       
+					
+
+						
+					
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+				</div>
+			
+						<div id="addDocDiv" class="contentDiv">
+				<div id="signupbox"
+   class="mainbox col-md-8  col-sm-8 ">
+   <div class="panel panel-info">
+    <div class="panel-heading">
+     <div class="panel-title">Edit Profile</div>
+    </div>
+    <div class="panel-body">
+     <div id="signupform" class="form-horizontal" >
+      <div class="form-group">
+       <label for="Name" class="col-md-3 control-label">Name:</label>
+       <div class="col-md-9">
+        <input id="name" type="tel"  class="form-control" placeholder="name" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+     
+      <div class="form-group">
+       <label for="address1" class="col-md-3 control-label">Address1:</label>
+       <div class="col-md-9">
+        <input id="address1" type="tel"  class="form-control" placeholder="Address1" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="address2" class="col-md-3 control-label">Address2:</label>
+       <div class="col-md-9">
+        <input id="address2" type="tel"  class="form-control" placeholder="Address2" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      
+        <div class="form-group">
+       <label for="city" class="col-md-3 control-label">City:</label>
+       <div class="col-md-9">
+        <input id="city" type="tel"  class="form-control" placeholder="City" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      
+        <div class="form-group">
+       <label for="state" class="col-md-3 control-label">state:</label>
+       <div class="col-md-9">
+        <input id="state" type="tel"  class="form-control" placeholder="state" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+     
+     
+     
+     
+      
+
+      
+      <div class="form-group">
+       <!-- Button -->
+       <div class="col-sm-12 controls">
+        <button id="proupdatebtn" class="btn btn-success">
+         <i class="glyphicon glyphicon-send"></i>Update
+        </button>
+        
+       </div>
+      </div>
+     
+    </div>
+   </div>
+  </div></div>
+		
+				</div>
+				
+						<div id="addbookDiv" class="contentDiv">
+							<div class="row">
+	
+			
+			<div class="col-md-10">
+			<div id="displayArea" >
+			
+			</div></div>
+			</div>
+	
+				</div>
+			</div>
+   
+     
+    </div>
+   </div>
+  </div>
+		</div>
+		
+		
+
+	</section>
+</body>
+
+</html>

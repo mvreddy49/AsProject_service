@@ -769,6 +769,13 @@ div.mytile5 p:first-child {
 .liststyles{
 	width: 200px;	
 }
+.tablestyle{
+	background-color: #dc4fad;
+	
+}
+.clinicbookingstyle{
+	color: green;
+}
 <style>
 #map-outer {
 	height: 230px;
@@ -779,5 +786,9 @@ div.mytile5 p:first-child {
 }
 #map-container {
 	height: 220px
+}
+.userStyle{
+color: green;
+margin-left: 5px;
 }
 </style>
