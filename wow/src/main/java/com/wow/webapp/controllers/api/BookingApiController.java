@@ -1,7 +1,6 @@
 package com.wow.webapp.controllers.api;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,23 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wow.webapp.dao.BookingDAO;
 import com.wow.webapp.dao.ContentDAO;
 import com.wow.webapp.dao.UserDAO;
-import com.wow.webapp.domain.account.UserModel;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
-import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.CreateBookingModel;
-import com.wow.webapp.domain.model.DoctorModel;
-import com.wow.webapp.domain.model.SlotsModel;
 import com.wow.webapp.entitymodel.Authority;
-import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
-import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.SMS;
 import com.wow.webapp.util.Utils;
 
 @RestController
@@ -177,6 +170,8 @@ public class BookingApiController {
 		
 		userDao.save(user);
 		logger.info("add user success");
+		SMS sms = new SMS();
+		sms.sendSMS(Constants.SMS_BOOKING_MSG, createBookingModel.getMobile());
 		}
 		catch(Exception e)
 		{
@@ -215,7 +210,7 @@ public class BookingApiController {
 					
 					if (ud == null) {
 						logger.info("Anonymous user");
-						if(createBookingModel.getMobile() == null && createBookingModel.getName() == null){
+						if(createBookingModel.getMobile().isEmpty() || createBookingModel.getName().isEmpty()){
 							logger.info("Anonymous user requested parameters are not coming to user");
 							retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
 									"Please enter mobile number", errors);
@@ -242,6 +237,12 @@ public class BookingApiController {
 							role=auth.getAuthority();
 						if(role!=null && role.contains(Constants.ROLE_RECP))
 						{
+							if(createBookingModel.getMobile().isEmpty() || createBookingModel.getName().isEmpty()){
+								logger.info("Anonymous user requested parameters are not coming to user");
+								retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
+										"Please enter mobile number", errors);
+								return retunModel;
+							}
 							logger.info("ROLE RECP is booking a slot for new user");
 							addUser(createBookingModel);
 							userName = createBookingModel.getMobile();
@@ -258,11 +259,12 @@ public class BookingApiController {
 					User user=new User(userName);
 					slot.setUser(user);
 					slot.setStatus(true);
-					
+					slot.setBooked_time(new Date());
 					contentDao.save(slot);
 					
 					BookingModel bookingModel=new BookingModel();
 					
+					/*
 					//clinic model
 					ClinicModel clinicModel=new ClinicModel();
 					Clinic clinic=slot.getClinic();
@@ -284,7 +286,7 @@ public class BookingApiController {
 					bookingModel.setClinic(clinicModel);
 					bookingModel.setDoctor(doctorModel);
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
-					
+					*/
 					List<BookingModel> bookingList=new ArrayList<BookingModel>();
 					bookingList.add(bookingModel);
 					

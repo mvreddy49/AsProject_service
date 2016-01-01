@@ -96,6 +96,7 @@ public class Utils {
 				calendar.add(Calendar.MINUTE, duration);
 				times.add(sdf.format(calendar.getTime()));
 			}
+			times.remove(times.size()-1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

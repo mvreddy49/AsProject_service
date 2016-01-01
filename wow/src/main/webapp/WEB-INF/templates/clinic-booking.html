@@ -3,12 +3,7 @@
 	layout:decorator="layout">
 
 <head>
-<title>Clinic Booking</title>
-<link rel="stylesheet"
-	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<link rel="stylesheet" href="/resources/demos/style.css" />
+	<title>Clinic Booking</title>
 
 <script>
 	$(function() {
@@ -22,11 +17,12 @@
 		$('#form').hide();
 
 		$('#submitbtn').click(function(){
+			
 			$.ajax({
 				url : "api/bookings/slotBooking",
 				data : {
-					"slotId" : slotId,
-					"slotTime" : $('#slotsDropdown').val(),
+					"slotId" : $('#slotsDropdown').val().split(",")[0],
+					"slotTime" : $('#slotsDropdown').val().split(",")[1],
 					"name" : $('#name').val(),
 					"mobile" : $('#mobile').val()
 				},
@@ -34,24 +30,25 @@
 					console.log(result);
 
 					if (result.status == "OK") {
-		alert("Booking completed");
+						
+							$('#output').empty();
+							$('#output').append("<h2>Booking Completed Successfully...</h2>");
 						
 
 					}
 				}
-		});
+		});//submittn Ajax End
 		});
 		
-		$("#datebtn").click(
-				function() {
+		$("#datebtn").click(function() {
 					date = $('#datetimepicker').val();
 					doctorId = $('input[name=doctor]:checked', '#displayArea').val();
 					$('#form').show();
+					$('#output').empty();
 
 					$.ajax({
 						url : "api/slotsByDate",
 						data : {
-							"clinicId" : "10",
 							"doctorId" : doctorId,
 							"date" : date
 						},
@@ -60,27 +57,33 @@
 
 							if (result.status == "OK") {
 
-								//$('#slotsDropdown')
 								$('#slotsDropdown').find('option').remove();
 								$('#slotdisplayArea').html('');
-								slotId=result.slotModel.id;
-								$.each(result.slotModel.slots, function(index, slot) {
+								/* 
+								console.log("Slots");
+								console.log(result.slotModel);
+								console.log("Booked Slots");
+								console.log(result.bookedSlots);
+								var diff = $(result.slotModel.slots).not(result.slotModel.bookedSlots).get();
+								console.log("Diff");
+								console.log(diff);  */
+							
+									
+								$.each(result.slotModel, function(index, slot) {
 									console.log(slot);
 									$('#slotsDropdown').append($('<option></option>', { 
-								        value: slot,
-								        text : slot
-								    }));
-									//$('#slotsDropdown').append('<option></option>').val(slot);
-								});
+								       value: slot.id+","+slot.time,
+								       text : slot.time
+								   }));
 								
-
-								/* $('#slotdisplayArea').append(slotContent); */
+								});
+							
 								$('#slotbookingArea').show();
 
 							}
 
 						} // End Success : function
-					}); // End Ajax
+					}); // Get Slots  Ajax End
 				});
 
 		$(".clinicspeciality").click(function() {
@@ -90,6 +93,7 @@
 							console.log("In search btn click ");
 							console.log(speciality);
 							speciality = $(this).context.id;
+							$('#output').empty();
 							console.log(speciality);
 							location = "hyderabad";
 							type = "clinic";
@@ -109,11 +113,11 @@
 												if (result.doctors.length == 0) {
 													$('#displayArea')
 															.append(
-																	'<center><h3 class="style-heading" >No Doctors availale  for '
+																	'<center><h4 >No Doctors availale  for '
 																			+ speciality
 																			+ ' in '
 																			+ location
-																			+ ' </h3></center>');
+																			+ ' </h4></center>');
 												}
 												$.each(result.doctors,function(index,item) {
 																	var htmlContent = '';
@@ -129,22 +133,29 @@
 											} // End STatus OK
 												$(".doctor").click(function() {
 												$('#slotsDropdown').find('option').remove();
+												$('#slotbookingArea').hide();
 												$('#dateArea').show();
+												$('#output').empty();
 											})
 										} // End Success : function
 									}); // End Ajax
 							console.log("ajax req sent");
 						});
-						$("#bookbtn").click(function() {
-							$('#form').show();
-						})
+					
 	});
 </script>
+<script>
+								$(function() {
+									$("#datetimepicker").datepicker({
+										dateFormat : "yy-mm-dd"
+									});
+
+								});
+							</script>
 </head>
 <body>
 	<section layout:fragment="content">
-		<div class="container">
-			<div class="row">
+					<div class="row">
 				<div class="col-md-8 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
 					<div>
@@ -156,20 +167,20 @@
 			<div class="row">
 				<div class="col-md-3">
 					<ul class="nav">
-						<li id="Gynecolagist" class="clinicspeciality"><a href="#"
+						<li id="Gynecologist" class="clinicspeciality"><a href="#"
 							class="list-group-item liststyles" data-target="#custom_carousel"
 							data-slide-to="1">
-								<p id="li1" class="list-group-item-text">Gynecolagist</p>
+								<p id="li1" class="list-group-item-text">Gynecologist</p>
 						</a></li>
-						<li id="Orthopaedician" class="clinicspeciality"><a href="#"
+						<li id="orthopedician" class="clinicspeciality"><a href="#"
 							class="list-group-item liststyles" data-target="#custom_carousel"
 							data-slide-to="2">
-								<p class="list-group-item-text">Orthopaedician</p>
+								<p class="list-group-item-text">Orthopedician</p>
 						</a></li>
 						<li id="Cardiologist" class="clinicspeciality"><a href="#"
 							class="list-group-item liststyles" data-target="#custom_carousel"
 							data-slide-to="3">
-								<p class="list-group-item-text">Cardiologist Checks</p>
+								<p class="list-group-item-text">Cardiologist</p>
 						</a></li>
 						<li id="Pediatrician" class="clinicspeciality"><a href="#"
 							class="list-group-item liststyles" data-target="#custom_carousel"
@@ -198,18 +209,19 @@
 						</a></li>
 						<li id="Neuro Physician" class="clinicspeciality"><a href="#"
 							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="9"><p class="list-group-item-text">Neuro
+							data-slide-to="9"> <p class="list-group-item-text">Neuro
 									Physician</p> </a></li>
 					</ul>
 				</div>
 				<div class="col-md-3">
 					<div class="displaystyle">
-						<div id="displayArea" style="background-color: cyan;"></div>
+						<div id="displayArea"></div>
 					</div>
 				</div>
 				<div class="col-md-3">
-					<div id="example">
-						<div id="dateArea" style="display: none;">
+					
+						
+						<div id="dateArea" style="display: none;" >
 							Preferred Date And Time <input id="datetimepicker"
 								style="width: 80%;" />
 							<div class=" controls">
@@ -218,36 +230,19 @@
 								</button>
 
 							</div>
-							<div>
+							<div id="slotbookingArea" style="display: none;">
 								<select id="slotsDropdown"></select>
+								<div sec:authorize="!isAnonymous()">
+				<button id="submitbtn" type="submit"
+						class="btn btn-primary btn-md">Submit</button></div>
 							</div>
+							<div id="output" class="clinicbookingstyle"></div>
 						</div>
 						
-						<div id="slotbookingArea" style="display: none;">
-							
-							<div id="slotdisplayArea" style="background-color: cyan;"></div>
-							<div class=" controls">
-								<button id="bookbtn" class="btn btn-success">
-									<i class="glyphicon glyphicon-send"></i>Book
-								</button>
-
-							</div>
-
-							<script>
-								$(function() {
-									$("#datetimepicker").datepicker({
-										dateFormat : "yy-mm-dd"
-									});
-
-								});
-							</script>
-
-						</div>
-
-
-
+					
+						
 					</div>
-				</div>
+				
 
 				
 					
@@ -264,18 +259,11 @@
 				<br/>
 					<button id="submitbtn" type="submit"
 						class="btn btn-primary btn-md">Submit</button>
-				</div><br/>
-				<br/>
+				</div>
 				
 		</div>
-<button id="submitbtn" type="submit"
-						class="btn btn-primary btn-md">Submit</button>
-					</div>
-				</div>
-
-		
-
-
+		</div>		
+ 
 	</section>
 </body>
 </html>

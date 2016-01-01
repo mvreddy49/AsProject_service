@@ -129,7 +129,8 @@ public class ContentDAOImpl implements ContentDAO{
 					.list();
 			if(slots.size() == 0) continue;
 			for(Slot s : slots){
-				if(!s.getDoctor().getSpeciality().equalsIgnoreCase(speciality)) continue;
+				if(speciality != null && speciality.trim().length() > 0)
+					if(!s.getDoctor().getSpeciality().equalsIgnoreCase(speciality)) continue;
 				
 				DoctorModel doctorModel = new DoctorModel();
 				Doctor d = s.getDoctor();

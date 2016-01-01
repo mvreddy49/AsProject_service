@@ -28,29 +28,29 @@
 <script
 	src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
 <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<script>	
-	
-      function init_map() {
-		var myLocation = new google.maps.LatLng(17.4088943,78.3873666);
-		  
-        var mapOptions = {
-          center: myLocation,
-          zoom: 14
-        };
-		
-		var marker = new google.maps.Marker({
-			position: myLocation,
-			title:"Peggy Guggenheim Collection"});
-			
-        var map = new google.maps.Map(document.getElementById("map-container"),
-            mapOptions);
-		
-		marker.setMap(map);	
+<script>
+	function init_map() {
+		var myLocation = new google.maps.LatLng(17.4088943, 78.3873666);
 
-      }
-	  
-      google.maps.event.addDomListener(window, 'load', init_map);
-  	$(function() {
+		var mapOptions = {
+			center : myLocation,
+			zoom : 14
+		};
+
+		var marker = new google.maps.Marker({
+			position : myLocation,
+			title : "Peggy Guggenheim Collection"
+		});
+
+		var map = new google.maps.Map(document.getElementById("map-container"),
+				mapOptions);
+
+		marker.setMap(map);
+
+	}
+
+	google.maps.event.addDomListener(window, 'load', init_map);
+	$(function() {
 
 		$("#contactsubmit").click(function() {
 			$('#nameerror').empty();
@@ -101,7 +101,7 @@
 	function checkName() {
 
 		var name = document.getElementById('name');
-		var filter = /^([a-zA-Z]{4,8})+$/;
+		var filter = /^([a-zA-Z, ]{4,20})+$/;
 
 		if (!filter.test(name.value)) {
 
@@ -160,7 +160,7 @@
 	function checkMessage() {
 
 		var message = document.getElementById('message');
-		var filter = /^([a-zA-Z0-9]{4,250})+$/;
+		var filter = /^([a-zA-Z, ]{4,250})+$/;
 
 		if (!filter.test(message.value)) {
 			var htm = "";
@@ -187,8 +187,7 @@
 	function messageclear() {
 		$('#messageerror').empty();
 	}
-
-    </script>
+</script>
 
 </head>
 <body>
@@ -196,55 +195,56 @@
 		<div class="container">
 			<div class="row">
 
-				<div class="col-md-4"><br/>
-				      <h4>Contact US</h4>
+				<div class="col-md-4">
+					<br />
+					<h4>Contact US</h4>
 					<span for="name" class="blocklabel">Your Name*</span><br /> <input
 						name="name" type="text" id="name" style="width: 280px;"
 						onkeypress="nameclear()" />
-					<div id="nameerror" class="errorstyle"></div><br/>
-
-					<span for="email" class="blocklabel">E-Mail*</span> <br /> <input
-						name="email" type="text" id="email" style="width: 280px;"
+					<div id="nameerror" class="errorstyle"></div>
+					<br /> <span for="email" class="blocklabel">E-Mail*</span> <br />
+					<input name="email" type="text" id="email" style="width: 280px;"
 						onkeypress="emailclear()" />
-					<div id="mailerror" class="errorstyle"></div><br/>
-
-					<span for="website" class="blocklabel">Phone Number</span> <br />
+					<div id="mailerror" class="errorstyle"></div>
+					<br /> <span for="website" class="blocklabel">Phone Number</span> <br />
 
 					<input name="phone" type="text" id="phone" style="width: 280px;"
 						onkeypress="phoneclear()" />
-					<div id="phoneerror" class="errorstyle"></div><br/>
-
-					<span for="message" class="blocklabel">Your Message*</span> <br />
+					<div id="phoneerror" class="errorstyle"></div>
+					<br /> <span for="message" class="blocklabel">Your Message*</span>
+					<br />
 
 					<textarea name="message" id="message"
 						style="width: 280px; height: 135px;" onkeypress="messageclear()"></textarea>
-					<div id="messageerror" class="errorstyle"></div><br/>
+					<div id="messageerror" class="errorstyle"></div>
+					<br />
 					<button id="contactsubmit" type="submit"
 						class="btn btn-primary btn-md">Submit</button>
-				</div><br/>
-				<br />
-				<div id="address" class="col-md-6" style="margin-left: 20px;">
-				<div style="background-color: ;">
-				<div style="margin-left:20px;"><br/>
-					<h4>Our Location</h4>
-					<address>
-						<strong>Astra Healthcare Pvt Ltd </strong><br /> <br />Plot No-<br />
-						Opposite Western Plaza, <br />O.U Colony, Manikonda<br />
-						Hyderabad 500089,Telangana. India.<br /> Ph: +91- 40 - ********<br />
-						General Information: <a href="mailto:info@astrahealth.in">info@astrahealthcare.in</a><br />
-						Website <a href="HomeOne.html">www.astrahealth.in</a>
-					</address>
 				</div>
+				<br /> <br />
+				<div id="address" class="col-md-6" style="margin-left: 20px;">
+					<div style="background-color:;">
+						<div style="margin-left: 20px;">
+							<br />
+							<h4>Our Location</h4>
+							<address>
+								<strong>Astra Healthcare Pvt Ltd </strong><br /> <br />Plot
+								No-<br /> Opposite Western Plaza, <br />O.U Colony, Manikonda<br />
+								Hyderabad 500089,Telangana. India.<br /> Ph: +91- 40 - ********<br />
+								General Information: <a href="mailto:info@astrahealth.in">info@astrahealthcare.in</a><br />
+								Website <a href="HomeOne.html">www.astrahealth.in</a>
+							</address>
+						</div>
 					</div>
 					<div class="row">
-				<div id="map-outer" class="col-md-12">
+						<div id="map-outer" class="col-md-12">
 
-					<div id="map-container" class="col-md-12"></div>
+							<div id="map-container" class="col-md-12"></div>
+						</div>
+					</div>
+
 				</div>
 			</div>
-				
-			</div>
-		</div>
 		</div>
 	</section>
 </body>

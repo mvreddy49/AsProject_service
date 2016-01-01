@@ -19,15 +19,15 @@
 					<form name="userForm" novalidate="novalidate">
 						<span style="color: red"
 							ng-show="userForm.username.$dirty &amp;&amp; userForm.username.$invalid">
-							<span ng-show="userForm.username.$error.required">Email is
-								required.</span> <span ng-show="userForm.username.$error.email">Enter
-								valid email address</span>
+							<span ng-show="userForm.username.$error.required">Mobile number is
+								required.</span> <span ng-show="userForm.username.$error.pattern">Enter
+								valid Mobile Number</span>
 						</span>
 						<div style="margin-bottom: 25px" class="input-group">
 							<span class="input-group-addon"> <i
 								class="glyphicon glyphicon-user"></i>
-							</span> <input id="usernameid" name="username" type="email"
-								class="form-control" required="required" placeholder="email"
+							</span> <input id="usernameid" name="username" type="text"
+								class="form-control" required="required" pattern=".{10}" placeholder="Mobile Number"
 								ng-model="user.username" />
 
 						</div>
