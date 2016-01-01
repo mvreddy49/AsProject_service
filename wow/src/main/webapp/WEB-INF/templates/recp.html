@@ -5,154 +5,255 @@
 <head>
 <title>Recp</title>
 <script>
-$(function() {
-	var speciality = 'not set';
-	var location = 'not set';
-	var doctorId = '';
-	var slotId='';
-	
-	var date = new Date();
-	console.log(speciality);
-	$('#form').hide();
+	$(function() {
+		var speciality = 'not set';
+		var location = 'not set';
+		var doctorId = '';
+		var slotId = '';
+		var doctorname = '';
+		var doctorspeciality = '';
+		var doctormoile = '';
 
-	$('#submitbtn').click(function(){
-		
-		$.ajax({
-			url : "api/bookings/slotBooking",
-			data : {
-				"slotId" : $('#slotsDropdown').val().split(",")[0],
-				"slotTime" : $('#slotsDropdown').val().split(",")[1],
-				"name" : $('#name').val(),
-				"mobile" : $('#mobile').val()
-			},
-			success : function(result) {
-				console.log(result);
+		var date = new Date();
+		console.log(speciality);
+		$('#form').hide();
 
-				if (result.status == "OK") {
-					
-						$('#output').empty();
-						$('#output').append("<h2>Booking Completed Successfully...</h2>");
-					
+		$('#addSlot').click(
+				function() {
+					$.ajax({
 
+						url : "api/doctor",
+						data : {
+
+						},
+						success : function(result) {
+							console.log(result);
+							if (result.status == "OK") {
+								$('#doctorId').find('option').remove();
+
+								$.each(result.doctors, function(index, doctor) {
+									console.log(doctor);
+									$('#doctorId').append(
+											$('<option></option>', {
+												value : doctor.id,
+												text : doctor.id + "-"
+														+ doctor.name + "-"
+														+ doctor.speciality
+														+ "-" + doctor.mobile
+											}));
+									//$('#slotsDropdown').append('<option></option>').val(slot);
+								});
+
+							}
+						}//Success End
+					});//Ajax End
+
+				});
+
+		$('#submitbtn').click(function() {
+			alert($('#source').val())
+			$.ajax({
+				url : "api/bookings/slotBooking",
+				data : {
+					"slotId" : $('#slotsDropdown').val(),
+					"name" : $('#bookingName').val(),
+					"mobile" : $('#bookingMobile').val(),
+					"source" : $('#bookingSource').val()
+				},
+				success : function(result) {
+					console.log(result);
+
+					if (result.status == "OK") {
+						alert("Booking completed Successfully");
+
+					}
 				}
-			}
-	});//submittn Ajax End
-	});
-	
-	$("#datebtn").click(function() {
-				date = $('#datetimepicker').val();
-				doctorId = $('input[name=doctor]:checked', '#displayArea').val();
-				$('#form').show();
-				$('#output').empty();
-
-				$.ajax({
-					url : "api/slotsByDate",
-					data : {
-						"doctorId" : doctorId,
-						"date" : date
-					},
-					success : function(result) {
-						console.log(result);
-
-						if (result.status == "OK") {
-
-							$('#slotsDropdown').find('option').remove();
-							$('#slotdisplayArea').html('');
-							/* 
-							console.log("Slots");
-							console.log(result.slotModel);
-							console.log("Booked Slots");
-							console.log(result.bookedSlots);
-							var diff = $(result.slotModel.slots).not(result.slotModel.bookedSlots).get();
-							console.log("Diff");
-							console.log(diff);  */
-						
-								
-							$.each(result.slotModel, function(index, slot) {
-								console.log(slot);
-								$('#slotsDropdown').append($('<option></option>', { 
-							       value: slot.id+","+slot.time,
-							       text : slot.time
-							   }));
-							
-							});
-						
-							$('#slotbookingArea').show();
-
-						}
-
-					} // End Success : function
-				}); // Get Slots  Ajax End
 			});
+		});
 
-	$(".clinicspeciality").click(function() {
-						$('#slotbookingArea').hide();
-						$('#dateArea').hide();
-						$('#form').hide();
-						console.log("In search btn click ");
-						console.log(speciality);
-						speciality = $(this).context.id;
-						$('#output').empty();
-						console.log(speciality);
-						location = "hyderabad";
-						type = "clinic";
-						console.log(location);
-						console.log("sending ajax req");
-						$.ajax({
-									url : "api/doctor",
-									data : {
-										"speciality" : speciality,
-										"location" : location,
-										"type" : type
-									},
-									success : function(result) {
-										console.log(result);
-										if (result.status == "OK") {
-											$('#displayArea').html('');
-											if (result.doctors.length == 0) {
-												$('#displayArea')
-														.append(
-																'<center><h3 class="" >No Doctors availale  for '
-																		+ speciality
-																		+ ' in '
-																		+ location
-																		+ ' </h3></center>');
+		$("#datebtn").click(function() {
+			date = $('#datetimepicker').val();
+			doctorId = $('input[name=doctor]:checked', '#displayArea').val();
+			$('#form').show();
+			$('#slotbookingArea').show();
+
+			$.ajax({
+				url : "api/slotsByDate",
+				data : {
+					"doctorId" : doctorId,
+					"date" : date
+				},
+				success : function(result) {
+					console.log(result);
+
+					if (result.status == "OK") {
+
+						//$('#slotsDropdown')
+						$('#slotsDropdown').find('option').remove();
+						$('#slotdisplayArea').html('');
+						slotId = result.slotModel.id;
+						$.each(result.slotModel, function(index, slot) {
+							console.log(slot);
+							$('#slotsDropdown').append($('<option></option>', {
+								value : slot.id,
+								text : slot.time
+							}));
+							//$('#slotsDropdown').append('<option></option>').val(slot);
+						});
+
+						/* $('#slotdisplayArea').append(slotContent); */
+						$('#slotbookingArea').show();
+
+					}
+
+				} // End Success : function
+			}); // End Ajax
+		});
+
+		$('#getBookings')
+				.click(
+						function() {
+
+							$
+									.ajax({
+										url : "api/bookings/myBookings",
+										data : {},
+										success : function(result) {
+											var content = '<table class="table table-hover " >'
+													+ '<th class="tablestyle">Slot Time</th><th class="tablestyle">User Name</th><th class="tablestyle">User Mobile</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
+											var htmlContent = '';
+											console.log(result);
+											if (result.status == "OK") {
+
+												$
+														.each(
+																result.bookings,
+																function(index,
+																		item) {
+
+																	htmlContent = htmlContent
+																			+ "<tr>"
+																			+ "<td>"
+																			+ item.slotTime
+																			+ "</td>"
+																			+ "<td>"
+																			
+																			+ item.user.name
+																			+ "</td><td>"
+																			+item.user.username
+																			+"</td><td>"
+											
+																			+ item.doctor.name
+																			+ "</td>"
+																			+ "<td>"
+
+																			+ item.doctor.speciality
+																			+ "</td>"
+																			+ "</tr>";
+																	content = content
+																			+ htmlContent;
+																	htmlContent = '';
+																	console
+																			.log(index
+																					+ " => "
+																					+ item.name);
+
+																}); // End $.each
+												content = content + "</table>";
+												$('#displayBookingArea').empty();
+												console.log(content);
+												$('#displayBookingArea').append(
+														content);
 											}
-											$.each(result.doctors,function(index,item) {
-																var htmlContent = '';
-																htmlContent = htmlContent
-																	
-																		+ "<h4>"
-																		+ '<input type="radio"  name="doctor" value="'+  item.id  + '"  class="doctor"  />'
-																		+ item.name
-																		+ "</h4>";
+										}
 
-																console.log(index+ " => "+ item.name);
-																$('#displayArea').append(htmlContent);
-															}); // End $.each
-										} // End STatus OK
-											$(".doctor").click(function() {
-											$('#slotsDropdown').find('option').remove();
-											$('#slotbookingArea').hide();
-											$('#dateArea').show();
-											$('#output').empty();
-										})
-									} // End Success : function
-								}); // End Ajax
-						console.log("ajax req sent");
-					});
-				
-});
-	
-</script>
-<script>
-								$(function() {
-									$("#datetimepicker").datepicker({
-										dateFormat : "yy-mm-dd"
 									});
 
-								});
-							</script>
+						});
+
+		$(".clinicspeciality")
+				.click(
+						function() {
+							$('#slotbookingArea').hide();
+							$('#dateArea').hide();
+							$('#form').hide();
+							console.log("In search btn click ");
+							console.log(speciality);
+							speciality = $(this).context.id;
+							console.log(speciality);
+							location = "hyderabad";
+							type = "clinic";
+							console.log(location);
+							console.log("sending ajax req");
+							$
+									.ajax({
+										url : "api/doctor",
+										data : {
+											"speciality" : speciality,
+											"location" : location,
+											"type" : type
+										},
+										success : function(result) {
+											console.log(result);
+											if (result.status == "OK") {
+												$('#displayArea').html('');
+												if (result.doctors.length == 0) {
+													$('#displayArea')
+															.append(
+																	'<center><h3 class="style-heading" >No Doctors availale  for '
+																			+ speciality
+																			+ ' in '
+																			+ location
+																			+ ' </h3></center>');
+												}
+												$
+														.each(
+																result.doctors,
+																function(index,
+																		item) {
+																	var htmlContent = '';
+																	htmlContent = htmlContent
+																			+ "<h3>"
+																			+ '<input type="radio"  name="doctor" value="'+  item.id  + '"  class="doctor"  />'
+																			+ item.name
+																			+ "</h3>";
+
+																	console
+																			.log(index
+																					+ " => "
+																					+ item.name);
+																	$(
+																			'#displayArea')
+																			.append(
+																					htmlContent);
+																}); // End $.each
+											} // End STatus OK
+											$(".doctor").click(
+													function() {
+														$('#slotsDropdown')
+																.find('option')
+																.remove();
+														$('#slotbookingArea')
+																.hide();
+														$('#dateArea').show();
+													})
+										} // End Success : function
+									}); // End Ajax
+							console.log("ajax req sent");
+						});
+		$("#bookbtn").click(function() {
+			$('#form').show();
+		})
+	});
+</script>
+<script>
+	$(function() {
+		$("#datetimepicker").datepicker({
+			dateFormat : "yy-mm-dd"
+		});
+
+	});
+</script>
 <script>
 	$(function() {
 		$('.contentDiv').hide();
@@ -161,100 +262,93 @@ $(function() {
 			$('.contentDiv').hide();
 			$('#' + $(this).attr('id') + 'Div').show();
 		});
-	
-		$('#doctorsubmit').click(function(){
-			  console.log($('#startTime').val());
-			  /* var isoDate = new Date($('#startTime').val()).toISOString();
-			  console.log('isoDate = ' + isoDate);
-		    */
-		   
-		  	 name=$('#name').val();
-		      mobile=$('#mobile').val();
-		      startTime=$('#startTime').val();
-		      endTime=$('#endTime').val();
-		      speciality=$('#speciality').val();
-		   alert(name+mobile+startTime+endTime+speciality);
-		   $.ajax({
-			   
-		    type:"POST",
-		    url:"content/addDoctor",
-		       data:{
-		        "name" : name,
-		        "mobile":mobile,
-		        "startTime":startTime+":00Z",
-		        "endTime" : endTime+":00Z",
-		        "speciality" :speciality,
-		        "duration" : "15"
-		        
-		       },
-		    success : function(result) {
-		     console.log(result);
-		     if (result.status == "OK") {
-		     alert("Booking completed");
-		      
 
-		     }
-		    }
-		  });
-		   document.getElementById("name").value = "";
-		   document.getElementById("speciality").value = "";
-		   document.getElementById("mobile").value = "";
-		    
-		   
+		$('#doctorsubmit').click(function() {
+			console.log($('#startTime').val());
+			/* var isoDate = new Date($('#startTime').val()).toISOString();
+			console.log('isoDate = ' + isoDate);
+			 */
+
+			name = $('#name').val();
+			mobile = $('#mobile').val();
+			startTime = $('#startTime').val();
+			endTime = $('#endTime').val();
+			speciality = $('#speciality').val();
+			alert(name + mobile + startTime + endTime + speciality);
+			$.ajax({
+
+				type : "POST",
+				url : "content/addDoctor",
+				data : {
+					"name" : name,
+					"mobile" : mobile,
+					"startTime" : startTime + ":00Z",
+					"endTime" : endTime + ":00Z",
+					"speciality" : speciality,
+					"duration" : "15"
+
+				},
+				success : function(result) {
+					console.log(result);
+					if (result.status == "OK") {
+						alert("Insertion completed");
+
+					}
+				}
+			});
+			document.getElementById("name").value = "";
+			document.getElementById("speciality").value = "";
+			document.getElementById("mobile").value = "";
+
 		});
-		
-		$('#slotsubmit').click(function(){
-			
+
+		$('#slotsubmit').click(function() {
 
 			$.ajax({
-				type:"POST",
+				type : "POST",
 				url : "content/addSlots",
-				data :{
-					
-					"doctorId" :$('#doctorId').val(),
-					"startTime" : $('#slotstartTime').val()+":00Z",
-					"endTime" : $('#slotendTime').val()+":00Z"
+				data : {
+
+					"doctorId" : $('#doctorId').val(),
+					"startTime" : $('#slotstartTime').val() + ":00Z",
+					"endTime" : $('#slotendTime').val() + ":00Z"
 				},
-				success: function(result){
+				success : function(result) {
 					console.log(result);
-					if(result.status=="OK"){
+					if (result.status == "OK") {
 						alert("DONE....");
 					}
-					
+
 				}
-			
+
 			});
 		});
-		
-		$('#usersubmit').click(function(){
-			alert(""+$(this).attr('id'));
+
+		$('#usersubmit').click(function() {
+			alert("" + $(this).attr('id'));
 
 			$.ajax({
 				url : "api/doctor",
-				data :{
+				data : {
 					"speciality" : "Gynocologist",
 					"location" : "Hyderaad",
 					"type" : "clinic"
 				},
-				success: function(result){
+				success : function(result) {
 					console.log(result);
-					if(result.status=="OK"){
+					if (result.status == "OK") {
 						alert("DONE....");
 					}
-					
+
 				}
-			
+
 			});
 		});
-		
-		$('#bookingsubmit').click(function(e){
-			alert(""+$(this).attr('id'));
 
-			
-			 
-				
+		$('#bookingsubmit').click(function(e) {
+			alert("" + $(this).attr('id'));
+
 		});
-		
 
 	});
 </script>
@@ -270,8 +364,10 @@ $(function() {
 						class="btn btn-primary contentSelection">Add Slots</button>
 					<button id="addUser" type="button"
 						class="btn btn-primary contentSelection">Add User</button>
-					<button  id="addBooking" type="button"
+					<button id="addBooking" type="button"
 						class="btn btn-primary contentSelection">Add Booking</button>
+					<button id="getBookings" type="button"
+						class="btn btn-primary contentSelection">View Bookings</button>
 				</div>
 			</div>
 			<div class="col-md-10">
@@ -287,7 +383,7 @@ $(function() {
 										<label for="Name" class="col-md-3 control-label">Name</label>
 										<div class="col-md-9">
 											<input id="name" type="tel" class="form-control"
-												placeholder="name"  />
+												placeholder="name" />
 											<div id="nameerror" class="errorstyle"></div>
 											<br />
 										</div>
@@ -295,8 +391,19 @@ $(function() {
 									<div class="form-group">
 										<label for="Speciality" class="col-md-3 control-label">Speciality</label>
 										<div class="col-md-9">
-											<input id="speciality" type="tel" class="form-control"
-												placeholder="speciality"  />
+											<select id="speciality">
+												<option value="Gynecologist">Gynecologist</option>
+												<option value="orthopedician">orthopedician</option>
+												<option value="Cardiologist">Cardiologist</option>
+												<option value="Pediatrician">Pediatrician</option>
+												<option value="Ent Surgeon">Ent Surgeon</option>
+												<option value="Endocrinologist">Endocrinologist</option>
+												<option value="Nephrologist">Nephrologist</option>
+												<option value="Neurosurgeon">Neurosurgeon</option>
+												<option value="Neuro Physician">Neuro Physician</option>
+											</select>
+											<!--  <input id="speciality" type="tel" class="form-control"
+												placeholder="speciality"  />-->
 											<div id="specialityerror" class="errorstyle"></div>
 											<br />
 										</div>
@@ -306,28 +413,29 @@ $(function() {
 											Number</label>
 										<div class="col-md-9">
 											<input id="mobile" type="tel" class="form-control"
-												placeholder="Mobile"  />
+												placeholder="Mobile" />
 											<div id="mobileerror" class="errorstyle"></div>
 											<br />
 										</div>
 									</div>
-							   <div class="form-group">
-       <label for="startTime" class="col-md-3 control-label">Start Time</label>
-       <div class="col-md-9">
-        <input id="startTime" type="datetime-local" class="form-control"
-          required="required"
-         placeholder="startTime"  />
-       </div>
-      </div>
-      <div class="form-group">
-       <label for="endTime" class="col-md-3 control-label">End Time</label>
-       <div class="col-md-9">
-        <input id="endTime" type="datetime-local" class="form-control" 
-         required="required" placeholder="end time"
-         
-          />
-       </div>
-      </div>
+									<div class="form-group">
+										<label for="startTime" class="col-md-3 control-label">Start
+											Time</label>
+										<div class="col-md-9">
+											<input id="startTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="startTime" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="endTime" class="col-md-3 control-label">End
+											Time</label>
+										<div class="col-md-9">
+											<input id="endTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="end time" />
+										</div>
+									</div>
 
 
 									<div class="form-group">
@@ -375,16 +483,18 @@ $(function() {
 										<label for="startTime" class="col-md-3 control-label">Start
 											Time</label>
 										<div class="col-md-9">
-											<input id="slotstartTime" type="datetime-local" class="form-control"
-												required="required" placeholder="startTime" />
+											<input id="slotstartTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="startTime" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="endTime" class="col-md-3 control-label">End
 											Time</label>
 										<div class="col-md-9">
-											<input id="slotendTime" type="datetime-local" class="form-control"
-												required="required" placeholder="end time" />
+											<input id="slotendTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="end time" />
 										</div>
 									</div>
 
@@ -397,7 +507,7 @@ $(function() {
 											</button>
 
 										</div>
-									
+
 									</div>
 
 								</div>
@@ -424,15 +534,7 @@ $(function() {
 											<br />
 										</div>
 									</div>
-									<div class="form-group">
-										<label for="Speciality" class="col-md-3 control-label">Speciality</label>
-										<div class="col-md-9">
-											<input id="speciality" type="tel" class="form-control"
-												placeholder="speciality" onkeypress="specialityclear()" />
-											<div id="specialityerror" class="errorstyle"></div>
-											<br />
-										</div>
-									</div>
+
 									<div class="form-group">
 										<label for="Mobile Number" class="col-md-3 control-label">Mobile
 											Number</label>
@@ -479,118 +581,119 @@ $(function() {
 					<!-- 	Bookind Div started -->
 				</div>
 				<div id="addBookingDiv" class="contentDiv">
-			
-		<div class="row">
-			
-				<div class="col-md-3">
-				<h3>Select Speciality</h3>
-					<ul class="nav">
-						<li id="Gynecologist" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="1">
-								<p id="li1" class="list-group-item-text">Gynecologist</p>
-						</a></li>
-						<li id="orthopedician" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="2">
-								<p class="list-group-item-text">Orthopedician</p>
-						</a></li>
-						<li id="Cardiologist" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="3">
-								<p class="list-group-item-text">Cardiologist</p>
-						</a></li>
-						<li id="Pediatrician" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="4">
 
-								<p class="list-group-item-text">Pediatrician</p>
-						</a></li>
-						<li id="Ent Surgeon" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="5">
-								<p class="list-group-item-text">Ent Surgeon</p>
-						</a></li>
-						<li id="Endocrinologist" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="6">
-								<p class="list-group-item-text">Endocrinologist</p>
-						</a></li>
-						<li id="Nephrologist" class="clinicspeciality"><a href="#"
-							class="list-group-item  liststyles"
-							data-target="#custom_carousel" data-slide-to="7">
-								<p id="li1" class="list-group-item-text">Nephrologist</p>
-						</a></li>
-						<li id="Neurosurgeon" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="8"><p class="list-group-item-text">Neurosurgeon</p>
-						</a></li>
-						<li id="Neuro Physician" class="clinicspeciality"><a href="#"
-							class="list-group-item liststyles" data-target="#custom_carousel"
-							data-slide-to="9"> <p class="list-group-item-text">Neuro
-									Physician</p> </a></li>
-					</ul>
-				</div>
-				<div class="col-md-3">
-				
-					<div class="displaystyle">
-						<div id="displayArea" style=""></div>
-					</div>
-				</div>
-				
-				<div class="col-md-3">
-					
-						
-						<div id="dateArea" style="display: none;" >
-							Preferred Date And Time <input id="datetimepicker"
-								style="width: 80%;" />
-							<div class=" controls"><br/>
-								<button id="datebtn" class="btn btn-success">
-									<i class="glyphicon glyphicon-send"></i>Get Slot
-								</button>
-										
-							</div>
-							<br/>
-							<div id="slotbookingArea" style="display: none;">
-								<select id="slotsDropdown"></select>
-								<div sec:authorize="!isAnonymous()">
-				<button id="submitbtn" type="submit"
-						class="btn btn-primary btn-md">Submit</button></div>
-							</div>
-							<div id="output" class="clinicbookingstyle"></div>
+					<div class="row">
+						<div class="col-md-3">
+							<h4 style="color: green;">Select Speciality</h4>
+							<ul class="nav">
+								<li id="Gynecologist" class="clinicspeciality"><a href="#"
+									class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="1">
+										<p id="li1" class="list-group-item-text">Gynecologist</p>
+								</a></li>
+								<li id="Orthopaedician" class="clinicspeciality"><a
+									href="#" class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="2">
+										<p class="list-group-item-text">Orthopaedician</p>
+								</a></li>
+								<li id="Cardiologist" class="clinicspeciality"><a href="#"
+									class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="3">
+										<p class="list-group-item-text">Cardiologist Checks</p>
+								</a></li>
+								<li id="Pediatrician" class="clinicspeciality"><a href="#"
+									class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="4">
+
+										<p class="list-group-item-text">Pediatrician</p>
+								</a></li>
+								<li id="Ent Surgeon" class="clinicspeciality"><a href="#"
+									class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="5">
+										<p class="list-group-item-text">Ent Surgeon</p>
+								</a></li>
+								<li id="Endocrinologist" class="clinicspeciality"><a
+									href="#" class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="6">
+										<p class="list-group-item-text">Endocrinologist</p>
+								</a></li>
+								<li id="Nephrologist" class="clinicspeciality"><a href="#"
+									class="list-group-item  liststyles"
+									data-target="#custom_carousel" data-slide-to="7">
+										<p id="li1" class="list-group-item-text">Nephrologist</p>
+								</a></li>
+								<li id="Neurosurgeon" class="clinicspeciality"><a href="#"
+									class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="8"><p
+											class="list-group-item-text">Neurosurgeon</p> </a></li>
+								<li id="Neuro Physician" class="clinicspeciality"><a
+									href="#" class="list-group-item liststyles"
+									data-target="#custom_carousel" data-slide-to="9">
+										<p class="list-group-item-text">Neuro Physician</p>
+								</a></li>
+							</ul>
 						</div>
-						
-					
-						
+						<div class="col-md-3">
+							<div class="displaystyle">
+								<div id="displayArea" style="background-color: cyan;"></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div id="example">
+								<div id="dateArea" style="display: none;">
+									Preferred Date And Time <input id="datetimepicker"
+										style="width: 80%;" />
+									<div class=" controls">
+										<button id="datebtn" class="btn btn-success">
+											<i class="glyphicon glyphicon-send"></i>Get Slot
+										</button>
+
+									</div>
+									<div id="slotbookingArea" style="display: none;">
+										<select id="slotsDropdown"></select> <select
+											id="bookingSource">
+											<option value="practo">Practo</option>
+											<option value="reference">Reference</option>
+
+										</select>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+
+
+
+						<div class="col-md-3">
+							<div id="form">
+								<span for="name" class="blocklabel">Name</span><br /> <input
+									name="name" type="text" id="bookingName" style="width: 280px;" />
+								<br /> <span for="mobile" class="blocklabel">Mobile</span> <br />
+								<input name="mobile" type="text" id="bookingMobile"
+									style="width: 280px;" /> <br /> <span for="age"
+									class="blocklabel">Age</span> <br /> <input name="age"
+									type="text" id="bookingAge" style="width: 280px;" /><br /> <br />
+								<button id="submitbtn" type="submit"
+									class="btn btn-primary btn-md">Submit</button>
+							</div>
+							<br /> <br />
+
+						</div>
 					</div>
-				
-
-				
-					
-				<div class="col-md-3" sec:authorize="isAnonymous()"><div id="form">
-					<span for="name" class="blocklabel">Name</span><br /> <input
-						name="name" type="text" id="name" style="width: 280px;" />
-					<br/>
-					<span for="mobile" class="blocklabel">Mobile</span> <br /> <input
-						name="mobile" type="text" id="mobile" style="width: 280px;"/>
-					<br/>
-					<span for="age" class="blocklabel">Age</span> <br />
-					<input name="age" type="text" id="age" style="width: 280px;"/><br/>
-
-				<br/>
-					<button id="submitbtn" type="submit"
-						class="btn btn-primary btn-md">Submit</button>
 				</div>
-				
+			</div>
+
+			<div id="getBookingsDiv" class="contentDiv col-md-10">
+				<div id="displayBookingArea"></div>
+			</div>
 		</div>
-		</div>		
- 
-</div> 
-					</div>
-				</div>
 		
-			<div id="data"></div>
-		
+
+		<div id="data"></div>
+
 	</section>
 </body>
 </html>

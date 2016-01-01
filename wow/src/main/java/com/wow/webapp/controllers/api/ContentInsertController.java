@@ -275,13 +275,9 @@ public class ContentInsertController {
 	public List<String> addSlots(String starttime,String endtime,Doctor d)
 	{
 		List<String> errors=new ArrayList<String>();
-		Slot s = new Slot();
+		
 		try{
-			Clinic c = userDao.getClinicByUserName("9999999999");
-			s.setClinic(c);
-	
-		s.setDoctor(d);
-		s.setEnabled(true);
+			
 		Utils utils=new Utils();
 		Date startTime=utils.convertStringToDate(starttime);
 		Date endTime=utils.convertStringToDate(endtime);
@@ -306,6 +302,11 @@ public class ContentInsertController {
 			if(insertedList!=null && insertedList.size()>0)
 				for(String str:insertedList)
 				{
+					Slot s = new Slot();
+					Clinic c = userDao.getClinicByUserName("9999999999");
+					s.setClinic(c);
+					s.setDoctor(d);
+					s.setEnabled(true);
 					Date time=utils.convertStringToDate(str);
 					s.setTime(time);
 					

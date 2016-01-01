@@ -20,7 +20,7 @@ public class UserModel {
 	private String name;
 	
 	@NotEmpty(message="Role Can not be empty")
-	@Size(max=12)
+	@Size(max=20)
 	private String role;
 
 	

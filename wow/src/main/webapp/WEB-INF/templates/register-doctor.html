@@ -1,125 +1,227 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ layout:decorator="layout">
+
 <head>
-<title>Register Clinic</title>
+<title>Register Doctor</title>
 
+
+<style type="text/css">
+.errorstyle {
+ color: red;
+}
+
+.errorstyle1 {
+ color: green;
+}
+
+.header {
+ color: #36A0FF;
+ font-size: 18px;
+ padding: 4px;
+}
+
+.bigicon {
+ font-size: 12px;
+ color: #36A0FF;
+}
+</style>
+
+<script>
+ $(function() {
+  var name='';
+     var mobile='';
+     var startTime='';
+     var endTime='';
+     var speciality='';
+     //$("#startTime").datepicker();
   
-   
-    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css" />
-    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css" />
+  console.log(speciality);
+ 
 
-    <script src="//kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
-    <!-- <script>
-                $(document).ready(function () {
-                   
-                    $("#starttime").kendoDateTimePicker({
-                        value:new Date()
-                    });
-                    $("#endtime").kendoDateTimePicker({
-                        value:new Date()
-                    });
-                });
-            </script> -->
+  $('#submitbtn').click(function(){
+	  console.log($('#startTime').val());
+	  var isoDate = new Date($('#startTime').val()).toISOString();
+	  console.log('isoDate = ' + isoDate);
+   $('#nameerror').empty();
+   $('#specialityerror').empty();
+   $('#mobileerror').empty();
+   
+   if (checkName()) {
+    if (checkSpeciality()) {
+     if (checkMobile()) {
+   
+   
+   
+   name=$('#name').val();
+      mobile=$('#mobile').val();
+      startTime=$('#startTime').val();
+      endTime=$('#endTime').val();
+      speciality=$('#speciality').val();
+   alert(name+mobile+startTime+endTime+speciality);
+   $.ajax({
+	   
+    type:"POST",
+    url:"content/register-doctor",
+       data:{
+        "name" : name,
+        "mobile":mobile,
+        "startTime":startTime+":00Z",
+        "endTime" : endTime+":00Z",
+        "speciality" :speciality
+        
+       },
+    success : function(result) {
+     console.log(result);
+     if (result.status == "OK") {
+     alert("Booking completed");
+      
+
+     }
+    }
+  });
+   document.getElementById("name").value = "";
+   document.getElementById("speciality").value = "";
+   document.getElementById("mobile").value = "";
+     }
+    }
+   }
+   
+  });
+     });
+ function checkName() {
+
+  var name = document.getElementById('name');
+  var filter = /^([a-zA-Z]{4,8})+$/;
+
+  if (!filter.test(name.value)) {
+
+   var htm = "";
+   htm = htm + "Enter Valid Name";
+   $('#nameerror').empty();
+   $('#nameerror').append(htm);
+
+   name.focus();
+   return false;
+  } else {
+   $('#nameerror').empty();
+   return true;
+  }
+ }
+ function checkSpeciality() {
+
+  var speciality = document.getElementById('speciality');
+  var filter = /^([a-zA-Z]{4,8})+$/;
+
+  if (!filter.test(speciality.value)) {
+
+   var htm = "";
+   htm = htm + "Enter Valid Name";
+   $('#specialityerror').empty();
+   $('#specialityerror').append(htm);
+
+   speciality.focus();
+   return false;
+  } else {
+   $('#specialityerror').empty();
+   return true;
+  }
+ }
+ function checkMobile() {
+
+  var mobile = document.getElementById('mobile').value;
+
+  var filter = /^([789])([0-9]){9}$/;
+
+  if (!filter.test(mobile)) {
+   var htm = "";
+   htm = htm + "Enter valid phone number";
+   $('#mobileerror').empty();
+   $('#mobileerror').append(htm);
+   mobile.focus();
+   return false;
+  } else {
+   $('#mobileerror').empty();
+  }
+  return true;
+
+ }
+ function nameclear() {
+  $('#nameerror').empty();
+ }
+ function emailclear() {
+  $('#specialityerror').empty();
+ }
+ function mobileclear() {
+  $('#mobileerror').empty();
+ }
+ 
+ 
+</script>
 </head>
 <body>
-	<section layout:fragment="content">
-		<div id="feedbackbox" style="margin-top: 10px;"
-			class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-			<div th:if="${errors.size() > 0}"
-				class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<ul>
-					<li th:each="error : ${errors}" th:text="${error}">${error}</li>
-				</ul>
-			</div>
-		</div>
-		<div id="signupbox"
-			class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<div class="panel-title">Sign Up</div>
-				</div>
-				<div class="panel-body">
-					<form id="signupform" class="form-horizontal" role="form"
-						method="post" th:object="${model}" action="content/register-doctor">
-						<div class="form-group">
-							<label for="email" class="col-md-3 control-label">Name</label>
-							<div class="col-md-9">
-								<input type="text" class="form-control" th:field="*{name}"
-									required="required" placeholder="Name of the Doctor"
-									value="*{name}" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="password" class="col-md-3 control-label">Speciality</label>
-							<div class="col-md-9">
-								<input type="text" class="form-control" th:field="*{speciality}"
-									required="required" placeholder="speciality" 
-									title="enter valid Speciality" />
-							</div>
-						</div>
+ <section layout:fragment="content">
+  <div id="signupbox"
+   class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+   <div class="panel panel-info">
+    <div class="panel-heading">
+     <div class="panel-title">Sign Up</div>
+    </div>
+    <div class="panel-body">
+     <div id="signupform" class="form-horizontal" >
+      <div class="form-group">
+       <label for="Name" class="col-md-3 control-label">Name</label>
+       <div class="col-md-9">
+        <input id="name" type="tel"  class="form-control" placeholder="name" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="Speciality" class="col-md-3 control-label">Speciality</label>
+       <div class="col-md-9">
+        <input id="speciality" type="tel"  class="form-control" placeholder="speciality" onkeypress="specialityclear()" />
+        <div id="specialityerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="Mobile Number" class="col-md-3 control-label">Mobile Number</label>
+       <div class="col-md-9">
+        <input id="mobile" type="tel"  class="form-control" placeholder="Mobile" onkeypress="mobileclear()" />
+        <div id="mobileerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="startTime" class="col-md-3 control-label">Start Time</label>
+       <div class="col-md-9">
+        <input id="startTime" type="datetime-local" class="form-control"
+          required="required"
+         placeholder="startTime"  />
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="endTime" class="col-md-3 control-label">End Time</label>
+       <div class="col-md-9">
+        <input id="endTime" type="datetime-local" class="form-control" 
+         required="required" placeholder="end time"
+         
+          />
+       </div>
+      </div>
 
-						<div class="form-group">
-							<label for="clinicName" class="col-md-3 control-label">mobile</label>
-							<div class="col-md-9">
-								<input type="text" class="form-control" th:field="*{mobile}"
-									required="required" placeholder="Clinic Name" pattern=".{10,10}"
-									title="mobile no should be 10 numbers"
-									value="${model.mobile}" />
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="clinicDesc" class="col-md-3 control-label">startTime</label>
-							<div class="col-md-9">
-							
-							 
-            
-              
-                <input id="starttime"  class="form-control" th:field="*{startTime}"
-									required="required" placeholder="startTime"
-									pattern=".{2,50}" title="Min 2 characters, Max50 characters"
-									value="${model.startTime}"/>
-            		
-								
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="clinicPhone1" class="col-md-3 control-label">endTime</label>
-							<div class="col-md-9">
-								<input id="endtime" class="form-control"
-									th:field="*{endTime}" required="required"
-									placeholder="endTime" pattern=".{1,50}" title="endTime"
-									value="${model.endTime}" />
-							</div>
-						</div>
-						
-
-						
-						
-						
-						
-						<!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
-						<div class="form-group">
-							<!-- Button -->
-							<div class="col-sm-12 controls">
-								<button id="btn-signup" class="btn btn-success">
-									<i class="glyphicon glyphicon-send"></i> Sign Up
-								</button>
-								<button id="btn-reset1" type="reset" class="btn btn-danger">Reset</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-	</section>
+      
+      <div class="form-group">
+       <!-- Button -->
+       <div class="col-sm-12 controls">
+        <button id="submitbtn" class="btn btn-success">
+         <i class="glyphicon glyphicon-send"></i>Register
+        </button>
+        
+       </div>
+      </div>
+     
+    </div>
+   </div>
+  </div></div>
+ </section>
 </body>
 </html>

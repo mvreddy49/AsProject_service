@@ -28,7 +28,7 @@ public class SMS {
 			restClient.addParam("title",Constants.SMS_TITLE);
 			
 			restClient.addParam("phone",mobile);
-			restClient.addParam("msg",Constants.SMS_BOOKING_MSG);
+			restClient.addParam("msg",message);
 			
 			String response=restClient.postRestApi();
 			logger.info("send SMS Reponse format:::"+response);
