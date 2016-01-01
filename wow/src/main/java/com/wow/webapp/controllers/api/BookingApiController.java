@@ -84,6 +84,12 @@ public class BookingApiController {
 					logger.debug("Before calling getCookings on clinic");
 					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
 				}
+				else if(role!=null && role.contains(Constants.ROLE_DOCTOR))
+				{
+					User user=userDao.findByUserName(userName);
+					Doctor doctor=contentDao.getDoctorByUser(user);
+					returnModel=getBookingsOnDoctor(doctor);
+				}
 				else{
 					returnModel = getBookingsOnUser(userName);
 				}
@@ -115,6 +121,13 @@ public class BookingApiController {
 		return returnModel;
 	}
 	
+	private ApiReturnModel getBookingsOnDoctor(Doctor doctor) {
+		ApiReturnModel returnModel = null;
+		List<BookingModel> bookings = contentDao.findBookingsOnDoctor(doctor);
+		// User user=userDao.findByid(Integer.parseInt(userId));
+		returnModel=commonReturnBookingModel(bookings);
+		return returnModel;
+	}
 
 	private ApiReturnModel getBookingsOnUser(String userName) {
 		ApiReturnModel returnModel = null;
