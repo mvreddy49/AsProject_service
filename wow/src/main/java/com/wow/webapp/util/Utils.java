@@ -93,7 +93,7 @@ public class Utils {
 			calendar.setTime(startTime);
 			times.add(sdf.format(startTime));
 			while (calendar.getTime().before(endTime)) {
-				calendar.add(Calendar.MINUTE, 30);
+				calendar.add(Calendar.MINUTE, duration);
 				times.add(sdf.format(calendar.getTime()));
 			}
 		} catch (Exception e) {

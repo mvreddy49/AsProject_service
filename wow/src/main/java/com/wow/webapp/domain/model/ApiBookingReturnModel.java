@@ -15,16 +15,18 @@ public class ApiBookingReturnModel extends ApiReturnModel{
 		super();
 	}
 	
-	public ApiBookingReturnModel(Integer code,String status, String message, List<String> errors)
-	{
-		super(code,status,message,errors);
-	}
 	
 	public ApiBookingReturnModel(Integer code,String status, String message)
 	{
 		super(code,status,message);
 	}
 	
+	public ApiBookingReturnModel(Integer code,String status, String message,List<BookingModel> bookings)
+	{
+		super(code,status,message);
+		this.bookings=bookings;
+		
+	}
 	
 	private List<BookingModel> bookings = new ArrayList<BookingModel>(0);
 	

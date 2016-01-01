@@ -86,6 +86,7 @@ public class ContentGetController {
 	@RequestMapping(value="/slotsByDate", method=RequestMethod.GET)
 	public ApiReturnModel slots(@RequestParam("doctorId") String doctorId,@RequestParam("date") String date)
 	{
+		logger.info("enter into slotsBydate");
 		Utils utils=new Utils();
 		ApiReturnModel returnValue = null;
 		try
@@ -96,6 +97,7 @@ public class ContentGetController {
 			List<Slot> slots=contentDao.findSlotsByClinicAndDoctor(doctor,clinic, date); 
 			if(slots!=null && slots.size()>0)
 			{
+				logger.info("slots availble for request date"+date);
 				List<SlotsModel> list=new ArrayList<SlotsModel>();
 				List<SlotsModel> bookedSlots = new ArrayList<SlotsModel>();
 				for(Slot slot:slots)
@@ -111,7 +113,10 @@ public class ContentGetController {
 				
 			}
 			else
+			{
 				returnValue=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS, "slots not available");
+				logger.info("slots are not availble for requestdate::"+date);
+			}
 			
 		}
 		catch(Exception e)
@@ -122,4 +127,7 @@ public class ContentGetController {
 		}
 		return returnValue;
 	}
+	
+	
+	
 }
