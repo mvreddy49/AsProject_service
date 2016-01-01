@@ -116,5 +116,30 @@ public class HomeController {
 		ModelAndView mv = new ModelAndView("Contact");
 		return mv;
 	}
+	@RequestMapping(value = "/recp", method = RequestMethod.GET)
+	public ModelAndView recp(){
+		logger.debug("recp get get start");
+		ModelAndView mv = new ModelAndView("recp");
+		return mv;
+	}
+	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
+	public ModelAndView doctor(){
+		logger.debug("recp get get start");
+		ModelAndView mv = new ModelAndView("doctor");
+		return mv;
+	}
+	@RequestMapping(value = "/MedicalTourism", method = RequestMethod.GET)
+	public ModelAndView MedicalTourism(){
+		logger.debug("MedicalTourism get get start");
+		ModelAndView mv = new ModelAndView("MedicalTourism");
+		return mv;
+	}
+	
+	@RequestMapping(value = "homeclinic", method = RequestMethod.GET)
+	public ModelAndView homeclinic(){
+		logger.debug("homeclinic get get start");
+		ModelAndView mv = new ModelAndView("homeclinic");
+		return mv;
+	}
 
 }

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Recp</title>
+<script>
+	$(function() {
+		$('.contentDiv').hide();
+		$('#addSlotDiv').show();
+		$('.contentSelection').click(function() {
+			$('.contentDiv').hide();
+			$('#' + $(this).attr('id') + 'Div').show();
+		});
+
+		$.ajax({
+
+			url : "api/getdoctors",
+			data : {
+
+			},
+			success : function(result) {
+				console.log(result);
+				if (result.status == "OK") {
+					$('#doctorId').find('option').remove();
+
+					$.each(result.doctors, function(index, doctor) {
+						console.log(doctor);
+						$('#doctorId').append($('<option></option>', {
+							value : doctor.id + "," + doctor.name,
+							text : doctor.id + "-" + doctor.name
+						}));
+						//$('#slotsDropdown').append('<option></option>').val(slot);
+					});
+
+				}
+			}
+		});
+
+	});
+</script>
+<script type="text/javascript">
+	$(function(){
+		
+		$('#addBooking').click(function(){
+				
+			$.ajax({
+				url: "api/bookings/myBookings",
+				data : {},
+				success: function(result){
+					var content =
+						'<table class="table table-hover " >'
+						+'<th class="tablestyle">Slot Time</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
+				var htmlContent='';
+					console.log(result);
+					if (result.status == "OK") {
+					
+						$.each(result.bookings,function(index,item) {
+							
+							htmlContent = htmlContent
+									+ "<tr>"+"<td>"
+									+  item.slotTime  +"</td>"+"<td>"
+									
+									+ item.doctor.name+"</td>"+"<td>"
+									
+									+ item.doctor.speciality+"</td>"
+									+ "</tr>";
+			content=content+htmlContent;
+			htmlContent='';
+							console.log(index+ " => "+ item.name);
+							}); // End $.each
+						content=content+"</table>";
+						$('#addBookingDiv').empty();
+						$('#addBookingDiv').append(content);
+						}
+				}
+				
+				
+			});
+			
+		});	
+	
+	});
+</script>
+
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="row">
+			<div class="col-md-2">
+				<div class="btn-group-vertical">
+					
+					<button id="addSlot" type="button"
+						class="btn btn-primary contentSelection">Add Slots</button>
+							<button id="addBooking" type="button"
+						class="btn btn-primary contentSelection">My Bookings</button>
+				</div>
+			</div>
+			
+			<!-- 	Add Slot Div started -->
+			<div id="addSlotDiv" class="contentDiv">
+				<div id="signupbox" class="mainbox col-md-6 col-sm-8 ">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<div class="panel-title">Booking</div>
+						</div>
+						<div class="panel-body">
+							<div id="signupform" class="form-horizontal">
+								<div class="form-group">
+									<label for="doctorId" class="col-md-3 control-label">Doctor
+										Id</label>
+									<div class="col-md-9">
+										<select id="doctorId"></select>
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<label for="startTime" class="col-md-3 control-label">Start
+										Time</label>
+									<div class="col-md-9">
+										<input id="startTime" type="text" class="form-control"
+											required="required" placeholder="startTime" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="endTime" class="col-md-3 control-label">End
+										Time</label>
+									<div class="col-md-9">
+										<input id="endTime" type="text" class="form-control"
+											required="required" placeholder="end time" />
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<!-- Button -->
+									<div class="col-sm-12 controls" align="center">
+										<button id="submitbtn" class="btn btn-success">
+											<i class="glyphicon glyphicon-send"></i>Add
+										</button>
+
+									</div>
+									<div id="result" align="center"
+										style="background-color: silver; border-bottom-color: green;"></div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		
+			<div id="addBookingDiv" class="contentDiv">
+				
+					</div>
+				</div>
+			
+	</section>
+</body>
+</html>
