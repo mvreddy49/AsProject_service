@@ -1,12 +1,11 @@
 package com.wow.webapp.domain.model;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class LoginModel {
 	
 	@NotEmpty(message="User Name Can not be empty")
-	@Email
+	
 	private String username;
 	
 	@NotEmpty(message="Password Can not be empty")

@@ -122,6 +122,12 @@ public class HomeController {
 		ModelAndView mv = new ModelAndView("recp");
 		return mv;
 	}
+	@RequestMapping(value = "/lab", method = RequestMethod.GET)
+	public ModelAndView lab(){
+		logger.debug("lab get get start");
+		ModelAndView mv = new ModelAndView("lab");
+		return mv;
+	}
 	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
 	public ModelAndView doctor(){
 		logger.debug("recp get get start");

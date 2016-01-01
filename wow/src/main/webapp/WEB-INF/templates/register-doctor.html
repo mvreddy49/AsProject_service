@@ -1,0 +1,227 @@
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ layout:decorator="layout">
+
+<head>
+<title>Register Doctor</title>
+
+
+<style type="text/css">
+.errorstyle {
+ color: red;
+}
+
+.errorstyle1 {
+ color: green;
+}
+
+.header {
+ color: #36A0FF;
+ font-size: 18px;
+ padding: 4px;
+}
+
+.bigicon {
+ font-size: 12px;
+ color: #36A0FF;
+}
+</style>
+
+<script>
+ $(function() {
+  var name='';
+     var mobile='';
+     var startTime='';
+     var endTime='';
+     var speciality='';
+     //$("#startTime").datepicker();
+  
+  console.log(speciality);
+ 
+
+  $('#submitbtn').click(function(){
+	  console.log($('#startTime').val());
+	  var isoDate = new Date($('#startTime').val()).toISOString();
+	  console.log('isoDate = ' + isoDate);
+   $('#nameerror').empty();
+   $('#specialityerror').empty();
+   $('#mobileerror').empty();
+   
+   if (checkName()) {
+    if (checkSpeciality()) {
+     if (checkMobile()) {
+   
+   
+   
+   name=$('#name').val();
+      mobile=$('#mobile').val();
+      startTime=$('#startTime').val();
+      endTime=$('#endTime').val();
+      speciality=$('#speciality').val();
+   alert(name+mobile+startTime+endTime+speciality);
+   $.ajax({
+	   
+    type:"POST",
+    url:"content/register-doctor",
+       data:{
+        "name" : name,
+        "mobile":mobile,
+        "startTime":startTime+":00Z",
+        "endTime" : endTime+":00Z",
+        "speciality" :speciality
+        
+       },
+    success : function(result) {
+     console.log(result);
+     if (result.status == "OK") {
+     alert("Booking completed");
+      
+
+     }
+    }
+  });
+   document.getElementById("name").value = "";
+   document.getElementById("speciality").value = "";
+   document.getElementById("mobile").value = "";
+     }
+    }
+   }
+   
+  });
+     });
+ function checkName() {
+
+  var name = document.getElementById('name');
+  var filter = /^([a-zA-Z]{4,8})+$/;
+
+  if (!filter.test(name.value)) {
+
+   var htm = "";
+   htm = htm + "Enter Valid Name";
+   $('#nameerror').empty();
+   $('#nameerror').append(htm);
+
+   name.focus();
+   return false;
+  } else {
+   $('#nameerror').empty();
+   return true;
+  }
+ }
+ function checkSpeciality() {
+
+  var speciality = document.getElementById('speciality');
+  var filter = /^([a-zA-Z]{4,8})+$/;
+
+  if (!filter.test(speciality.value)) {
+
+   var htm = "";
+   htm = htm + "Enter Valid Name";
+   $('#specialityerror').empty();
+   $('#specialityerror').append(htm);
+
+   speciality.focus();
+   return false;
+  } else {
+   $('#specialityerror').empty();
+   return true;
+  }
+ }
+ function checkMobile() {
+
+  var mobile = document.getElementById('mobile').value;
+
+  var filter = /^([789])([0-9]){9}$/;
+
+  if (!filter.test(mobile)) {
+   var htm = "";
+   htm = htm + "Enter valid phone number";
+   $('#mobileerror').empty();
+   $('#mobileerror').append(htm);
+   mobile.focus();
+   return false;
+  } else {
+   $('#mobileerror').empty();
+  }
+  return true;
+
+ }
+ function nameclear() {
+  $('#nameerror').empty();
+ }
+ function emailclear() {
+  $('#specialityerror').empty();
+ }
+ function mobileclear() {
+  $('#mobileerror').empty();
+ }
+ 
+ 
+</script>
+</head>
+<body>
+ <section layout:fragment="content">
+  <div id="signupbox"
+   class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+   <div class="panel panel-info">
+    <div class="panel-heading">
+     <div class="panel-title">Sign Up</div>
+    </div>
+    <div class="panel-body">
+     <div id="signupform" class="form-horizontal" >
+      <div class="form-group">
+       <label for="Name" class="col-md-3 control-label">Name</label>
+       <div class="col-md-9">
+        <input id="name" type="tel"  class="form-control" placeholder="name" onkeypress="nameclear()" />
+        <div id="nameerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="Speciality" class="col-md-3 control-label">Speciality</label>
+       <div class="col-md-9">
+        <input id="speciality" type="tel"  class="form-control" placeholder="speciality" onkeypress="specialityclear()" />
+        <div id="specialityerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="Mobile Number" class="col-md-3 control-label">Mobile Number</label>
+       <div class="col-md-9">
+        <input id="mobile" type="tel"  class="form-control" placeholder="Mobile" onkeypress="mobileclear()" />
+        <div id="mobileerror" class="errorstyle"></div><br/>
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="startTime" class="col-md-3 control-label">Start Time</label>
+       <div class="col-md-9">
+        <input id="startTime" type="datetime-local" class="form-control"
+          required="required"
+         placeholder="startTime"  />
+       </div>
+      </div>
+      <div class="form-group">
+       <label for="endTime" class="col-md-3 control-label">End Time</label>
+       <div class="col-md-9">
+        <input id="endTime" type="datetime-local" class="form-control" 
+         required="required" placeholder="end time"
+         
+          />
+       </div>
+      </div>
+
+      
+      <div class="form-group">
+       <!-- Button -->
+       <div class="col-sm-12 controls">
+        <button id="submitbtn" class="btn btn-success">
+         <i class="glyphicon glyphicon-send"></i>Register
+        </button>
+        
+       </div>
+      </div>
+     
+    </div>
+   </div>
+  </div></div>
+ </section>
+</body>
+</html>

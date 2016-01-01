@@ -1,0 +1,302 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Carporate Health</title>
+
+<script>
+	$(function() {
+
+		$("#contactsubmit").click(function() {
+			$('#nameerror').empty();
+			$('#mailerror').empty();
+			$('#phoneerror').empty();
+			$('#messageerror').empty();
+			
+			checkPhone();
+			checkEmail();
+			checkMessage();
+			
+			if (checkName()) {
+				if (checkEmail()) {
+					if (checkPhone()) {
+						if (checkMessage()) {
+						$.ajax({
+							url : "api/secondopinion",
+							data : {
+								"name" : $("#name").val(),
+								"email" : $("#email").val(),
+								"phone" : $("#phone").val(),
+								"message" : $("#message").val()
+							},
+							method : "post",
+							success : function(result) {
+								console.log(result);
+								if (result.status == "OK") {
+									alert("mail sent successfully");
+									console.log(result)
+
+								}
+							}
+						});
+						document.getElementById("name").value = "";
+						document.getElementById("email").value = "";
+						document.getElementById("phone").value = "";
+						document.getElementById("message").value = "";
+						}
+					}
+				}
+
+			}
+
+		});
+
+	});
+
+	function checkName() {
+
+		var name = document.getElementById('name');
+		var filter = /^([a-zA-Z]{4,8})+$/;
+		
+
+		if (!filter.test(name.value)) {
+			
+			var htm="";
+			htm=htm+"Enter Valid Name";
+			$('#nameerror').empty();
+			$('#nameerror').append(htm);
+			
+			name.focus();
+			return false;
+		} else {
+				$('#nameerror').empty();
+			return true;
+		}
+	}
+
+	function checkEmail() {
+
+		var email = document.getElementById('email');
+		var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+		if (!filter.test(email.value)) {
+			
+			var htm="";
+			htm=htm+"Enter valid email";
+			$('#mailerror').empty();
+			$('#mailerror').append(htm);
+			
+			email.focus();
+			return false;
+		} else {
+			$('#mailerror').empty();
+			return true;
+		}
+	}
+
+	function checkPhone() {
+
+		var y = document.getElementById('phone').value;
+
+		var filter = /^([789])([0-9]){9}$/;
+
+		
+		if (!filter.test(y)) {
+			var htm="";
+			htm=htm+"Enter valid phone number";
+			$('#phoneerror').empty();
+			$('#phoneerror').append(htm);
+			phone.focus();
+			return false;
+		}else{
+			$('#phoneerror').empty();
+		}
+		return true;
+
+	}
+	function checkMessage() {
+
+		var message = document.getElementById('message');
+		var filter = /^([a-zA-Z0-9]{4,250})+$/;
+		
+
+		if (!filter.test(message.value)) {
+			var htm="";
+			htm=htm+"Enter Message";
+			$('#messageerror').empty();
+			$('#messageerror').append(htm);
+			message.focus();
+			return false;
+		} else {
+			$('#messageerror').empty();
+			return true;
+		}
+	}
+	
+	function nameclear() {
+		$('#nameerror').empty();
+	}
+	function  emailclear() {
+		$('#mailerror').empty();
+	}
+	function  phoneclear() {
+		$('#phoneerror').empty();
+	}
+	function  messageclear() {
+		$('#messageerror').empty();
+	}
+
+</script>
+
+</head>
+<body>
+
+
+	<section layout:fragment="content">
+
+		<div class="row">
+			<div id="displayArea" class="errorstyle1"></div>
+		</div>
+
+		<div class="welcome_topbg"></div>
+		<br />
+		<div class="welcome_services_inner">
+			<br />
+			<p class="heading1">
+			<h3></h3>
+			</p>
+			&nbsp;
+
+			<div class="container">
+				<div class="row">
+					<div class="col-md-9">
+						<div class="well well-sm">
+							<legend class="text-center header">CarporateHealth</legend>
+							<div align="center">
+								<table>
+									<tr>
+										<td align="right">Your Name:</td>
+										<td>
+											<div class="form-group">
+												<span class="col-md-1 col-md-offset-0 text-center"><i
+													class="fa fa-user bigicon"></i></span>
+												<div class="col-md-10">
+													<input id="name" name="name" type="text" placeholder="Name"
+														class="form-control" onkeypress="nameclear()"></input>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div id="nameerror" class="errorstyle"></div>
+										</td>
+									</tr>
+
+									<tr>
+										<td align="right">Your Email Id :</td>
+										<td>
+											<div class="form-group">
+												<span class="col-md-1 col-md-offset-0 text-center"><i
+													class="fa fa-envelope-o bigicon"></i></span>
+												<div class="col-md-10">
+													<input id="email" name="email" type="text"
+														placeholder="Email Address" class="form-control"
+														onkeypress="emailclear()"></input>
+												</div>
+											</div>
+
+										</td>
+										<td>
+											<div id="mailerror" class="errorstyle"></div>
+										</td>
+
+
+
+									</tr>
+
+									<tr>
+										<td align="right">Mobile Number :</td>
+										<td>
+											<div class="form-group">
+												<span class="col-md-1 col-md-offset-0 text-center"><i
+													class="fa fa-phone-square bigicon"></i></span>
+												<div class="col-md-10">
+													<input id="phone" name="phone" type="text"
+														placeholder="Phone" class="form-control"
+														onkeypress="phoneclear()"></input>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div id="phoneerror" class="errorstyle"></div>
+										</td>
+									</tr>
+
+
+									<tr>
+										<td align="right">Message :</td>
+										<td>
+											<div class="form-group">
+												<span class="col-md-1 col-md-offset-0 text-center"><i
+													class="fa fa-pencil-square-o bigicon"></i></span>
+												<div class="col-md-10">
+													<textarea class="form-control" id="message" name="message"
+														placeholder="" rows="7" onkeypress="messageclear()"></textarea>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div id="messageerror" class="errorstyle"></div>
+										</td>
+									</tr>
+
+									<tr>
+
+										<td colspan="2" align="center">
+											<div class="form-group">
+												<div class="col-md-10 text-center">
+													<button id="contactsubmit" type="submit"
+														class="btn btn-primary btn-lg">Submit</button>
+
+
+
+
+												</div>
+											</div>
+										</td>
+									</tr>
+
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<style>
+.errorstyle {
+	color: red;
+}
+
+.errorstyle1 {
+	color: green;
+}
+
+.header {
+	color: #36A0FF;
+	font-size: 18px;
+	padding: 4px;
+}
+
+.bigicon {
+	font-size: 12px;
+	color: #36A0FF;
+}
+</style>
+
+
+		</div>
+
+
+	</section>
+</body>
+</html>

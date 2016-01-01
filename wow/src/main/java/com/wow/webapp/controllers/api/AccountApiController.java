@@ -35,6 +35,7 @@ import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.SMS;
 import com.wow.webapp.util.Utils;
 
 @RestController
@@ -77,23 +78,32 @@ public class AccountApiController {
 		}
 		else{
 			try{
-				userDao.findByUserName(model.getUsername());
+				User u = userDao.findByUserName(model.getUsername());
+				if(u != null)
+				{	
 				returnValue.setStatus("ERROR");
 				errors.add(String.format("User %s already exists", model.getUsername()));
-				returnValue.setErrors(errors);				
+				returnValue.setErrors(errors);		
+				}
+				else{
+					u = new User();
+					u.setUsername(model.getUsername());
+					//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+					//u.setPassword(passwordEncoder.encode(model.getPassword()));
+					u.setPassword(new Utils().getEncryptedPassword(model.getPassword()));
+					u.setEnabled(true);
+					
+					Set<Authority> authorities = new HashSet<Authority>();
+					authorities.add(new Authority(u, "ROLE_USER"));
+					u.setUserRole(authorities);
+					userDao.save(u);
+				}
 			}
 			catch(Exception e){
-				User u = new User();
-				u.setUsername(model.getUsername());
-				//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				//u.setPassword(passwordEncoder.encode(model.getPassword()));
-				u.setPassword(new Utils().getEncryptedPassword(model.getPassword()));
-				u.setEnabled(true);
-				
-				Set<Authority> authorities = new HashSet<Authority>();
-				authorities.add(new Authority(u, "ROLE_USER"));
-				u.setUserRole(authorities);
-				userDao.save(u);
+				logger.error("Exception while creating user:" + e.toString());
+				returnValue.setStatus(Responses.ERROR_STATUS);
+				errors.add(Responses.ERROR_MSG);
+				returnValue.setErrors(errors);	
 			}
 		}
 
@@ -149,8 +159,7 @@ public class AccountApiController {
 				}
 				userDetails.setUsername(model.getUsername());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				userDetails.setPassword(passwordEncoder.encode(model
-						.getPassword()));
+				userDetails.setPassword(passwordEncoder.encode(model.getUsername()));
 				userDetails.setEnabled(true);
 				Set<Authority> authorities = new HashSet<Authority>();
 				Authority auth = null;
@@ -176,11 +185,13 @@ public class AccountApiController {
 				userDetails.setUserProfile(userProfile);
 				userDetails.setUserRole(authorities);
 				Clinic c = userDao.getClinicByUserName(ud.getUsername());
-				if(model.getRole().equalsIgnoreCase(Constants.ROLE_RECP))
+				if(Constants.ROLE_CLINIC_ACCESS.contains(model.getRole()))
 					userDetails.setClinic(c);
 				if(Constants.ROLE_RECP_ACCESS.contains(model.getRole()))
 					userDetails.setClinic(null);
 				userDao.save(userDetails);
+				SMS sms = new SMS();
+				sms.sendSMS(Constants.SMS_BOOKING_MSG, model.getUsername());
 			} catch (Exception e) {
 				logger.info("exception occurs :::" + e.toString());
 				errors.add(e.getMessage());
@@ -197,7 +208,9 @@ public class AccountApiController {
 			returnModel.setMessage("Adding user unsuccessfullty");
 		}
 		else{
+			logger.info("SUCCESS");
 			List<User> userList = userDao.list();
+			logger.info("User list is : " + userList.size());
 			List<ResponseUserModel> usersList = new ArrayList<ResponseUserModel>();
 			for(User user:userList){
 				logger.debug("User details are :" + user);

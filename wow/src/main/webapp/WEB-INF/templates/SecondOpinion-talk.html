@@ -1,0 +1,214 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<title>Contact US</title>
+
+<script>
+	$(function() {
+
+		$("#contactsubmit").click(function() {
+			$('#nameerror').empty();
+			$('#mailerror').empty();
+			$('#phoneerror').empty();
+			$('#messageerror').empty();
+
+			checkPhone();
+			checkEmail();
+			checkMessage();
+
+			if (checkName()) {
+				if (checkEmail()) {
+					if (checkPhone()) {
+						if (checkMessage()) {
+							$.ajax({
+								url : "api/contactus",
+								data : {
+									"name" : $("#name").val(),
+									"email" : $("#email").val(),
+									"phone" : $("#phone").val(),
+									"message" : $("#message").val()
+								},
+								method : "post",
+								success : function(result) {
+									console.log(result);
+									if (result.status == "OK") {
+										alert("mail sent successfully");
+										console.log(result)
+
+									}
+								}
+							});
+							document.getElementById("name").value = "";
+							document.getElementById("email").value = "";
+							document.getElementById("phone").value = "";
+							document.getElementById("message").value = "";
+						}
+					}
+				}
+
+			}
+
+		});
+
+	});
+
+	function checkName() {
+
+		var name = document.getElementById('name');
+		var filter = /^([a-zA-Z]{4,8})+$/;
+
+		if (!filter.test(name.value)) {
+
+			var htm = "";
+			htm = htm + "Enter Valid Name";
+			$('#nameerror').empty();
+			$('#nameerror').append(htm);
+
+			name.focus();
+			return false;
+		} else {
+			$('#nameerror').empty();
+			return true;
+		}
+	}
+
+	function checkEmail() {
+
+		var email = document.getElementById('email');
+		var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+		if (!filter.test(email.value)) {
+
+			var htm = "";
+			htm = htm + "Enter valid email";
+			$('#mailerror').empty();
+			$('#mailerror').append(htm);
+
+			email.focus();
+			return false;
+		} else {
+			$('#mailerror').empty();
+			return true;
+		}
+	}
+
+	function checkPhone() {
+
+		var y = document.getElementById('phone').value;
+
+		var filter = /^([789])([0-9]){9}$/;
+
+		if (!filter.test(y)) {
+			var htm = "";
+			htm = htm + "Enter valid phone number";
+			$('#phoneerror').empty();
+			$('#phoneerror').append(htm);
+			phone.focus();
+			return false;
+		} else {
+			$('#phoneerror').empty();
+		}
+		return true;
+
+	}
+	function checkMessage() {
+
+		var message = document.getElementById('message');
+		var filter = /^([a-zA-Z0-9]{4,250})+$/;
+
+		if (!filter.test(message.value)) {
+			var htm = "";
+			htm = htm + "Enter Message";
+			$('#messageerror').empty();
+			$('#messageerror').append(htm);
+			message.focus();
+			return false;
+		} else {
+			$('#messageerror').empty();
+			return true;
+		}
+	}
+
+	function nameclear() {
+		$('#nameerror').empty();
+	}
+	function emailclear() {
+		$('#mailerror').empty();
+	}
+	function phoneclear() {
+		$('#phoneerror').empty();
+	}
+	function messageclear() {
+		$('#messageerror').empty();
+	}
+</script>
+<style type="text/css">
+.errorstyle {
+	color: red;
+}
+
+.errorstyle1 {
+	color: green;
+}
+
+.header {
+	color: #36A0FF;
+	font-size: 18px;
+	padding: 4px;
+}
+
+.bigicon {
+	font-size: 12px;
+	color: #36A0FF;
+}
+</style>
+
+
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+	<br/> <br/>
+	
+			<div class="row ">
+
+				<div class="col-md-6" align="left">
+					<label for="name" class="blocklabel">Your Name*</label><br /> <input
+						name="name" type="text" id="name" style="width: 250px;"
+						onkeypress="nameclear()" />
+					<div id="nameerror" class="errorstyle"></div>
+
+					<label for="email" class="blocklabel">E-Mail*</label> <br /> <input
+						name="email" type="text" id="email" style="width: 250px;"
+						onkeypress="emailclear()" />
+					<div id="mailerror" class="errorstyle"></div>
+
+					<label for="website" class="blocklabel">Phone Number</label> <br />
+
+					<input name="phone" type="text" id="phone" style="width: 250px;"
+						onkeypress="phoneclear()" />
+					<div id="phoneerror" class="errorstyle"></div>
+
+					<label for="message" class="blocklabel">Your Message*</label> <br />
+
+					<textarea name="message" id="message"
+						style="width: 250px; height: 135px;" onkeypress="messageclear()"></textarea>
+					<div id="messageerror" class="errorstyle"></div>
+
+
+							<br/>
+					<button id="contactsubmit" type="submit"
+						class="btn btn-primary btn-lg">Submit</button>
+
+				</div>
+
+			
+
+			</div>
+			
+
+		</div>
+	</section>
+</body>
+</html>

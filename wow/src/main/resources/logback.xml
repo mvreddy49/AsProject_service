@@ -9,21 +9,43 @@
 		</layout>
 	</appender>
 
-<!-- 	<logger name="org.springframework" level="error" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger> -->
-	
-<!-- 	<logger name="com.wow.*" level="debug" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger> -->
-	 
-	 <logger name="org.springframework" level="ERROR" /> 
-	 <logger name="org.thymeleaf" level="ERROR" /> 
-	  <logger name="org.hibernate" level="ERROR" />
-     <logger name="com.wow" level="DEBUG" />  
-	  
+	<appender name="TIME_BASED_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/usr/lib/apache-tomcat-8.0.28/logs/webapp/webapp.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			
+			<fileNamePattern>/usr/lib/apache-tomcat-8.0.28/logs/webapp/webapp.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		
+		<!--  <file>E:\webapp.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			
+			<fileNamePattern>E:\webapp.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		-->
+		<encoder>
+			<pattern>%relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- <logger name="org.springframework" level="error" additivity="false"> 
+		<appender-ref ref="STDOUT" /> </logger> -->
+
+	<!-- <logger name="com.wow.*" level="debug" additivity="false"> <appender-ref 
+		ref="STDOUT" /> </logger> -->
+
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="org.thymeleaf" level="ERROR" />
+	<logger name="org.hibernate" level="ERROR" />
+	<logger name="com.wow" level="DEBUG" />
+
 	<root level="debug">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="TIME_BASED_FILE" />
 	</root>
 
 </configuration>

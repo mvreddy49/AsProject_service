@@ -1,0 +1,794 @@
+div.mytile {
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 150px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+	bottom:0px;
+	z-index:999;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.new:hover {
+  outline:6px solid #4390df;
+/*   height: 220px; */
+}
+
+
+
+.style-heading{
+  border-top: 4px solid #0050ef; /* mid green */  
+  background-color:#4390df;     /* pale green   #efe*/
+  color: block;                /* dark green */
+}
+
+
+.mybox {
+	padding: 10px;	
+}
+
+.nav.navbar-nav>li>a:hover {
+	background-color: #ff8000;
+	 color : white;
+}
+
+div.mytile:active {
+  outline: 0;
+}
+
+div.mytile.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile p+a {
+    top:10%;
+    color : block;
+}
+
+div.mytile p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile2 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 170px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0;
+ z-index:994;
+	vertical-align:bottom;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile2:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile3 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 190px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0;
+ vertical-align:bottom;
+ z-index:992;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile3:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile4 {
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 170px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+ bottom:0px;
+ z-index:991;
+  
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile4:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile5 {
+	border-top-left-radius:20px;
+border-top-right-radius:20px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:opx;
+  width: 220px; 
+  height: 150px;
+  overflow: hidden;
+  display: block;
+  float: left;
+  margin: 5px;
+  background-color: #eeeeee;
+  box-shadow: inset 0 0 1px #FFFFCC;
+  cursor: pointer;
+  position: relative;
+  text-align : center;
+  bottom:0px;
+  z-index:990;
+ 
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+     
+    x;
+}
+          
+}
+div.mytile5:hover {
+  outline: #999999 solid 1px;
+/*   height: 220px; */
+}
+
+div.mytile2:active {
+  outline: 0;
+}
+
+div.mytile2.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile2 p+a {
+    top:20%;
+    color : block;
+}
+
+div.mytile2 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile3:active {
+  outline: 0;
+}
+
+div.mytile3.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile3 p+a {
+    top:20%;
+    color : block;
+}
+
+div.mytile3 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile4:active {
+  outline: 0;
+}
+
+div.mytile4.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile4 p+a {
+    top:30%;
+    color : block;
+}
+
+div.mytile4 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+div.mytile5:active {
+  outline: 0;
+}
+
+div.mytile5.no-outline {
+  outline-color: transparent;
+}
+
+
+div.mytile5 p+a {
+    top:30%;
+    color : block;
+}
+
+div.mytile5 p:first-child {
+	position: relative;
+    top:30%;
+    text-align: center;
+    color: white;
+    font-size: x-large;
+    
+  }
+
+
+
+.top-buffer {
+	margin-top:50px;
+	margin-left: 0px;
+
+	}
+
+.round-corner {
+	border-radius: 25px;
+}
+
+.bg-black {
+  background: #000000 !important;
+}
+.bg-green {
+	
+	 background: #00B800!important;
+}
+
+.bg-DarkOrchid {
+	
+	 background: #CC66FF !important;
+}
+
+.bg-MediumSlateBlue {
+  background: #47A3FF !important;
+}
+
+
+.bg-DODGERBLUE {
+  background: #2090FF !important;
+}
+
+.bg-MEDIUMSEAGREEN {
+  background: #40B070 !important;
+}
+
+.bg-SALMON {
+  background:#F08070 !important;
+}
+.bg-MEDIUMTURQUOISE {
+  background:#40D0D0 !important;
+}
+
+.bg-DARKSLATEBLUE {
+  background:#403880 !important;
+}
+
+.bg-GHOSTWHITE{
+  background:#F0F7FF !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+.bg-Crimson {
+  background: #FF1C1C !important;
+}
+
+.bg-Aqua {
+  background: #00FFFF !important;
+}
+
+
+
+
+
+.bg-white {
+  background: #e3e3e3 !important;
+}
+
+
+
+
+.bg-lime {
+  background: #a4c400 !important;
+}
+
+.bg-MEDIUMORCHID {
+  background: #B050D0 !important;
+}
+.bg-green {
+  background: #60a917 !important;
+}
+.bg-emerald {
+  background: #008a00 !important;
+}
+.bg-teal {
+  background: #00aba9 !important;
+}
+.bg-cyan {
+  background: #1ba1e2 !important;
+}
+.bg-cobalt {
+  background: #0050ef !important;
+}
+.bg-indigo {
+  background: #6a00ff !important;
+}
+.bg-violet {
+  background: #aa00ff !important;
+}
+.bg-pink {
+  background: #dc4fad !important;
+}
+.bg-magenta {
+  background: #d80073 !important;
+}
+.bg-crimson {
+  background: #a20025 !important;
+}
+.bg-red {
+  background: #ce352c !important;
+}
+.bg-orange {
+  background: #fa6800 !important;
+}
+.bg-amber {
+  background: #f0a30a !important;
+}
+.bg-yellow {
+  background: #e3c800 !important;
+}
+.bg-brown {
+  background: #825a2c !important;
+}
+.bg-olive {
+  background: #6d8764 !important;
+}
+.bg-steel {
+  background: #647687 !important;
+}
+.bg-mauve {
+  background: #76608a !important;
+}
+.bg-taupe {
+  background: #87794e !important;
+}
+.bg-gray {
+  background: #555555 !important;
+}
+.bg-dark {
+  background: #333333 !important;
+}
+.bg-darker {
+  background: #222222 !important;
+}
+.bg-transparent {
+  background: transparent !important;
+}
+.bg-darkBrown {
+  background: #63362f !important;
+}
+.bg-darkCrimson {
+  background: #640024 !important;
+}
+.bg-darkMagenta {
+  background: #81003c !important;
+}
+.bg-darkIndigo {
+  background: #4b0096 !important;
+}
+.bg-darkCyan {
+  background: #1b6eae !important;
+}
+.bg-darkCobalt {
+  background: #00356a !important;
+}
+.bg-darkTeal {
+  background: #004050 !important;
+}
+.bg-darkEmerald {
+  background: #003e00 !important;
+}
+.bg-darkGreen {
+  background: #128023 !important;
+}
+.bg-darkOrange {
+  background: #bf5a15 !important;
+}
+.bg-darkRed {
+  background: #9a1616 !important;
+}
+.bg-darkPink {
+  background: #9a165a !important;
+}
+.bg-darkViolet {
+  background: #57169a !important;
+}
+.bg-darkBlue {
+  background: #16499a !important;
+}
+.bg-lightBlue {
+  background: #4390df !important;
+}
+.bg-lightRed {
+  background: #da5a53 !important;
+}
+.bg-lightGreen {
+  background: #7ad61d !important;
+}
+.bg-lighterBlue {
+  background: #00ccff !important;
+}
+.bg-lightTeal {
+  background: #45fffd !important;
+}
+.bg-lightOlive {
+  background: #78aa1c !important;
+}
+.bg-lightOrange {
+  background: #ffc194 !important;
+}
+.bg-lightPink {
+  background: #f472d0 !important;
+}
+.bg-grayDark {
+  background: #333333 !important;
+}
+.bg-grayDarker {
+  background: #222222 !important;
+}
+.bg-grayLight {
+  background: #999999 !important;
+}
+.bg-grayLighter {
+  background: #eeeeee !important;
+}
+.bg-blue {
+  background: #00aff0 !important;
+}
+
+
+.fg-black {
+  color: #000000 !important;
+}
+.fg-white {
+  color: #ffffff !important;
+}
+.fg-lime {
+  color: #a4c400 !important;
+}
+.fg-green {
+  color: #60a917 !important;
+}
+.fg-emerald {
+  color: #008a00 !important;
+}
+.fg-teal {
+  color: #00aba9 !important;
+}
+.fg-cyan {
+  color: #1ba1e2 !important;
+}
+.fg-cobalt {
+  color: #0050ef !important;
+}
+.fg-indigo {
+  color: #6a00ff !important;
+}
+.fg-violet {
+  color: #aa00ff !important;
+}
+.fg-pink {
+  color: #dc4fad !important;
+}
+.fg-magenta {
+  color: #d80073 !important;
+}
+.fg-crimson {
+  color: #a20025 !important;
+}
+.fg-red {
+  color: #ce352c !important;
+}
+.fg-orange {
+  color: #fa6800 !important;
+}
+.fg-amber {
+  color: #f0a30a !important;
+}
+.fg-yellow {
+  color: #e3c800 !important;
+}
+.fg-brown {
+  color: #825a2c !important;
+}
+.fg-olive {
+  color: #6d8764 !important;
+}
+.fg-steel {
+  color: #647687 !important;
+}
+.fg-mauve {
+  color: #76608a !important;
+}
+.fg-taupe {
+  color: #87794e !important;
+}
+.fg-gray {
+  color: #555555 !important;
+}
+.fg-dark {
+  color: #333333 !important;
+}
+.fg-darker {
+  color: #222222 !important;
+}
+.fg-transparent {
+  color: transparent !important;
+}
+.fg-darkBrown {
+  color: #63362f !important;
+}
+.fg-darkCrimson {
+  color: #640024 !important;
+}
+.fg-darkMagenta {
+  color: #81003c !important;
+}
+.fg-darkIndigo {
+  color: #4b0096 !important;
+}
+.fg-darkCyan {
+  color: #1b6eae !important;
+}
+.fg-darkCobalt {
+  color: #00356a !important;
+}
+.fg-darkTeal {
+  color: #004050 !important;
+}
+.fg-darkEmerald {
+  color: #003e00 !important;
+}
+.fg-darkGreen {
+  color: #128023 !important;
+}
+.fg-darkOrange {
+  color: #bf5a15 !important;
+}
+.fg-darkRed {
+  color: #9a1616 !important;
+}
+.fg-darkPink {
+  color: #9a165a !important;
+}
+.fg-darkViolet {
+  color: #57169a !important;
+}
+.fg-darkBlue {
+  color: #16499a !important;
+}
+.fg-lightBlue {
+  color: #4390df !important;
+}
+.fg-lighterBlue {
+  color: #00ccff !important;
+}
+.fg-lightTeal {
+  color: #45fffd !important;
+}
+.fg-lightOlive {
+  color: #78aa1c !important;
+}
+.fg-lightOrange {
+  color: #ffc194 !important;
+}
+.fg-lightPink {
+  color: #f472d0 !important;
+}
+.fg-lightRed {
+  color: #da5a53 !important;
+}
+.fg-lightGreen {
+  color: #7ad61d !important;
+}
+.fg-grayDark {
+  color: #333333 !important;
+}
+.fg-grayDarker {
+  color: #222222 !important;
+}
+.fg-grayLight {
+  color: #999999 !important;
+}
+.fg-grayLighter {
+  color: #eeeeee !important;
+}
+.fg-blue {
+  color: #00aff0 !important;
+}
+
+.carousel-inner .item img{
+	
+	height: 100px;
+	
+}
+
+.myButton {
+	background-color:#44c767;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:12px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+	.overlap1 {
+	top: -40px;
+}
+
+.overlap2 {
+	top: -60px;
+}
+
+.overlap3 {
+	top: -80px;
+}
+
+.overlap4 {
+	top: -60px;
+}
+
+.overlap5 {
+	top: -40px;
+}
+
+.overlap6 {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	top: -130px;
+}
+.overlap7{
+	background-color: orange;
+	position: relative;
+	height: 90px;
+	top: -60px;}
+#myCarousel{
+	
+	width: 100%;
+	height: 100px;
+}
+#myCarouseltxt{
+	height: 80px; 
+	width: 100%;
+	
+}
+.liststyles{
+	width: 200px;	
+}
+.tablestyle{
+	background-color: #dc4fad;
+	
+}
+.clinicbookingstyle{
+	color: green;
+}
+<style>
+#map-outer {
+	height: 230px;
+	border: 2px solid #CCC;
+	margin-bottom: 20px;
+	background-color: #FFF;
+	width: 290px;
+}
+#map-container {
+	height: 220px
+}
+.userStyle{
+color: green;
+margin-left: 5px;
+}
+</style>
