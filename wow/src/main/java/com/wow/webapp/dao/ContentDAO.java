@@ -9,6 +9,7 @@ import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Slot;
+import com.wow.webapp.entitymodel.User;
 
 public interface ContentDAO {
 	
@@ -22,13 +23,19 @@ public interface ContentDAO {
 	
 	public Doctor getDoctorById(Integer id);
 	
+	public Doctor getDoctorByUser(User user);
+	
 	public List<Slot> findSlotsByClinicAndDoctor(Doctor d,Clinic c,String date);
 	
-	public List<String> findSlotsByStartAndEndTimes(Date startTime,Date endTime);
+	public List<String> findSlotsByStartAndEndTimes(Date startTime,Date endTime,Doctor d);
 	
 
 	public List<BookingModel> findBookingsOnClinic(Clinic clinic);
 	public List<BookingModel> findBookingsOnClinic(Clinic clinic,String date);
 	public List<BookingModel> findBookingsOnUser(String userName);
+	public List<BookingModel> findBookingsOnDoctor(Doctor doctor);
+	
+	
+	public List<DoctorModel> getDoctors();
 
 }
