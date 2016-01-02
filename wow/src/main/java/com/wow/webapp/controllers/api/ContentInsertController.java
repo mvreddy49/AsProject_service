@@ -263,6 +263,7 @@ public class ContentInsertController {
 			User user=new User();
 			user.setUsername(model.getMobile());
 			user.setPassword(u.getEncryptedPassword(model.getMobile()));
+			user.setEnabled(true);
 			Set<Authority> authorities = new HashSet<Authority>();
 			authorities.add(new Authority(user, Constants.ROLE_DOCTOR));
 			user.setUserRole(authorities);

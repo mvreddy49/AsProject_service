@@ -65,7 +65,7 @@ public class ContentGetController {
 		return returnValue;
 	}
 	
-	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
+	@RequestMapping(value = "/getDoctors", method = RequestMethod.GET)
 	public ApiReturnModel doctors(
 			@RequestParam(value = "speciality", required = false) String speciality,
 			@RequestParam(value = "location", required = false, defaultValue = "hyderabad") String location,
@@ -136,14 +136,18 @@ public class ContentGetController {
 		return returnValue;
 	}
 	
-	@RequestMapping(value="/getDoctors",method=RequestMethod.GET)
-	public ApiReturnModel getDoctors()
+	@RequestMapping(value="/doctor",method=RequestMethod.GET)
+	public ApiReturnModel getDoctors(
+			@RequestParam(value = "speciality", required = false) String speciality,
+			@RequestParam(value = "location", required = false, defaultValue = "hyderabad") String location,
+			@RequestParam(value = "type", required = false, defaultValue = "clinic") String type
+			)
 	{
 		ApiReturnModel returnValue=null;
 		logger.info("enter into getDoctors:::");
 		try
 		{
-			List<DoctorModel> doctors=contentDao.getDoctors();
+			List<DoctorModel> doctors=contentDao.getDoctors(speciality,location);
 			returnValue=new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
 		}
 		catch(Exception e)
@@ -152,7 +156,7 @@ public class ContentGetController {
 			logger.error("while exception occurs getdoctors info:::"+e.toString());
 			returnValue = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_MSG, e.getMessage());
 		}
-		return null;
+		return returnValue;
 		
 	}
 	

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wow.webapp.domain.account.UserModel;
 import com.wow.webapp.domain.model.BookingModel;
@@ -26,7 +27,7 @@ import com.wow.webapp.util.Utils;
 public class ContentDAOImpl implements ContentDAO{
 
 	private SessionFactory sessionFactory;
-	private static final Logger logger = LoggerFactory.getLogger(BookingDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContentDAOImpl.class);
 
 	public ContentDAOImpl(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -349,13 +350,23 @@ public class ContentDAOImpl implements ContentDAO{
 		}
 		return bookingModel;
 	}
-
+	
+	@Autowired
+	private UserDAO userDao;
+	
 	@Transactional
-	public List<DoctorModel> getDoctors() {
+	public List<DoctorModel> getDoctors(String speciality,String location) {
 		
 		List<DoctorModel> doctorModel=new ArrayList<DoctorModel>();
 		Session session=this.getSession();
-		List<Doctor> doctors=session.createQuery("from Doctor").list();
+		List<Doctor> doctors = new ArrayList<Doctor>();
+		if(speciality == null || location == null || location.isEmpty() || speciality.isEmpty()){
+			doctors=session.createQuery("from Doctor").list();
+		}
+		else{
+			doctors=session.createQuery("from Doctor where speciality=:speciality")
+					.setParameter("speciality", speciality).list();
+		}
 		if(doctors!=null && doctors.size()>0)
 		{
 			for(Doctor d:doctors)
@@ -369,7 +380,45 @@ public class ContentDAOImpl implements ContentDAO{
 				
 				//clinic model
 				ClinicModel clinicModel=new ClinicModel();
-				Clinic clinic=d.getUser().getClinic();
+				Clinic clinic= userDao.getClinicByUserName("9999999999");
+				clinicModel.setId(clinic.getId());
+				clinicModel.setClinicName(clinic.getName());
+				clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
+				clinicModel.setClinicAddress(clinic.getAddresses().toString());
+				clinicModel.setClinicDesc(clinic.getDescription());
+				
+				//add doctorModel
+				model.setClinic(clinicModel);
+				doctorModel.add(model);
+				
+			}
+		}
+		return doctorModel;
+		
+	}
+	
+	@Transactional
+	public List<DoctorModel> getDoctors() {
+		
+		List<DoctorModel> doctorModel=new ArrayList<DoctorModel>();
+		Session session=this.getSession();
+		List<Doctor> doctors = new ArrayList<Doctor>();
+		doctors=session.createQuery("from Doctor").list();
+		
+		if(doctors!=null && doctors.size()>0)
+		{
+			for(Doctor d:doctors)
+			{
+				//doctor model
+				DoctorModel model=new DoctorModel();
+				model.setId(d.getId());
+				model.setName(d.getUser().getUserProfile().getName());
+				model.setMobile(d.getUser().getUsername());
+				model.setSpeciality(d.getSpeciality());
+				
+				//clinic model
+				ClinicModel clinicModel=new ClinicModel();
+				Clinic clinic= userDao.getClinicByUserName("9999999999");
 				clinicModel.setId(clinic.getId());
 				clinicModel.setClinicName(clinic.getName());
 				clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
