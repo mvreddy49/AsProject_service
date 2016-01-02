@@ -35,7 +35,7 @@ public interface ContentDAO {
 	public List<BookingModel> findBookingsOnUser(String userName);
 	public List<BookingModel> findBookingsOnDoctor(Doctor doctor);
 	
-	
 	public List<DoctorModel> getDoctors();
+	public List<DoctorModel> getDoctors(String speciality,String location);
 
 }
