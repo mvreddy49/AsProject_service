@@ -93,6 +93,8 @@ public class ContentGetController {
 		ApiReturnModel returnValue = null;
 		try
 		{
+			if(!doctorId.isEmpty() && !date.isEmpty())
+			{
 			Clinic clinic = userDao.getClinicByUserName("9999999999");
 			Doctor doctor=new Doctor(Integer.parseInt(doctorId));
 			//Date time=utils.convertStringToDateOnly(date);
@@ -119,6 +121,10 @@ public class ContentGetController {
 				returnValue=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS, "slots not available");
 				logger.info("slots are not availble for requestdate::"+date);
 			}
+			}
+			else
+				returnValue = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_MSG, "doctor Id and date  cant be empty");
+			
 			
 		}
 		catch(Exception e)
@@ -130,6 +136,25 @@ public class ContentGetController {
 		return returnValue;
 	}
 	
+	@RequestMapping(value="/getDoctors",method=RequestMethod.GET)
+	public ApiReturnModel getDoctors()
+	{
+		ApiReturnModel returnValue=null;
+		logger.info("enter into getDoctors:::");
+		try
+		{
+			List<DoctorModel> doctors=contentDao.getDoctors();
+			returnValue=new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.error("while exception occurs getdoctors info:::"+e.toString());
+			returnValue = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_MSG, e.getMessage());
+		}
+		return null;
+		
+	}
 	
 	
 }
