@@ -33,7 +33,7 @@
 			</security:user-service> -->
 		</security:authentication-provider>
 	</security:authentication-manager>
-	 
+
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
@@ -41,14 +41,16 @@
     	<property name="password" value="root"/>
 	</bean>
 	
-	
+
+
 	<!-- <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 	     <property name="driverClassName" value="org.h2.Driver"/>
 	     <property name="url" value="jdbc:h2:tcp://localhost:9092/~/hcdb1"/>
 	     <property name="username" value="sa"/>
 	     <property name="password" value=""/>
-	</bean> -->
-	
+	</bean>
+	-->
+
 	<bean id="authSuccessHandler" class="com.wow.webapp.security.AuthenticationSuccessHandlerImpl"/>
 	<bean id="authFailureHandler" class="com.wow.webapp.security.AuthenticationFailureHandlerImpl">
 		<constructor-arg name="defaultFailureUrl" value="/login?error" />

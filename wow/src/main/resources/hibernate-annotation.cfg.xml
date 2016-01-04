@@ -25,6 +25,10 @@
         <mapping class="com.wow.webapp.entitymodel.Doctor"/>
         <mapping class="com.wow.webapp.entitymodel.Slot"/>
         <mapping class="com.wow.webapp.entitymodel.Profile"/>
+        <mapping class="com.wow.webapp.entitymodel.LabType"/>
+        <mapping class="com.wow.webapp.entitymodel.LabSubType"/>
+        <mapping class="com.wow.webapp.entitymodel.LabSlots"/>
+        <mapping class="com.wow.webapp.entitymodel.LabBooking"/>
         
     </session-factory>
 </hibernate-configuration>
