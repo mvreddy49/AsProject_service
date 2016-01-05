@@ -25,9 +25,9 @@ public class LabDAOImpl implements LabDAO{
 	
 	@Transactional
 	public void save(LabType labType) {
+		logger.info("In DAO IMPL");
 		Session session = this.getSession();
 		session.saveOrUpdate(labType);
-		
-		
+
 	}
 }

@@ -22,6 +22,7 @@ public class LabService {
 		List<String> errors = new ArrayList<String>();
 		LabType lab = new LabType();
 		try{
+			logger.info("Name id :"+name );
 			lab.setName(name);
 			labDao.save(lab);
 		}

@@ -18,6 +18,9 @@ import javax.persistence.TemporalType;
 @Table(name="lab_booking")
 public class LabBooking {
 	
+	public LabBooking(){
+		super();
+	}
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
