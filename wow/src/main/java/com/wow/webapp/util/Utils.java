@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import ch.qos.logback.classic.Logger;
+
 public class Utils {
 	public Date convertStringToDate(String time) {
 		try {
@@ -92,10 +94,19 @@ public class Utils {
 			Calendar calendar = GregorianCalendar.getInstance();
 			calendar.setTime(startTime);
 			times.add(sdf.format(startTime));
+			Date startDate=getTimeFromDate(startTime);
+			Date endDate=getTimeFromDate(endTime);
 			while (calendar.getTime().before(endTime)) {
-				calendar.add(Calendar.MINUTE, 30);
-				times.add(sdf.format(calendar.getTime()));
+				calendar.add(Calendar.MINUTE, duration);
+				Date time=getTimeFromDate(calendar.getTime());
+				int comp = startDate.compareTo(time);
+				int comp1 = endDate.compareTo(time);
+				if ((comp == -1 || comp == 0) && comp1 == 1) 
+					{
+						times.add(sdf.format(calendar.getTime()));
+					}
 			}
+					//times.remove(times.size()-1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

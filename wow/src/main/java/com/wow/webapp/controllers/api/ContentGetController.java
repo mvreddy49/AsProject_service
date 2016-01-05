@@ -65,12 +65,14 @@ public class ContentGetController {
 		return returnValue;
 	}
 	
-	@RequestMapping(value = "/doctor", method = RequestMethod.GET)
-	public ApiReturnModel doctors(@RequestParam("speciality") String speciality,
-			@RequestParam(required=false) String location,@RequestParam("type") String type){
+	@RequestMapping(value = "/getDoctors", method = RequestMethod.GET)
+	public ApiReturnModel doctors(
+			@RequestParam(value = "speciality", required = false) String speciality,
+			@RequestParam(value = "location", required = false, defaultValue = "hyderabad") String location,
+			@RequestParam(value = "type", required = false, defaultValue = "clinic") String type
+			){
 		ApiReturnModel returnValue = null;
 		try {
-			location = "Hyderabad";
 			List<DoctorModel> doctors = contentDao.getDoctorsInfo(speciality, location,type);
 			returnValue = new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
 			returnValue.setMessage("Location : " + location + "," + "Speciality : " + speciality);
@@ -86,16 +88,20 @@ public class ContentGetController {
 	@RequestMapping(value="/slotsByDate", method=RequestMethod.GET)
 	public ApiReturnModel slots(@RequestParam("doctorId") String doctorId,@RequestParam("date") String date)
 	{
+		logger.info("enter into slotsBydate");
 		Utils utils=new Utils();
 		ApiReturnModel returnValue = null;
 		try
 		{
+			if(!doctorId.isEmpty() && !date.isEmpty())
+			{
 			Clinic clinic = userDao.getClinicByUserName("9999999999");
 			Doctor doctor=new Doctor(Integer.parseInt(doctorId));
 			//Date time=utils.convertStringToDateOnly(date);
 			List<Slot> slots=contentDao.findSlotsByClinicAndDoctor(doctor,clinic, date); 
 			if(slots!=null && slots.size()>0)
 			{
+				logger.info("slots availble for request date"+date);
 				List<SlotsModel> list=new ArrayList<SlotsModel>();
 				List<SlotsModel> bookedSlots = new ArrayList<SlotsModel>();
 				for(Slot slot:slots)
@@ -111,7 +117,14 @@ public class ContentGetController {
 				
 			}
 			else
+			{
 				returnValue=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS, "slots not available");
+				logger.info("slots are not availble for requestdate::"+date);
+			}
+			}
+			else
+				returnValue = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_MSG, "doctor Id and date  cant be empty");
+			
 			
 		}
 		catch(Exception e)
@@ -122,4 +135,30 @@ public class ContentGetController {
 		}
 		return returnValue;
 	}
+	
+	@RequestMapping(value="/doctor",method=RequestMethod.GET)
+	public ApiReturnModel getDoctors(
+			@RequestParam(value = "speciality", required = false) String speciality,
+			@RequestParam(value = "location", required = false, defaultValue = "hyderabad") String location,
+			@RequestParam(value = "type", required = false, defaultValue = "clinic") String type
+			)
+	{
+		ApiReturnModel returnValue=null;
+		logger.info("enter into getDoctors:::");
+		try
+		{
+			List<DoctorModel> doctors=contentDao.getDoctors(speciality,location);
+			returnValue=new ApiReturnModelDoctor(Responses.SUCCESS_CODE,Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG,doctors);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.error("while exception occurs getdoctors info:::"+e.toString());
+			returnValue = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_MSG, e.getMessage());
+		}
+		return returnValue;
+		
+	}
+	
+	
 }

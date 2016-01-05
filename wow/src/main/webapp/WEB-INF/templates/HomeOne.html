@@ -14,7 +14,7 @@ color:white;
 <body>
 	<section layout:fragment="content">
 		<div class="row">
-		<br/><br/>
+	  
 		<!-- 	<div id="myCarousel" class="carousel slide" data-ride="carousel"
 				data-interval="5000">
 				<div class="carousel-inner" role="listbox">
@@ -42,22 +42,25 @@ color:white;
 			</div>   -->
 			
 			 
-			<img class="img-responsive" th:src="@{/resources/img/imageForHome.jpg}" alt=""/>
+			<img class="img-responsive"  th:src="@{/resources/img/imageForHome.jpg}" alt=" " style="margin-left: 20px;" />
 			
-			<div class="overlap6 bg-darkViolet" >
+			<div class="overlap6 "  style="background-color: #63479b;" >
 		
 				<div class="row top-buffer " style="margin-left: 10px;">
 				
-					<div class="mytile overlap1 bg-MEDIUMORCHID" >
+					<div class="mytile overlap1 " style="background-color: #b770ac;" >
 					<img th:src="@{/resources/img/cli.jpg}" alt=" " style="margin-top: 12px;" />
 						<h3  style="margin-top: 8px;">Clinics</h3>
 						
-						<a th:href="@{/clinic-booking}"
+						<a sec:authorize="isAnonymous() || hasRole('ROLE_USER')" th:href="@{/clinic-booking}"
+							class="btn btn-default round-corner" style="margin-top: -1px;">Book
+							Appointment</a>
+						<a sec:authorize="hasRole('ROLE_RECP')" th:href="@{/recp}"
 							class="btn btn-default round-corner" style="margin-top: -1px;">Book
 							Appointment</a>
 					</div>
 
-					<div class="mytile2 overlap2 bg-DODGERBLUE">
+					<div class="mytile2 overlap2 " style="background-color: #209ed9;" >
 					<img th:src="@{/resources/img/dlh.jpg}" alt=" " style="margin-top: 12px;"/>
 						<h3>Diagnostics</h3>
 						<a th:href="@{/diagnostics-booking}"
@@ -65,7 +68,7 @@ color:white;
 							your Test</a>
 					</div>
 
-					<div class="mytile3 overlap3 bg-MEDIUMSEAGREEN"> 
+					<div class="mytile3 overlap3 " style="background-color: #14b361;"> 
 					<img th:src="@{/resources/img/phy.jpg}" alt=" "  style="margin-top: 12px;"/>
 						<h3>Pharmacy</h3>
 						<a th:href="@{/pharmacy-booking}"
@@ -73,7 +76,7 @@ color:white;
 							your Medicine</a>
 					</div>
 
-					<div class="mytile4 overlap4 bg-SALMON"> 
+					<div class="mytile4 overlap4" style="background-color: #f5876c;"> 
 					
 					<img th:src="@{/resources/img/cor1.jpg}" alt=" " style="margin-top: 12px;" /> 
 					
@@ -84,7 +87,7 @@ color:white;
 							an Appointment</a>
 					</div>
 
-					<div class="mytile5 overlap5 bg-MEDIUMTURQUOISE">
+					<div class="mytile5 overlap5 " style="background-color: #5bc6d0;">
 					<img th:src="@{/resources/img/sec.jpg}" alt=" " style="margin-top: 12px;" />
 
 						<h3 style="margin-top: 8px;">Second Opinion</h3>
@@ -103,7 +106,7 @@ color:white;
 				
 					<div class="container">
 						<section>
-			 <button type="button" class="btn btn-default" style="margin-left: 39.20%; margin-top:-20px; orange; Vertical-Size: 7px; Horizontal-Size: 11px; Border-Radius: 24px; border-size: 3px;">Medical And Health News</button>			
+			<button type="button" class="btn btn-default " style=" background-color:#63479b;  margin-left: 39.20%; margin-top:-20px; orange; Vertical-Size: 7px; Horizontal-Size: 11px; Border-Radius: 24px; border-size: 3px; border-color: #e67637;">Medical And Health News</button>			
 		<div id="myCarouseltxt" class="carousel slide" data-ride="carousel" data-interval="5000">
 				<div class="carousel-inner" role="listbox">
 					<div class="item">
@@ -121,7 +124,7 @@ color:white;
 										<p>
 											<strong >Tolerant immune system may be a risk factor for some cancers - </strong>
 											New research suggests that a tolerant immune system may be an independent risk factor for </p> 
-												 <p> the development of lung, colorectal and ER-negative breast cancers.</p>
+												<p> the development of lung, colorectal and ER-negative breast cancers.</p>
 
 
 
@@ -132,7 +135,7 @@ color:white;
 											<p>
 												<strong >Tolerant immune system may be a risk factor for some cancers - </strong>
 										New research suggests that a tolerant immune system may be an independent risk factor for </p>
-										 <p> the development of lung, colorectal and ER-negative breast cancers.</p>
+										<p> the development of lung, colorectal and ER-negative breast cancers.</p>
 
 										</div>
 

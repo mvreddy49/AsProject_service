@@ -1,7 +1,6 @@
 package com.wow.webapp.controllers.api;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,7 +28,6 @@ import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
 import com.wow.webapp.domain.model.CreateBookingModel;
 import com.wow.webapp.entitymodel.Authority;
-import com.wow.webapp.entitymodel.Booking;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.Profile;
@@ -38,6 +35,7 @@ import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.SMS;
 import com.wow.webapp.util.Utils;
 
 @RestController
@@ -80,6 +78,12 @@ public class BookingApiController {
 					logger.debug("Before calling getCookings on clinic");
 					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
 				}
+				else if(role!=null && role.contains(Constants.ROLE_DOCTOR))
+				{
+					User user=userDao.findByUserName(userName);
+					Doctor doctor=contentDao.getDoctorByUser(user);
+					returnModel=getBookingsOnDoctor(doctor);
+				}
 				else{
 					returnModel = getBookingsOnUser(userName);
 				}
@@ -111,6 +115,13 @@ public class BookingApiController {
 		return returnModel;
 	}
 	
+	private ApiReturnModel getBookingsOnDoctor(Doctor doctor) {
+		ApiReturnModel returnModel = null;
+		List<BookingModel> bookings = contentDao.findBookingsOnDoctor(doctor);
+		// User user=userDao.findByid(Integer.parseInt(userId));
+		returnModel=commonReturnBookingModel(bookings);
+		return returnModel;
+	}
 
 	private ApiReturnModel getBookingsOnUser(String userName) {
 		ApiReturnModel returnModel = null;
@@ -122,12 +133,11 @@ public class BookingApiController {
 
 	private ApiReturnModel commonReturnBookingModel(List<BookingModel> bookings)
 	{
-		ApiReturnModel returnModel = null;
-		ApiBookingReturnModel bookingReturnModel = new ApiBookingReturnModel(
+		ApiReturnModel returnModel = new ApiBookingReturnModel(
 				Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
-				Responses.SUCCESS_MSG);
-		bookingReturnModel.setBookings(bookings);
-		returnModel = bookingReturnModel;
+				Responses.SUCCESS_MSG,bookings);
+		//bookingReturnModel.setBookings(bookings);
+		//returnModel = bookingReturnModel;
 		return returnModel;
 	}
 	
@@ -157,6 +167,7 @@ public class BookingApiController {
 
 	private void addUser(CreateBookingModel createBookingModel)
 	{
+		logger.info("enter into addUser while slotBooking");
 		try
 		{
 		User user=new User();
@@ -172,6 +183,9 @@ public class BookingApiController {
 		user.setUserProfile(userProfile);
 		
 		userDao.save(user);
+		logger.info("add user success");
+		SMS sms = new SMS();
+		sms.sendSMS(Constants.SMS_BOOKING_MSG, createBookingModel.getMobile());
 		}
 		catch(Exception e)
 		{
@@ -181,12 +195,14 @@ public class BookingApiController {
 	@RequestMapping(value = "/slotBooking")
 	public ApiReturnModel slotBooking(@Valid CreateBookingModel createBookingModel,BindingResult bindingResult) {
 
+		logger.info("enter into slotBooking");
 		ApiReturnModel retunModel = null;
 		Utils utils=new Utils();
 		UserDetails ud=null;
 		List<String> errors = new ArrayList<String>();
 		
 		if(bindingResult.hasFieldErrors()){
+			logger.info("request parameters are not mapped to mandatory fields");
 			for(FieldError e : bindingResult.getFieldErrors()){
 				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
 				errors.add(e.getDefaultMessage());
@@ -201,55 +217,104 @@ public class BookingApiController {
 			{
 				Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
 				if (slot != null) {
-					
+					logger.info("request slot id is available");
 					ud=Utils.getUserSession();
 					String role=null;
 					String userName=null;
 					
 					if (ud == null) {
-						if(createBookingModel.getMobile() == null){
+						logger.info("Anonymous user");
+						if(createBookingModel.getMobile().isEmpty() || createBookingModel.getName().isEmpty()){
+							logger.info("Anonymous user requested parameters are not coming to user");
 							retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
 									"Please enter mobile number", errors);
 							return retunModel;
 						}
 						User user=userDao.findByUserName(createBookingModel.getMobile());
 						if(user == null){
+							logger.info("new user ,mobile no:::"+createBookingModel.getMobile());
 							addUser(createBookingModel);
 							userName = createBookingModel.getMobile();
 						}
 						else
+						{
 							userName=user.getUsername();
+							logger.info("existed user ::: username::"+userName);
+						}
+							
 						slot.setSource("web");
 					}
 					else
 					{
+						logger.info("registred user");
 						for(GrantedAuthority auth :ud.getAuthorities())
 							role=auth.getAuthority();
 						if(role!=null && role.contains(Constants.ROLE_RECP))
 						{
+							if(createBookingModel.getMobile().isEmpty() || createBookingModel.getName().isEmpty()){
+								logger.info("Anonymous user requested parameters are not coming to user");
+								retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
+										"Please enter mobile number", errors);
+								return retunModel;
+							}
+							logger.info("ROLE RECP is booking a slot for new user");
 							addUser(createBookingModel);
 							userName = createBookingModel.getMobile();
 							slot.setSource("recp");
 						}else
 						{
+							logger.info("ROLE USER booking a slot for own");
 							userName=ud.getUsername();
 							slot.setSource("web");
 						}
 							
 					}
+					logger.info("source coming from :::"+slot.getSource());
 					User user=new User(userName);
 					slot.setUser(user);
 					slot.setStatus(true);
-					
+					slot.setBooked_time(new Date());
 					contentDao.save(slot);
 					
-					retunModel=new ApiReturnModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
-							"slot ceated success", errors);
+					BookingModel bookingModel=new BookingModel();
+					
+					/*
+					//clinic model
+					ClinicModel clinicModel=new ClinicModel();
+					Clinic clinic=slot.getClinic();
+					clinicModel.setId(clinic.getId());
+					clinicModel.setClinicName(clinic.getName());
+					clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
+					clinicModel.setClinicAddress(clinic.getAddresses().toString());
+					clinicModel.setClinicDesc(clinic.getDescription());
+					
+					
+					//DoctorModel
+					DoctorModel doctorModel=new DoctorModel();
+					Doctor doctor=slot.getDoctor();
+					doctorModel.setId(doctor.getId());
+					doctorModel.setName(doctor.getUser().getUserProfile().getName());
+					doctorModel.setMobile(doctor.getUser().getUsername());
+					
+					//set bookingModel
+					bookingModel.setClinic(clinicModel);
+					bookingModel.setDoctor(doctorModel);
+					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
+					*/
+					List<BookingModel> bookingList=new ArrayList<BookingModel>();
+					bookingList.add(bookingModel);
+					
+					retunModel=new ApiBookingReturnModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
+							"slot ceated success", bookingList);
+					logger.info("booked sot success for user(username) :::"+userName);
 					
 				}
 				else
+				{
 					retunModel=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS,
 							"slot is not availble", errors);
+					logger.info("requested slot is not there in DB");
+				}
 			}
 			catch(Exception e)
 			{

@@ -3,68 +3,65 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout">
 <head>
-<title>Home</title>
+<title>User Home</title>
+<script type="text/javascript">
+	$(function(){
+		
+		$('#bookingsbtn').click(function(){
+				
+			$.ajax({
+				url: "api/bookings/myBookings",
+				data : {},
+				success: function(result){
+					var content =
+						'<table class="table table-hover " >'
+						+'<th class="tablestyle">Slot Time</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
+				var htmlContent='';
+					console.log(result);
+					if (result.status == "OK") {
+					
+						$.each(result.bookings,function(index,item) {
+							
+							htmlContent = htmlContent
+									+ "<tr>"+"<td>"
+									+  item.slotTime  +"</td>"+"<td>"
+									
+									+ item.doctor.name+"</td>"+"<td>"
+									
+									+ item.doctor.speciality+"</td>"
+									+ "</tr>";
+			content=content+htmlContent;
+			htmlContent='';
+							console.log(index+ " => "+ item.name);
+							
+						}); // End $.each
+						content=content+"</table>";
+						$('#displayArea').empty();
+						$('#displayArea').append(content);
+						}
+				}
+				
+				
+			});
+			
+		});	
+	
+	});
+</script>
 </head>
 <body>
 	<section layout:fragment="content">
-		<div ng-app="userApp" ng-controller="userAppCtrl">
-			<div class="row" style="margin: 500">
-				<span sec:authentication="name" class="pull-right"></span>
-			</div>
-			<div class="row">
-				<div class="col-md-2">
-					<button class="btn btn-primary" ng-click="OnMyBookingsClick()">My
-						Bookings</button>
-				</div>
-				<div class="col-md-10">
-
-					<table class="table table-striped">
-						<tr ng-repeat="booking in current_bookings">
-							<td>{{booking.slotTime}}</td>
-							<td>{{booking.doctor.name}}</td>
-						</tr>
-					</table>
-
-				</div>
-			</div>
-		</div>
-		<script th:inline="javascript">
-		/*<![CDATA[*/
-		var userApp = angular.module('userApp', []);
-		userApp.controller('userAppCtrl', function ($scope,$http) {
-			$scope.inprogress = false;
-			$scope.current_bookings = [];
-			$scope.OnMyBookingsClick = function(){
-				$http({
-					  method: 'GET',
-					  url: 'api/bookings/myBookings',
-					}).then(function successCallback(response) {
-						if(response.data.status == "OK"){
-							console.log("OK Response");
-							$scope.current_bookings = response.data.bookings;
-							$scope.showMessage = response.data;
-							$scope.showSuccess = true;
-						}
-						else{
-							console.log("Error Response");
-							$scope.showMessage = response.data;
-							$scope.showSuccess = false;
-						}
-						$scope.inprogress = false;
-						console.log(response.data);
-					  }, function errorCallback(response) {
-						  console.log("HTTP Error");
-						    $scope.showMessage = "Try again";
-						    $scope.showSuccess = false;
-						    $scope.inprogress = false;
-						    console.log(response);
-					  });
-			};
+		<div class="row">
+		<div class="col-md-2">
+		<button id="bookingsbtn" type="button"
+						class="btn btn-primary contentSelection">My Bookings</button>
+	 </div>
 			
-		});
-		/*]]>*/
-	  </script>
-
+			<div class="col-md-10">
+			<div id="displayArea" >
+			
+			</div></div>
+			</div>
 	</section>
 </body>
 </html>

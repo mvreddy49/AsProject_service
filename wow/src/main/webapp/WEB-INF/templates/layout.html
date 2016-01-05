@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="assets/css/bootstrap-responsive.css" rel="stylesheet"/>
+
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
 <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
@@ -70,23 +70,30 @@
 </head>
 <body>
 	
-	<div class="col-md-9">
-		<a th:href="@{/HomeOne}"> <img
-			th:src="@{/resources/img/astra.jpg}" alt="Astra Health" />
-		</a>
-	</div>
-	<div></div>
-	<br/>
-	<div class="input-group col-md-2 pull-center">
+	<div class="row">
+		<div class="col-md-9">
+			<a th:href="@{/HomeOne}"> 
+				<img th:src="@{/resources/img/astraLogo.gif}" alt="Astra Health" />
+			</a>
+			
 
-
-		<input type="text" class="form-control" placeholder="Search ..."
-			name="srch-term" id="srch-term" /> <span class="input-group-btn">
-			<button class="btn btn-warning" type="button">
-				<i class="glyphicon glyphicon-search"></i>
-			</button>
-		</span>
+		</div>
+		<div sec:authorize="isAnonymous()" class="col-md-3" >
+		 <label  class="userStyle"> Welcome Guest</label>
+		</div>
+		<div sec:authorize="!isAnonymous()" class="col-md-3" >
+			Logged in as  
+			<label sec:authentication="name" class="userStyle"></label>
+			
+			<p sec:authorize="!hasRole('ROLE_USER')" sec:authentication="principal.authorities"></p>
+				<!-- <span sec:authentication="principal.authorities"></span> -->
+				<!-- <span  sec:authorize="hasRole('ROLE_ADMIN')" class="userStyle"> Admin</span>
+				<span  sec:authorize="hasRole('ROLE_USER')" class="userStyle"> User</span> -->
+			</div>
+		
 	</div>
+	
+
 	<!-- Wrap all page content here -->
 	<!-- <div id="wrap"> -->
 		<!-- Fixed navbar -->
@@ -106,14 +113,20 @@
 					<ul class="nav navbar-nav">
 						<li sec:authorize="hasRole('ROLE_USER')"><a
 							th:href="@{/home-user}">Me</a></li>
-							<li sec:authorize="hasRole('ROLE_CLINIC')"><a
-							th:href="@{/home-clinic}">Me</a></li>
+							
 						<!-- 						<li><a th:href="@{/tests}">Tests</a></li> -->
 						<!-- 						<li><a th:href="@{/clinics}">Clinics</a></li> -->
 						<li sec:authorize="hasRole('ROLE_ADMIN')"><a
 							th:href="@{/admin}">Admin</a></li>
+							
+							<li sec:authorize="hasRole('ROLE_RECP')"><a
+							th:href="@{/recp}">Reception</a></li>
+							
+							<li sec:authorize="hasRole('ROLE_LAB')"><a
+							th:href="@{/lab}">Lab</a></li>
 						<!-- 						<li><a th:href="@{/HomeOne}">HomeOne</a></li> -->
-
+					<li sec:authorize="hasRole('ROLE_DOCTOR')"><a
+							th:href="@{/doctor}">Doctor</a></li>
 						<li><a th:href="@{/AboutUs}">About US</a></li>
 						<li><a th:href="@{/Services}">Services</a></li>
 						<li><a th:href="@{/PartnerWithUs}">Partner With Us</a></li>
