@@ -46,9 +46,21 @@ public class LabType {
 	private Date inserted_on;
 
 
-	@OneToMany(mappedBy = "lab_subtype" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-	private Set<LabSubType> subType = new HashSet<LabSubType>(0);
+	@OneToMany(mappedBy = "lab_type_id" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+	private Set<LabSubType> subTypes = new HashSet<LabSubType>(0);
+
 	
+	
+	public Set<LabSubType> getSubTypes() {
+		return subTypes;
+	}
+
+
+	public void setSubTypes(Set<LabSubType> subTypes) {
+		this.subTypes = subTypes;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -97,4 +109,7 @@ public class LabType {
 	public void setInserted_on(Date inserted_on) {
 		this.inserted_on = inserted_on;
 	}
+
+
+	
 }

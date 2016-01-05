@@ -53,8 +53,6 @@ public class LabSubType {
 	@JoinColumn(name = "lab_type_id", nullable = false)
 	private LabType labType;
 	
-	@OneToMany(mappedBy = "lab_slots" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-	private Set<LabSlots> slots = new HashSet<LabSlots>(0);
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated_on")
@@ -140,14 +138,7 @@ public class LabSubType {
 		this.labType = labType;
 	}
 
-	public Set<LabSlots> getSlots() {
-		return slots;
-	}
-
-	public void setSlots(Set<LabSlots> slots) {
-		this.slots = slots;
-	}
-
+	
 	public Date getModified_on() {
 		return modified_on;
 	}
