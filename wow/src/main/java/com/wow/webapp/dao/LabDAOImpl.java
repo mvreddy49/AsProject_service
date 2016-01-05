@@ -1,5 +1,7 @@
 package com.wow.webapp.dao;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -29,5 +31,13 @@ public class LabDAOImpl implements LabDAO{
 		Session session = this.getSession();
 		session.saveOrUpdate(labType);
 
+	}
+
+	@Transactional
+	public List<LabType> getLabType() {
+		logger.info("In getLab types");
+		Session session = this.getSession();
+		List<LabType> labType=session.createQuery("from LabType where enabled=:enabled").setParameter("enabled", true).list();
+		return labType;
 	}
 }

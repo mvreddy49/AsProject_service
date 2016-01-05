@@ -27,15 +27,6 @@ public class Constants {
 	//BOOKING SUCCESS MESSSAGE
 	public static final String SMS_BOOKING_MSG="BOOKING SUCCESS FOR NEW USER";
 	
-	
-	
-	
-	//SMS configs
-	public static final String SMS_URL="http://www.siegsms.com/SendingSms.aspx";
-	public static final String SMS_USERNAME="";
-	public static final String SMS_PASS="";
-	public static final String SMS_TITLE="";
-	
 	//BOOKING SUCCESS MESS
 	public static final String SMS_MSG="";
 
