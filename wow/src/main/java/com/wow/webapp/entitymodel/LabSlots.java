@@ -1,7 +1,10 @@
 package com.wow.webapp.entitymodel;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,6 +24,9 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Entity
 @Table(name="lab_slots")
 public class LabSlots {
+	public LabSlots(){
+		super();
+	}
 	
 	@Id
 	@Column(name="id")
@@ -94,4 +101,6 @@ public class LabSlots {
 	public void setModified_on(Date modified_on) {
 		this.modified_on = modified_on;
 	}
+
+	
 }
