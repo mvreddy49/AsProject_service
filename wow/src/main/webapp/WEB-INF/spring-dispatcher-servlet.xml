@@ -58,8 +58,9 @@
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     	<property name="url" value="jdbc:mysql://localhost:3306/hcdb1"/>
     	<property name="username" value="root"/>
-    	<property name="password" value="root"/>
+    	<property name="password" value="apalya01"/>
 	</bean>
+
 	
 	<!-- <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 	     <property name="driverClassName" value="org.h2.Driver"/>
@@ -67,7 +68,9 @@
 	     <property name="username" value="sa"/>
 	     <property name="password" value=""/>
 	</bean>
+
 	 -->
+
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource" />
     	<property name="configLocation" value="classpath:hibernate-annotation.cfg.xml" />
@@ -95,6 +98,11 @@
     	</constructor-arg>
 	</bean>
 	
+	<bean id="labDao" class="com.wow.webapp.dao.LabDAOImpl">
+    	<constructor-arg>
+        	<ref bean="sessionFactory" />
+    	</constructor-arg>
+	</bean>
 	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="100000000" />
     </bean>
