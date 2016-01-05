@@ -67,7 +67,7 @@ public class LabSubType {
 	private Date inserted_on;
 	
 	@Column(name="enabled")
-	public boolean enabled;
+	public boolean enabled = true;
 
 	public Integer getId() {
 		return id;

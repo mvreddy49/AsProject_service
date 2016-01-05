@@ -23,6 +23,9 @@ public class LabType {
 	public LabType(){
 		super();
 	}
+	public LabType(Integer id){
+		this.id=id;
+	}
 	
 	@Id
 	@Column(name="id")
