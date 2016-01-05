@@ -21,7 +21,10 @@ import javax.persistence.TemporalType;
 public class LabType {
 
 	public LabType(){
-		
+		super();
+	}
+	public LabType(Integer id){
+		this.id=id;
 	}
 	
 	@Id
@@ -34,7 +37,7 @@ public class LabType {
 	
 	
 	@Column(name="enabled")
-	public boolean enabled;
+	public boolean enabled = true;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated_on")
@@ -44,22 +47,6 @@ public class LabType {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "inserted_on")
 	private Date inserted_on;
-
-
-	@OneToMany(mappedBy = "lab_type_id" , fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-	private Set<LabSubType> subTypes = new HashSet<LabSubType>(0);
-
-	
-	
-	public Set<LabSubType> getSubTypes() {
-		return subTypes;
-	}
-
-
-	public void setSubTypes(Set<LabSubType> subTypes) {
-		this.subTypes = subTypes;
-	}
-
 
 	public Integer getId() {
 		return id;

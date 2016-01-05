@@ -27,5 +27,9 @@ public class Constants {
 	//BOOKING SUCCESS MESSSAGE
 	public static final String SMS_BOOKING_MSG="BOOKING SUCCESS FOR NEW USER";
 	
+	//BOOKING SUCCESS MESS
+	public static final String SMS_MSG="";
+
+		
 	
 }

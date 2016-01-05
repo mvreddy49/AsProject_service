@@ -22,6 +22,9 @@ import javax.persistence.TemporalType;
 @Table(name="lab_subtype")
 public class LabSubType {
 
+	public LabSubType(){
+		super();
+	}
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +51,9 @@ public class LabSubType {
 	@Column(name="max_homepickup_bookings")
 	private Integer maxHomePickupBookings;
 	
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lab_type_id", nullable = false)
 	private LabType labType;
-	
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated_on")
@@ -64,7 +65,7 @@ public class LabSubType {
 	private Date inserted_on;
 	
 	@Column(name="enabled")
-	public boolean enabled;
+	public boolean enabled = true;
 
 	public Integer getId() {
 		return id;
@@ -138,7 +139,6 @@ public class LabSubType {
 		this.labType = labType;
 	}
 
-	
 	public Date getModified_on() {
 		return modified_on;
 	}
