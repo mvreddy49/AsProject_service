@@ -122,10 +122,10 @@ public class LabController {
 
 	}
 	
-	@RequestMapping(value = "/slots", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/slots", method = RequestMethod.GET)
 	public ApiReturnModel getLabSlots()
 	{
 		List<Object> labTypes=labService.getLabTypes();
 		return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG, labTypes);
-	}
+	}*/
 }
