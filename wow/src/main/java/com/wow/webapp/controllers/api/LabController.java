@@ -102,4 +102,30 @@ public class LabController {
 		return returnModel; 
 	}
 	
+	@RequestMapping(value = "/slots" , method = RequestMethod.POST)
+	public ApiReturnModel addLabSlots(@RequestParam("subTypeId") String subTypeId , @RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime)
+	{
+		ApiReturnModel returnModel=null;
+		
+		List<String> errors = labService.addLabSlots(subTypeId, startTime, endTime);
+		
+		if(errors.size() == 0)
+		{
+			List<Object> slots= new ArrayList<Object>();//labService.getSlots(subTypeId);
+			returnModel=new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, "lab slots insertion success" , slots);
+		
+		}
+		else
+			returnModel = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slots insertion failed",errors);
+			
+		return returnModel;
+
+	}
+	
+	@RequestMapping(value = "/slots", method = RequestMethod.GET)
+	public ApiReturnModel getLabSlots()
+	{
+		List<Object> labTypes=labService.getLabTypes();
+		return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG, labTypes);
+	}
 }
