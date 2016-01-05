@@ -3,20 +3,18 @@ package com.wow.webapp.domain.pojo;
 public class LabTypeModel {
 	
 	private Integer id;
-	private String typeName;
+	private String name;
 	public Integer getId() {
 		return id;
 	}
-	public String getTypeName() {
-		return typeName;
+	public String getName() {
+		return name;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	
-
 }

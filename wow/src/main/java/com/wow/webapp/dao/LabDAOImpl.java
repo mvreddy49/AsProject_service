@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
 
 public class LabDAOImpl implements LabDAO{
@@ -40,4 +41,37 @@ public class LabDAOImpl implements LabDAO{
 		List<LabType> labType=session.createQuery("from LabType where enabled=:enabled").setParameter("enabled", true).list();
 		return labType;
 	}
+
+	@Transactional
+	public void save(LabSubType labSubType) {
+		logger.info("In save sub types");
+		Session session = this.getSession();
+		session.saveOrUpdate(labSubType);
+		
+	}
+
+	@Transactional
+	public LabType findLabType(Integer id) {
+		
+		logger.info("In find lab types");
+		Session session = this.getSession();
+		List<LabType> labType=session.createQuery("from LabType where id=:id").setParameter("id", id).list();
+		if(labType.size() > 0 && labType != null) return labType.get(0);
+		else return null;
+	}
+
+	
+	@Transactional
+	public List<LabSubType> getLabSubType(Integer id) {
+		
+		logger.info("In find lab types");
+		Session session = this.getSession();
+		LabType labType=new LabType(id);
+		List<LabSubType> labSubType=session.createQuery("from LabSubType where labType=:labType and enabled=:enabled").setParameter("labType", labType).setParameter("enabled", true).list();
+		return labSubType;
+	}
+
+	
+
+	
 }
