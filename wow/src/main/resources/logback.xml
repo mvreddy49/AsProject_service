@@ -11,10 +11,10 @@
 
 	<appender name="TIME_BASED_FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/usr/lib/apache-tomcat-8.0.28/logs/webapp/webapp.log</file>
+		<file>/tmp/astra/webapp.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			
-			<fileNamePattern>/usr/lib/apache-tomcat-8.0.28/logs/webapp/webapp.%d{yyyy-MM-dd}.log
+			<fileNamePattern>/tmp/astra/webapp.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
@@ -28,7 +28,7 @@
 		</rollingPolicy>
 		-->
 		<encoder>
-			<pattern>%relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
