@@ -48,8 +48,6 @@ public class LabType {
 	@Column(name = "inserted_on")
 	private Date inserted_on;
 
-
-	
 	public Integer getId() {
 		return id;
 	}
@@ -98,4 +96,7 @@ public class LabType {
 	public void setInserted_on(Date inserted_on) {
 		this.inserted_on = inserted_on;
 	}
+
+
+	
 }

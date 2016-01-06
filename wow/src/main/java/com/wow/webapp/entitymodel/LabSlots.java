@@ -34,17 +34,15 @@ public class LabSlots {
 	private Integer id;
 	
 	@DateTimeFormat(iso=ISO.DATE_TIME)
-	@Column(name="start_time")
-	public Date startTime;
-	
-	@DateTimeFormat(iso=ISO.DATE_TIME)
-	@Column(name="end_time")
-	public Date endDime;
+	@Column(name="time")
+	public Date time;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lab_subtype_id", nullable = true)
 	private LabSubType subType;
 	
+	@Column(name = "enabled")
+	private boolean enabled;
 	
 	@Temporal(TemporalType.TIMESTAMP)
  	@Column(name = "inserted_on")
@@ -62,20 +60,13 @@ public class LabSlots {
 		this.id = id;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	
+	public Date getTime() {
+		return time;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public Date getEndDime() {
-		return endDime;
-	}
-
-	public void setEndDime(Date endDime) {
-		this.endDime = endDime;
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	public LabSubType getSubType() {
