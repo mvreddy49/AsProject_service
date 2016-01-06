@@ -184,8 +184,6 @@ public class BookingApiController {
 		
 		userDao.save(user);
 		logger.info("add user success");
-		SMS sms = new SMS();
-		sms.sendSMS(Constants.SMS_BOOKING_MSG, createBookingModel.getMobile());
 		}
 		catch(Exception e)
 		{
@@ -303,6 +301,8 @@ public class BookingApiController {
 					*/
 					List<BookingModel> bookingList=new ArrayList<BookingModel>();
 					bookingList.add(bookingModel);
+					SMS sms = new SMS();
+					sms.sendSMS(Constants.SMS_BOOKING_MSG + "FOR " + userName, createBookingModel.getMobile());
 					
 					retunModel=new ApiBookingReturnModel(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,
 							"slot ceated success", bookingList);
