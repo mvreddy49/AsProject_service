@@ -82,7 +82,23 @@ public class LabController {
 		return returnModel;
 	}
 	
-	
+	@RequestMapping(value = "/subType", method = RequestMethod.GET)
+	public ApiReturnModel getLabSubTypes()
+	{
+		ApiReturnModel returnModel=null;
+		try
+		{
+			List<Object> labSubTypes=labService.getLabSubTypes(null);
+			returnModel= new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG, labSubTypes);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.error("exception occured while getting subtypes:::"+e.toString());
+			returnModel = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,e.toString());
+		}
+		return returnModel; 
+	}
 	
 	@RequestMapping(value = "/subType/{typeId}", method = RequestMethod.GET)
 	public ApiReturnModel getLabSubTypes(@PathVariable("typeId") String typeId)
