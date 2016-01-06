@@ -1,5 +1,7 @@
 package com.wow.webapp.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,8 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
+import com.wow.webapp.entitymodel.Slot;
+import com.wow.webapp.util.Utils;
 
 public class LabDAOImpl implements LabDAO{
 
@@ -62,16 +67,61 @@ public class LabDAOImpl implements LabDAO{
 
 	
 	@Transactional
-	public List<LabSubType> getLabSubType(Integer id) {
+	public List<LabSubType> getLabSubType(LabType labType) {
 		
 		logger.info("In find lab types");
 		Session session = this.getSession();
-		LabType labType=new LabType(id);
 		List<LabSubType> labSubType=session.createQuery("from LabSubType where labType=:labType and enabled=:enabled").setParameter("labType", labType).setParameter("enabled", true).list();
 		return labSubType;
 	}
 
-	
+	@Transactional
+	public LabSubType gerLabsubType(Integer id) {
+		
+		logger.info("In find get lab types");
+		Session session = this.getSession();
+		List<LabSubType> labSubType=session.createQuery("from LabSubType where id=:id").setParameter("id", id).list();
+		if(labSubType != null && labSubType.size() > 0) return labSubType.get(0);
+		else return null;
+		
+	}
+
+	@Transactional
+	public List<String> findSlotsByStartAndEndTimes(Date startTime,
+			Date endTime,LabSubType labSubType) {
+		List<String> list=null;
+		Utils utils=new Utils();
+		try
+		{
+			Session session=this.getSession();
+			list=new ArrayList<String>();
+			
+			List<LabSlots> slots=session.createQuery("from LabSlots WHERE subType=:subType and time BETWEEN :startDate AND :endDate").setParameter("subType", labSubType).setParameter("startDate", startTime).setParameter("endDate", endTime).list();
+			if(slots!=null && slots.size()>0)
+			{
+				for(LabSlots slot:slots)
+				{
+					String time=utils.convertDateToUTCFormat(slot.getTime());
+					list.add(time);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.info("exception while getting slots information using start and endtimes:::"+e.toString());
+		}
+		return list;
+	}
+
+	@Transactional
+	public void save(LabSlots labSlots) {
+		
+		logger.info("in save labslots ");
+		Session session=this.getSession();
+		session.saveOrUpdate(labSlots);
+		
+	}	
 
 	
 }

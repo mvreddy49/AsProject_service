@@ -55,8 +55,6 @@ public class LabSubType {
 	@JoinColumn(name = "lab_type_id", nullable = false)
 	private LabType labType;
 	
-	
-	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated_on")
 	private Date modified_on;
@@ -140,8 +138,6 @@ public class LabSubType {
 	public void setLabType(LabType labType) {
 		this.labType = labType;
 	}
-
-	
 
 	public Date getModified_on() {
 		return modified_on;
