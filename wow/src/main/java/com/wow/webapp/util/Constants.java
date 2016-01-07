@@ -29,7 +29,15 @@ public class Constants {
 	
 	//BOOKING SUCCESS MESS
 	public static final String SMS_MSG="";
+	
+	//lab booking
+	public static final String RECEIVE_MODE = "homepickup"; 
+	
+	public static final String LAB_WALKIN = "walkin";
+	public static final String LAB_HOMEPICKUP = "homepickup";
 
+	//Default Values
+	public static final String ONLINE_SOURCE = "web";
 		
 	
 }

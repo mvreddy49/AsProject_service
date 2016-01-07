@@ -37,7 +37,7 @@ public class LabSlots {
 	@Column(name="time")
 	public Date time;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lab_subtype_id", nullable = true)
 	private LabSubType subType;
 	

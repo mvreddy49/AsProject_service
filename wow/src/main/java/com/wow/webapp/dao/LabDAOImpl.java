@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wow.webapp.entitymodel.Doctor;
+import com.wow.webapp.entitymodel.LabBooking;
 import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
@@ -121,7 +122,53 @@ public class LabDAOImpl implements LabDAO{
 		Session session=this.getSession();
 		session.saveOrUpdate(labSlots);
 		
-	}	
+	}
+
+	@Transactional
+	public LabSlots findSlot(Integer id) {
+
+		logger.info("in lab slots");
+		Session session=this.getSession();
+		
+		List<LabSlots> slots=session.createQuery("from LabSlots where id=:id").setParameter("id", id).list();
+		if(slots!=null && !slots.isEmpty()) return slots.get(0);
+		else return null;
+		
+	}
+
+	@Transactional
+	public List<LabBooking> findBookingsOnslot(LabSlots slot , String receive_mode) {
+		
+		logger.info("in find slots on type");
+		Session session = this.getSession();
+		List<LabBooking> bookings = session.createQuery("from LabBooking where labSlot=:labslot and receive_mode=:mode").setParameter("labslot", slot).setParameter("mode", receive_mode).list();
+		return bookings;
+	}
+
+	@Transactional
+	public void save(LabBooking labBooking) {
+		
+		logger.info("in find slots on type");
+		Session session = this.getSession();
+		session.saveOrUpdate(labBooking);
+		
+	}
+
+	@Transactional
+	public List<LabSlots> findLabSlotsOnDate(LabSubType labSubType, String date) {
+		logger.info("in find lab slots on date");
+		Session session = this.getSession();
+		String slotDate="s.time like '%"+date+"%'";
+		List<LabSlots> slots = session.createQuery("from LabSlots s where s.enabled=true and  s.subType=:subType and "+slotDate)
+				.setParameter("subType", labSubType).list();
+		return slots;
+	}
+
+	public List<LabBooking> findBookingsOnslot(LabSlots slot) {
+		logger.info("in find slots on type");
+		Session session = this.getSession();
+		List<LabBooking> bookings = session.createQuery("from LabBooking where labSlot=:labslot").setParameter("labslot", slot).list();
+		return bookings;	}	
 
 	
 }
