@@ -37,7 +37,7 @@ public class LabSlots {
 	@Column(name="time")
 	public Date time;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lab_subtype_id", nullable = true)
 	private LabSubType subType;
 	
@@ -91,6 +91,14 @@ public class LabSlots {
 
 	public void setModified_on(Date modified_on) {
 		this.modified_on = modified_on;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	

@@ -25,6 +25,12 @@ public class LabSubType {
 	public LabSubType(){
 		super();
 	}
+	
+	public LabSubType(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

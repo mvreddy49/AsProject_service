@@ -48,9 +48,21 @@ public class LabBooking {
 	@Column(name = "updated_on")
 	private Date modified_on;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "booked_time")
-	private Date booked_time;
+	@Column(name="receive_mode")
+	private String receive_mode;
+
+	@Column(name = "address")
+	private String address;
+	
+	
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public Integer getId() {
 		return id;
@@ -108,12 +120,13 @@ public class LabBooking {
 		this.modified_on = modified_on;
 	}
 
-	public Date getBooked_time() {
-		return booked_time;
+	public String getReceive_mode() {
+		return receive_mode;
 	}
 
-	public void setBooked_time(Date booked_time) {
-		this.booked_time = booked_time;
+	public void setReceive_mode(String receive_mode) {
+		this.receive_mode = receive_mode;
 	}
-	
+
+		
 }
