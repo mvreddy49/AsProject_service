@@ -93,5 +93,13 @@ public class LabSlots {
 		this.modified_on = modified_on;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	
 }

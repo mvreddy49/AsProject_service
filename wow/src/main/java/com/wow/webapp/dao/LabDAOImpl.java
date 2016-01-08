@@ -163,7 +163,7 @@ public class LabDAOImpl implements LabDAO{
 				.setParameter("subType", labSubType).list();
 		return slots;
 	}
-
+	@Transactional
 	public List<LabBooking> findBookingsOnslot(LabSlots slot) {
 		logger.info("in find slots on type");
 		Session session = this.getSession();

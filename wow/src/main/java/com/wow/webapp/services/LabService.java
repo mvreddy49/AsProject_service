@@ -23,6 +23,7 @@ import com.wow.webapp.domain.model.CreateBookingModel;
 import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabBookingModel;
+import com.wow.webapp.domain.pojo.LabSlotModel;
 import com.wow.webapp.domain.pojo.LabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabTypeModel;
 import com.wow.webapp.entitymodel.Authority;
@@ -205,6 +206,7 @@ public class LabService {
 							s.setTime(time);
 							s.setSubType(labsubType);
 							s.setInserted_on(new Date());
+							s.setEnabled(true);
 							labDao.save(s);
 							
 						}
@@ -410,8 +412,10 @@ public class LabService {
 		}
 	}
 
-	public void getSlots(String subTypeId, String date) {
+	public ApiReturnModel getSlots(String subTypeId, String date) {
 		
+		logger.info("in getslots subtypeId:::"+subTypeId);
+		List<String> errors = new ArrayList<String>();
 		try
 		{
 			LabSubType labSubType = new LabSubType(Integer.parseInt(subTypeId));
@@ -435,13 +439,26 @@ public class LabService {
 				
 				logger.info("reamining slots :::"+remaningSlots.toString());
 				
+				LabSlotModel labslotModel = new LabSlotModel();
+				labslotModel.setSlots(remaningSlots);
+				labslotModel.setBookedSlots(bookedSlotsList);
+				List<Object> res = new ArrayList<Object>();
+				res.add(labslotModel);
+				
+				return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG, res);
 			}
+			else
+				errors.add("slots not availble");
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			logger.info("exception occurs while getting get slots :::"+e.toString());
+			errors.add(e.getMessage());
 		}
+		
+		return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
+		
 	}
 	
 }
