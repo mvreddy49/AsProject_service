@@ -24,6 +24,7 @@ import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabBookingModel;
 import com.wow.webapp.domain.pojo.LabSlotModel;
+import com.wow.webapp.domain.pojo.LabSlotResponseModel;
 import com.wow.webapp.domain.pojo.LabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabTypeModel;
 import com.wow.webapp.entitymodel.Authority;
@@ -286,7 +287,7 @@ public class LabService {
 				
 				logger.info("already booking same slot numbers:::"+max_bookings_num);
 				
-				if(max_bookings_num <= size_limit_num)
+				if(max_bookings_num < size_limit_num)
 				{
 					logger.info("condition is true for checking max bookings for one slot");
 					ud=Utils.getUserSession();
@@ -422,26 +423,20 @@ public class LabService {
 			List<LabSlots> slots = labDao.findLabSlotsOnDate(labSubType,date);
 			if(slots!=null && slots.size()>0)
 			{
+				LabSlotResponseModel labslotModel = new LabSlotResponseModel();
 				logger.info("lab slots availble for request date"+date);
-				List<String> slotsList = new ArrayList<String>();
-				List<String> bookedSlotsList = new ArrayList<String>();
+				List<LabSlotModel> slotsList = new ArrayList<LabSlotModel>();
+				//List<LabSlotModel> bookedSlotsList = new ArrayList<LabSlotModel>();
 				for(LabSlots slot:slots)
 				{	
+					LabSlotModel slotObj = new LabSlotModel();
 					String time = new Utils().convertDateToUTCFormat(slot.getTime());
-					slotsList.add(time);
-					List<LabBooking> booking = labDao.findBookingsOnslot(slot);
-					if(booking!=null && booking.size()>0)
-						bookedSlotsList.add(time);
+						slotObj.setId(slot.getId());
+						slotObj.setSlotTime(time);
+						slotsList.add(slotObj);
+					//List<LabBooking> booking = labDao.findBookingsOnslot(slot);
 				}
-				
-				List<String> remaningSlots = new ArrayList<String>(slotsList);
-				remaningSlots.removeAll(bookedSlotsList);
-				
-				logger.info("reamining slots :::"+remaningSlots.toString());
-				
-				LabSlotModel labslotModel = new LabSlotModel();
-				labslotModel.setSlots(remaningSlots);
-				labslotModel.setBookedSlots(bookedSlotsList);
+				labslotModel.setAvailableSlots(slotsList);
 				List<Object> res = new ArrayList<Object>();
 				res.add(labslotModel);
 				

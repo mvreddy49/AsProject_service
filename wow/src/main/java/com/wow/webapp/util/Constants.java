@@ -22,10 +22,10 @@ public class Constants {
 	public static final String SMS_URL="http://www.siegsms.com/PostSms.aspx";
 	public static final String SMS_USERID="demo3";
 	public static final String SMS_PASS="demo@123";
-	public static final String SMS_TITLE="ASTRAA";
+	public static final String SMS_TITLE="SIEGSM";
 	
 	//BOOKING SUCCESS MESSSAGE
-	public static final String SMS_BOOKING_MSG="BOOKING SUCCESS FOR NEW USER";
+	public static final String SMS_BOOKING_MSG="BOOKING SUCCESS";
 	
 	//BOOKING SUCCESS MESS
 	public static final String SMS_MSG="";
