@@ -2,24 +2,43 @@ package com.wow.webapp.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.wow.webapp.controllers.api.LabController;
 import com.wow.webapp.dao.LabDAO;
+import com.wow.webapp.dao.UserDAO;
+import com.wow.webapp.domain.model.ApiReturnLab;
+import com.wow.webapp.domain.model.ApiReturnModel;
+import com.wow.webapp.domain.model.CreateBookingModel;
+import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
+import com.wow.webapp.domain.pojo.LabBookingModel;
+import com.wow.webapp.domain.pojo.LabSlotModel;
+import com.wow.webapp.domain.pojo.LabSlotResponseModel;
 import com.wow.webapp.domain.pojo.LabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabTypeModel;
+import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
+import com.wow.webapp.entitymodel.LabBooking;
 import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
+import com.wow.webapp.entitymodel.Profile;
 import com.wow.webapp.entitymodel.Slot;
+import com.wow.webapp.entitymodel.User;
+import com.wow.webapp.util.Constants;
+import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.SMS;
 import com.wow.webapp.util.Utils;
 
 @Service
@@ -28,6 +47,8 @@ public class LabService {
 
 	@Autowired
 	private LabDAO labDao;
+	@Autowired
+	private UserDAO userDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(LabController.class);
 	
@@ -186,6 +207,7 @@ public class LabService {
 							s.setTime(time);
 							s.setSubType(labsubType);
 							s.setInserted_on(new Date());
+							s.setEnabled(true);
 							labDao.save(s);
 							
 						}
@@ -207,36 +229,231 @@ public class LabService {
 		return errors;
 	}
 
-	public List<Object> getSlots(String subTypeId) {
-		List<Object> list = new ArrayList<Object>();
-		try{
-			
-			logger.info("in get lab slots");
-			LabType labType=new LabType();
-			List<LabSubType> labSubType=labDao.getLabSubType(labType);
-			if(labSubType.size() > 0 && labSubType != null)
+	
+
+	public ApiReturnModel labBooking(CreateLabBookingModel model) {
+		
+		logger.info("in lab booking");
+		ApiReturnModel returnModel = null;
+		List<String> errors = new ArrayList<String>();
+		UserDetails ud=null;
+		try
+		{
+			LabSlots slots = labDao.findSlot(Integer.parseInt(model.getSlotId()));
+			if(slots != null)
 			{
-				for(LabSubType type:labSubType)
+				logger.info("slot avilable");
+				LabSubType subType = slots.getSubType();
+				
+				String receive_mode = "";
+				Integer size_limit_num = 0;
+				Integer max_bookings_num = 0;
+				String source = model.getSource();
+				
+				
+				if(model.getReceive_mode() != null && model.getReceive_mode().equalsIgnoreCase(Constants.RECEIVE_MODE))
 				{
-					LabSubTypeModel model=new LabSubTypeModel();
-					model.setId(type.getId());
-					model.setName(type.getName());
-					model.setDescription(type.getDescription());
-					model.setDuration(type.getDuration());
-					model.setHome_pickup(type.isHomePickup());
-					model.setOnline_booking(type.isOnlineBooking());
-					model.setMax_homepickup_bookings(type.getMaxHomePickupBookings());
-					model.setMax_online_bookings(type.getMaxOnlineBookings());
+					logger.info("Home pick up booking");
+					size_limit_num = subType.getMaxHomePickupBookings();
+					receive_mode = Constants.LAB_HOMEPICKUP;
+					if(model.getAddress().isEmpty() && model.getAddress() == null)
+					{
+						errors.add("homepickup user must be give address");
+						logger.info("homepickup user must be give address");
+						return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
+					}
 					
-					list.add(model);
 				}
+				else
+				{
+					logger.info("walkin booking");
+					size_limit_num = subType.getMaxOnlineBookings();
+					receive_mode = Constants.LAB_WALKIN;
+				}
+				
+				
+				if(model.getSource() == null)
+					source = Constants.ONLINE_SOURCE;
+				
+				
+				logger.info("source :::"+source);
+				logger.info("receive Mode ::"+receive_mode);
+				logger.info("Max bookings allowed :::"+size_limit_num);
+				
+				List<LabBooking> booking = labDao.findBookingsOnslot(slots,receive_mode);
+				
+				if(!booking.isEmpty() && booking != null)
+					max_bookings_num = booking.size();
+				
+				logger.info("already booking same slot numbers:::"+max_bookings_num);
+				
+				if(max_bookings_num < size_limit_num)
+				{
+					logger.info("condition is true for checking max bookings for one slot");
+					ud=Utils.getUserSession();
+					String role=null;
+					String userName=null;
+					
+					if (ud == null) {
+						logger.info("Anonymous user");
+						if(model.getMobile() ==null || model.getName() ==null || model.getAddress() ==null){
+							logger.info("Anonymous user requested parameters are not coming to user");
+							errors.add("Anonymous user requested parameters are not coming to user");
+							return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
+						}
+						User user=userDao.findByUserName(model.getMobile());
+						if(user == null){
+							logger.info("new user ,mobile no:::"+model.getMobile());
+							addUser(model);
+							userName = model.getMobile();
+						}
+						else
+						{
+							userName=user.getUsername();
+							logger.info("existed user ::: username::"+userName);
+						}
+							
+						
+					}
+					else
+					{
+						logger.info("registred user");
+						for(GrantedAuthority auth :ud.getAuthorities())
+							role=auth.getAuthority();
+						if(role!=null && role.contains(Constants.ROLE_RECP))
+						{
+							if(model.getMobile() ==null || model.getName() ==null || model.getAddress() ==null){
+								logger.info("Anonymous user requested parameters are not coming to user");
+								errors.add("Anonymous user requested parameters are not coming to user");
+								return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
+							}
+							logger.info("ROLE RECP is booking a slot for new user");
+							addUser(model);
+							userName = model.getMobile();
+							
+						}else
+						{
+							logger.info("ROLE USER booking a slot for own");
+							userName=ud.getUsername();
+						}
+							
+					}
+					
+					User user=new User(userName);
+					LabBooking labBooking = new LabBooking();
+					labBooking.setLabSlot(slots);
+					labBooking.setUser(user);
+					labBooking.setReceive_mode(receive_mode);
+					labBooking.setSource(source);
+					labBooking.setInserted_on(new Date());
+					labBooking.setAddress(model.getAddress());
+					
+					labDao.save(labBooking);
+					
+					LabBookingModel labBookingModel = new LabBookingModel();
+					labBookingModel.setReceiveMode(receive_mode);
+					labBookingModel.setSlotTime(new Utils().convertDateToUTCFormat(slots.getTime()));
+					labBookingModel.setTestName(slots.getSubType().getName());
+					
+					List<Object> list = new ArrayList<Object>();
+					list.add(labBookingModel);
+					
+					logger.info("slot booking success response is :::"+list.toString());
+					
+					returnModel = new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, "slot booking success", list);
+					return returnModel;
+					
+				}
+				else
+					errors.add("booking exceed limit, try to book another slot");
+					
+				
 			}
+			else
+				errors.add("slot is not found");
 		}
-		catch(Exception ex){
-			logger.error("Exception raised " + ex.toString());
-			
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.info("exception occurs while book a slot for lab:::"+e.toString());
+			errors.add(e.getMessage());
 		}
-		return list;
+		
+		logger.info("error occurs while book a lab slot :::errors are::"+errors.toString());
+		
+		returnModel = new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);		
+		return returnModel;
+	}
+	
+	private void addUser(CreateLabBookingModel model)
+	{
+		logger.info("enter into addUser while slotBooking");
+		try
+		{
+		User user=new User();
+		user.setUsername(model.getMobile());
+		user.setPassword(new Utils().getEncryptedPassword(model.getMobile()));
+		user.setEnabled(true);
+		Set<Authority> authorities = new HashSet<Authority>();
+		authorities.add(new Authority(user, Constants.ROLE_USER));
+		user.setUserRole(authorities);
+		
+		Profile userProfile =  new Profile(user, model.getName());
+		
+		user.setUserProfile(userProfile);
+		
+		userDao.save(user);
+		logger.info("add user success");
+		SMS sms = new SMS();
+		sms.sendSMS(Constants.SMS_BOOKING_MSG, model.getMobile());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public ApiReturnModel getSlots(String subTypeId, String date) {
+		
+		logger.info("in getslots subtypeId:::"+subTypeId);
+		List<String> errors = new ArrayList<String>();
+		try
+		{
+			LabSubType labSubType = new LabSubType(Integer.parseInt(subTypeId));
+			List<LabSlots> slots = labDao.findLabSlotsOnDate(labSubType,date);
+			if(slots!=null && slots.size()>0)
+			{
+				LabSlotResponseModel labslotModel = new LabSlotResponseModel();
+				logger.info("lab slots availble for request date"+date);
+				List<LabSlotModel> slotsList = new ArrayList<LabSlotModel>();
+				//List<LabSlotModel> bookedSlotsList = new ArrayList<LabSlotModel>();
+				for(LabSlots slot:slots)
+				{	
+					LabSlotModel slotObj = new LabSlotModel();
+					String time = new Utils().convertDateToUTCFormat(slot.getTime());
+						slotObj.setId(slot.getId());
+						slotObj.setSlotTime(time);
+						slotsList.add(slotObj);
+					//List<LabBooking> booking = labDao.findBookingsOnslot(slot);
+				}
+				labslotModel.setAvailableSlots(slotsList);
+				List<Object> res = new ArrayList<Object>();
+				res.add(labslotModel);
+				
+				return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG, res);
+			}
+			else
+				errors.add("slots not availble");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			logger.info("exception occurs while getting get slots :::"+e.toString());
+			errors.add(e.getMessage());
+		}
+		
+		return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
+		
 	}
 	
 }

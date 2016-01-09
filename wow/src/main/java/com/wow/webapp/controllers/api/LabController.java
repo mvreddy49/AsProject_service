@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wow.webapp.domain.model.ApiReturnLab;
 import com.wow.webapp.domain.model.ApiReturnModel;
+import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
 import com.wow.webapp.services.LabService;
 import com.wow.webapp.util.Responses;
@@ -138,10 +139,40 @@ public class LabController {
 
 	}
 	
-	/*@RequestMapping(value = "/slots", method = RequestMethod.GET)
-	public ApiReturnModel getLabSlots()
+	@RequestMapping(value = "/slots", method = RequestMethod.GET)
+	public ApiReturnModel getLabSlots(@RequestParam("subTypeId") String subTypeId,@RequestParam("date") String date)
 	{
-		List<Object> labTypes=labService.getLabTypes();
-		return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS,Responses.SUCCESS_MSG, labTypes);
-	}*/
+		logger.info("enter into slotsBydate");
+		ApiReturnModel returnValue = null;
+		List<String> errors = new ArrayList<String>(); 
+			if(!subTypeId.isEmpty() && !date.isEmpty())
+				returnValue = labService.getSlots(subTypeId,date);
+			else
+			{	errors.add("subtype id and date cant be empty");
+				returnValue=new ApiReturnModel(Responses.FAILURE_CODE, Responses.FAILURE_STATUS, "slots not available",errors);
+			}
+		return returnValue;
+	}
+	
+	@RequestMapping(value = "/booking" , method = RequestMethod.POST)
+	public ApiReturnModel labBooking(@Valid CreateLabBookingModel model , BindingResult bindingResult)
+	{
+		ApiReturnModel returnModel=null;
+		
+		List<String> errors=new ArrayList<String>();
+		if(bindingResult.hasFieldErrors()){
+			logger.debug("Invalid Data");
+			for(FieldError e : bindingResult.getFieldErrors()){
+				logger.debug("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage() );
+				errors.add("Field Name : " + e.getField() + ", Error : " + e.getDefaultMessage());
+			}
+			return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,Responses.ERROR_MSG,errors);
+			
+		}
+		
+		returnModel = labService.labBooking(model);
+		
+		return returnModel;
+	}
+	
 }
