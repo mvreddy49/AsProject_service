@@ -490,14 +490,12 @@ public class LabService {
 					User user=userDao.findByUserName(userName);
 					bookings = labDao.findLabBookingsByUser(user);
 				}
+				bookings = labDao.findLabBookings();
 				List<LabBookingModel> results = new ArrayList<LabBookingModel>();
 				for(LabBooking book: bookings){
 					LabBookingModel result = new LabBookingModel();
 					result.setReceiveMode(book.getReceive_mode());
-					//logger.info("slot time is :" + book);
-					//logger.info("slot time is :" + book.getLabSlot().getTime());
 					LabSlots bookedSlot = book.getLabSlot();
-					logger.info("Slot info is : " + bookedSlot.getId());
 					result.setSlotTime(new Utils().convertDateToUTCFormat(bookedSlot.getTime()));
 					result.setTestName(book.getLabSlot().getSubType().getName());
 					UserModel userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername(),book.getAddress());

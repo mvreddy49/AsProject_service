@@ -39,6 +39,18 @@ public class LabController {
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	public ApiReturnModel addLabType(@RequestParam(value = "name", required = true) String name){
 		ApiReturnModel returnModel=null;
+		UserDetails ud = Utils.getUserSession();
+		if(ud == null) return Responses.invaliedSession();
+		else
+		{
+			String role=null;
+			for(GrantedAuthority auth :ud.getAuthorities())
+				role=auth.getAuthority();
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
+			{
+				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert lab Types");
+			}
+		}
 		List<String> errors = labService.addLabType(name);
 		if(errors.size()==0)
 		{
@@ -72,7 +84,7 @@ public class LabController {
 			String role=null;
 			for(GrantedAuthority auth :ud.getAuthorities())
 				role=auth.getAuthority();
-			if(!(role!=null && role.contains(Constants.ROLE_RECP)))
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
 			{
 				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert labSubTypes",errors);
 			}
@@ -149,7 +161,7 @@ public class LabController {
 			String role=null;
 			for(GrantedAuthority auth :ud.getAuthorities())
 				role=auth.getAuthority();
-			if(!(role!=null && role.contains(Constants.ROLE_RECP)))
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
 			{
 				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert lab slots");
 			}
