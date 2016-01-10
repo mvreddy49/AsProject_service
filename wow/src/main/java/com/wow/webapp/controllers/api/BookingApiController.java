@@ -245,7 +245,7 @@ public class BookingApiController {
 							logger.info("existed user ::: username::"+userName);
 						}
 							
-						slot.setSource("web");
+						
 					}
 					else
 					{
@@ -261,17 +261,26 @@ public class BookingApiController {
 								return retunModel;
 							}
 							logger.info("ROLE RECP is booking a slot for new user");
-							addUser(createBookingModel);
+							User user=userDao.findByUserName(createBookingModel.getMobile());
+							if(user == null){
+								addUser(createBookingModel);
+							}
 							userName = createBookingModel.getMobile();
-							slot.setSource("recp");
+							
 						}else
 						{
 							logger.info("ROLE USER booking a slot for own");
 							userName=ud.getUsername();
-							slot.setSource("web");
+							
 						}
 							
 					}
+					
+					if(createBookingModel.getSource() != null)
+						slot.setSource(createBookingModel.getSource());
+					else
+						slot.setSource(Constants.ONLINE_SOURCE);
+					
 					logger.info("source coming from :::"+slot.getSource());
 					User user=new User(userName);
 					slot.setUser(user);
@@ -281,7 +290,7 @@ public class BookingApiController {
 					
 					BookingModel bookingModel=new BookingModel();
 					
-					/*
+					
 					//clinic model
 					ClinicModel clinicModel=new ClinicModel();
 					
@@ -300,12 +309,13 @@ public class BookingApiController {
 					doctorModel.setMobile(doctor.getUser().getUsername());
 					
 					//set bookingModel
-					//bookingModel.setClinic(clinicModel);
+					bookingModel.setClinic(clinicModel);
 					bookingModel.setDoctor(doctorModel);
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
-					*/
+					
 					List<BookingModel> bookingList=new ArrayList<BookingModel>();
 					bookingList.add(bookingModel);
+					
 					SMS sms = new SMS();
 					sms.sendSMS(Constants.SMS_BOOKING_MSG + "FOR " + userName, createBookingModel.getMobile());
 					

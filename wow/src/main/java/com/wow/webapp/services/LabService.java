@@ -328,7 +328,10 @@ public class LabService {
 								return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
 							}
 							logger.info("ROLE RECP is booking a slot for new user");
-							addUser(model);
+							User user=userDao.findByUserName(model.getMobile());
+							if(user == null){
+								addUser(model);
+							}
 							userName = model.getMobile();
 							
 						}else
