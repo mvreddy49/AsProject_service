@@ -135,6 +135,7 @@ public class RestClient {
 
 			if (getParams().size() > 0) {
 				postRequest.setEntity(new UrlEncodedFormEntity(getParams()));
+				LOGGER.info("Params are : " + getParams());
 			}
 			HttpResponse response = httpClient.execute(postRequest);
 

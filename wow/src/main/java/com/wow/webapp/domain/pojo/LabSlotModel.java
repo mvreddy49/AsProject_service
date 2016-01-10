@@ -1,28 +1,20 @@
 package com.wow.webapp.domain.pojo;
 
-import java.util.List;
-
 public class LabSlotModel {
 	
-	private List<String> slots;
+	private int id;
+	private String slotTime;
 	
-	private List<String> bookedSlots;
-
-	public List<String> getSlots() {
-		return slots;
+	public int getId() {
+		return id;
 	}
-
-	public List<String> getBookedSlots() {
-		return bookedSlots;
+	public void setId(int id) {
+		this.id = id;
 	}
-
-	public void setSlots(List<String> slots) {
-		this.slots = slots;
+	public String getSlotTime() {
+		return slotTime;
 	}
-
-	public void setBookedSlots(List<String> bookedSlots) {
-		this.bookedSlots = bookedSlots;
+	public void setSlotTime(String slotTime) {
+		this.slotTime = slotTime;
 	}
-	
-	
 }
