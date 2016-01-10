@@ -40,12 +40,12 @@
 		});//submittn Ajax End
 		});
 		
-		$("#datebtn").click(function() {
+		$("#datetimepicker").change(function() {
 					date = $('#datetimepicker').val();
 					doctorId = $('input[name=doctor]:checked', '#displayArea').val();
 					$('#form').show();
 					$('#output').empty();
-
+					$('#slotsDropdown').find('option').remove();
 					$.ajax({
 						url : "api/slotsByDate",
 						data : {
@@ -147,7 +147,8 @@
 <script>
 								$(function() {
 									$("#datetimepicker").datepicker({
-										dateFormat : "yy-mm-dd"
+										dateFormat : "yy-mm-dd",
+										minDate: 0
 									});
 
 								});
@@ -224,19 +225,14 @@
 						<div id="dateArea" style="display: none;" >
 							Preferred Date And Time <input id="datetimepicker"
 								style="width: 80%;" />
-							<div class=" controls">
-								<button id="datebtn" class="btn btn-success">
-									<i class="glyphicon glyphicon-send"></i>Get Slot
-								</button>
-
-							</div>
+						
 							<div id="slotbookingArea" style="display: none;">
 								<select id="slotsDropdown"></select>
 								<div sec:authorize="!isAnonymous()">
 				<button id="submitbtn" type="submit"
 						class="btn btn-primary btn-md">Submit</button></div>
 							</div>
-							<div id="output" class="clinicbookingstyle"></div>
+							<div id="output" class=" alert alert-success"></div>
 						</div>
 						
 					

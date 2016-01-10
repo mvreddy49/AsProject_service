@@ -74,6 +74,15 @@ public class LabDAOImpl implements LabDAO{
 		List<LabSubType> labSubType=session.createQuery("from LabSubType where labType=:labType and enabled=:enabled").setParameter("labType", labType).setParameter("enabled", true).list();
 		return labSubType;
 	}
+	
+	@Transactional
+	public List<LabSubType> getLabSubType() {
+		
+		logger.info("In find lab types");
+		Session session = this.getSession();
+		List<LabSubType> labSubType=session.createQuery("from LabSubType where  enabled=:enabled").setParameter("enabled", true).list();
+		return labSubType;
+	}
 
 	@Transactional
 	public LabSubType gerLabsubType(Integer id) {
