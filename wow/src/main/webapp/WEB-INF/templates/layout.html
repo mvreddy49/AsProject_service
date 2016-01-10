@@ -38,7 +38,7 @@
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
 	
-	<link rel="stylesheet" th:href="@{/resources/custom/jquery.datetimepicker.css}"/>
+	
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -57,7 +57,6 @@
 
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-<script th:src="@{/resources/custom/jquery.datetimepicker.full.js}"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <!-- Bootstrap -->
 <script
@@ -121,7 +120,7 @@
 				<div class="collapse navbar-collapse" style="margin-left:150px;" >
 					<ul class="nav navbar-nav">
 						<li sec:authorize="hasRole('ROLE_USER')"><a
-							th:href="@{/home-user}">Me</a></li>
+							th:href="@{/home-user}">My Account</a></li>
 							
 						<!-- 						<li><a th:href="@{/tests}">Tests</a></li> -->
 						<!-- 						<li><a th:href="@{/clinics}">Clinics</a></li> -->
@@ -142,8 +141,9 @@
 						<li><a th:href="@{/Career}">Careers</a></li>
 						<li><a th:href="@{/MedicalTourism}">MedicalTourism</a></li>
 						<li><a th:href="@{/Contact}">Contact</a></li>
+						<li><a th:href="@{/register-user}">Register</a></li>
 					
-						<li class="dropdown" sec:authorize="isAnonymous()"><a
+						<!-- <li class="dropdown" sec:authorize="isAnonymous()"><a
 							href="#" class="dropdown-toggle" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="false">Register
 								<span class="caret"></span>
@@ -154,7 +154,7 @@
 								<li><a th:href="@{/register-user}">User</a></li>
 								<li role="separator" class="divider"></li>
 								<li><a th:href="@{/register-clinic}">Pharmacy</a></li>
-							</ul></li>
+							</ul></li> -->
 						<li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
 						<li sec:authorize="isAuthenticated()">
 							<form method="post" th:action="@{/logout}" role="form">
@@ -173,6 +173,9 @@
 			<section layout:fragment="content">
 				
 			</section>
+			<div class="row" style="margin:50px;">
+			   
+			</div>
 		</div>
 
 	<!-- </div> -->

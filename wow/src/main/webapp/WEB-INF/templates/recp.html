@@ -18,7 +18,7 @@
 		var date2 = new Date();
 		console.log(speciality);
 		$('#form').hide();
-
+		var myBookingsTableDiv = $('#myBookingsTableDiv').DataTable();
 		/* get lab tests */
 		$('#addLabBooking')
 				.click(
@@ -302,52 +302,18 @@
 										url : "api/bookings/myBookings",
 										data : {},
 										success : function(result) {
-											var content = '<table class="table table-hover " >'
-													+ '<th class="tablestyle">Slot Time</th><th class="tablestyle">User Name</th><th class="tablestyle">User Mobile</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
-											var htmlContent = '';
 											console.log(result);
 											if (result.status == "OK") {
+												myBookingsTableDiv.clear().draw();
+												$.each(result.bookings,function(index,item) {
 
-												$
-														.each(
-																result.bookings,
-																function(index,
-																		item) {
-
-																	htmlContent = htmlContent
-																			+ "<tr>"
-																			+ "<td>"
-																			+ item.slotTime
-																			+ "</td>"
-																			+ "<td>"
-
-																			+ item.user.name
-																			+ "</td><td>"
-																			+ item.user.username
-																			+ "</td><td>"
-
-																			+ item.doctor.name
-																			+ "</td>"
-																			+ "<td>"
-
-																			+ item.doctor.speciality
-																			+ "</td>"
-																			+ "</tr>";
-																	content = content
-																			+ htmlContent;
-																	htmlContent = '';
-																	console
-																			.log(index
-																					+ " => "
-																					+ item.name);
-
+																	var date = new Date(item.slotTime);
+																	var time = date.toLocaleString();
+																	
+																	myBookingsTableDiv.row.add([time,item.user.name,item.user.username,item.doctor.name,item.doctor.name,item.doctor.speciality]).draw( false );
+																	
 																}); // End $.each
-												content = content + "</table>";
-												$('#displayBookingArea')
-														.empty();
-												console.log(content);
-												$('#displayBookingArea')
-														.append(content);
+												
 											}
 										}
 
@@ -454,6 +420,7 @@
 	$(function() {
 		$('.contentDiv').hide();
 		$('#addDocDiv').show();
+		$('#displayAreaDiv').empty();
 		$('.contentSelection').click(function() {
 			$('.contentDiv').hide();
 			if ($(this).attr("value") != "addBooking") {
@@ -476,7 +443,7 @@
 			startTime = $('#startTime').val();
 			endTime = $('#endTime').val();
 			speciality = $('#speciality').val();
-			alert(name + mobile + startTime + endTime + speciality);
+			//alert(name + mobile + startTime + endTime + speciality);
 			$.ajax({
 
 				type : "POST",
@@ -493,7 +460,9 @@
 				success : function(result) {
 					console.log(result);
 					if (result.status == "OK") {
-						alert("Insertion completed");
+						
+						$('#displayAreaDiv').empty();
+						$('#displayAreaDiv').append("Insertion completed");
 
 					}
 				}
@@ -518,7 +487,8 @@
 				success : function(result) {
 					console.log(result);
 					if (result.status == "OK") {
-						alert("DONE....");
+						$('#displayAreaDiv').empty();
+						$('#displayAreaDiv').append("add slots added successfully");
 					}
 
 				}
@@ -547,7 +517,7 @@
 											var htmlContent = '';
 											console.log(result);
 											if (result.status == "OK") {
-												alert("User added successfully");
+												
 												$
 														.each(
 																result.users,
@@ -578,9 +548,9 @@
 
 																}); // End $.each
 												content = content + "</table>";
-												/* $('#displayArea').empty();
-												$('#displayArea').append(content);
-												 */
+												$('#displayAreaDiv').empty();
+												$('#displayAreaDiv').append("User added successfully");
+												 
 											}
 										}
 
@@ -588,9 +558,11 @@
 						});
 
 		$('#bookingsubmit').click(function(e) {
-			alert("" + $(this).attr('id'));
-
+			//alert("" + $(this).attr('id'));
+			
 		});
+		
+		
 
 	});
 </script>
@@ -615,6 +587,9 @@
 				</div>
 			</div>
 			<div class="col-md-10">
+				
+				
+		
 				<div id="addDocDiv" class="contentDiv">
 					<div id="signupbox" class="mainbox col-md-6  col-sm-8 ">
 						<div class="panel panel-info">
@@ -953,14 +928,30 @@
 						</div>
 
 					</div>
+					
+				</div>
+				
+			</div>
+			
+			<div id="getBookingsDiv" class="contentDiv col-md-10">
+				<div id="displayBookingArea">
+					<table class="table table-hover " id="myBookingsTableDiv">
+						<thead>
+							<tr><th class="tablestyle">Slot Time</th><th class="tablestyle">User Name</th><th class="tablestyle">User Mobile</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>
+							</tr>
+							
+						</thead>
+						<tbody>
+    							
+    						</tbody>
+					</table>
 				</div>
 			</div>
-
-			<div id="getBookingsDiv" class="contentDiv col-md-10">
-				<div id="displayBookingArea"></div>
-			</div>
+			
 		</div>
-
+		<div class="col-sm-10" align="center">
+					<label id="displayAreaDiv"></label>
+				</div>
 
 	</section>
 </body>
