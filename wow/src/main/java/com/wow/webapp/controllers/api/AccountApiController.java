@@ -88,6 +88,9 @@ public class AccountApiController {
 				else{
 					u = new User();
 					u.setUsername(model.getUsername());
+					
+					Profile profile = new Profile(u,model.getName());
+					u.setUserProfile(profile);
 					//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					//u.setPassword(passwordEncoder.encode(model.getPassword()));
 					u.setPassword(new Utils().getEncryptedPassword(model.getPassword()));
@@ -247,8 +250,11 @@ public class AccountApiController {
 				Authority au = (Authority)user.getUserRole().iterator().next();
 				ResponseUserModel u = null;
 				if(role != null && !role.equalsIgnoreCase(au.getRole())) continue;
+				logger.info("Role is :" + au.getRole());
+				logger.info("User name is : " + user.getUsername());
+				logger.info("Name is : " + user.getUserProfile().getName());
 				u = new ResponseUserModel(user.getUsername(),user.getUserProfile().getName(),au.getRole());
-				u.setUpdatedOn(new Utils().convertDateToUTCFormat(user.getModified_on()));
+				//u.setUpdatedOn(new Utils().convertDateToUTCFormat(user.getModified_on()));
 				usersList.add(u);
 				returnModel.setUsers(usersList);
 			}

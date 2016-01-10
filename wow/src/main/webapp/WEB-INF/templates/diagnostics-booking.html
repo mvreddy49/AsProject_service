@@ -20,10 +20,10 @@ $(function(){
 							$.each(result.results, function(index, item) {
 								var htmlContent = '';
 								htmlContent = htmlContent
-										+ "<h3>"
+										+ "<p>"
 										+ '<input type="radio"  name="labTest" value="'+  item.id + '"  class="labTest"  />'
 										+ item.name
-										+ "</h3>";
+										+ "</p>";
 
 								console.log(index+ " => "+ item.name);
 								$('#labTypeDiv').append(htmlContent);
@@ -59,10 +59,10 @@ $(function(){
 																		item) {
 																	var htmlContent = '';
 																	htmlContent = htmlContent
-																			+ "<h3>"
+																			+ "<p>"
 																			+ '<input type="radio"  name="subtype" value="'+  item.id  + '"  class="subtype"  />'
 																			+ item.name
-																			+ "</h3>";
+																			+ "</p>";
 
 																	console
 																			.log(index
@@ -76,7 +76,10 @@ $(function(){
 											} // End STatus OK
 
 
-$('.subtype')	.click(function() {
+$('.subtype').click(function() {
+	var d = new Date();
+	var date = (d.getFullYear())+'-'+(d.getMonth()+1)+ '-' +(d.getDate());
+	$('#datetimepicker2').val(date).change();
 $('#dateArea2').show();
 			});
 																}
@@ -183,7 +186,7 @@ $('#dateArea2').show();
 
 		<div id="addLabBookingDiv" >
 				<div id="labTypeDiv" class="col-md-2">
-				<h4 style="color: green;">Select Test Type</h4></div>
+		</div>
 				<div id="labSubTypeDiv" class="col-md-2"></div>
 				<div id="dateArea2" style="display: none;" class="col-md-4">
 									Preferred Date And Time <input id="datetimepicker2"
@@ -195,34 +198,34 @@ $('#dateArea2').show();
 							<div id="output2" class=" alert alert-success"></div>
 									</div>
 								</div>
-				<div class="col-md-2" ><div id="form2" style="display: none;">
-					<span for="labbookingname" class="blocklabel">Name</span><br /> <input
-						name="labbookingname" type="text" id="labbookingname" style="width: 280px;" />
-					<br/>
-					<span for="labbookingmobile" class="blocklabel">Mobile</span> <br /> <input
-						name="labbookingmobile" type="text" id="labbookingmobile" style="width: 280px;"/>
-					<br/>
-					
-					<span for="labbookingaddress" class="blocklabel">Address</span><br /> 
-					<textarea
-						name="labbookingaddress"  id="labbookingaddress" style="width: 280px;"></textarea>
-					<br/>
-	<span for="labbookingsource" class="blocklabel">Source</span><br />
-	<select id="labbookingsource">
-	<option value="reference">Reference</option>
-	<option value="practo">Practo</option>
-	
-	</select> 
-				<br/>
-				<span for="recievemode" class="blocklabel">recieve_mode</span><br />
-				<select id="recievemode">
-	<option value="walkin">Walkin</option>
-	<option value="homepickup">Home Pickup</option>
-	
-	</select> 
-				<br/>
-					<button id="submitbtn2" type="submit"
-						class="btn btn-primary btn-md">Submit</button>
+				<div class="col-md-2" >
+					<div id="form2" style="display: none;">
+						<div class="col-md-3">
+							<div sec:authorize="isAnonymous()">
+								<span for="labbookingname" class="blocklabel">Name</span><br /> 
+									<input name="labbookingname" type="text" id="labbookingname" style="width: 280px;" /><br/>
+								<span for="labbookingmobile" class="blocklabel">Mobile</span> <br /> 
+									<input name="labbookingmobile" type="text" id="labbookingmobile" style="width: 280px;"/><br/>
+								<span for="labbookingaddress" class="blocklabel">Address</span><br /> 
+									<textarea name="labbookingaddress"  id="labbookingaddress" style="width: 280px;"></textarea><br/>
+								<span for="labbookingsource" class="blocklabel">Source</span><br />
+								<select id="labbookingsource">
+									<option value="reference">Reference</option>
+									<option value="practo">Practo</option>
+								</select><br/>
+							</div>
+							<div>
+								<span for="recievemode" class="blocklabel">recieve_mode</span><br />
+								<select id="recievemode">
+									<option value="walkin">Walkin</option>
+									<option value="homepickup">Home Pickup</option>
+									</select> 	
+								<br/>
+									<button id="submitbtn2" type="submit" class="btn btn-primary btn-md">Submit</button>
+								
+							</div>
+						</div>
+			
 				</div>
 				
 		</div>
