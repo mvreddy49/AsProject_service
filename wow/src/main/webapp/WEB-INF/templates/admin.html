@@ -8,12 +8,29 @@
 	$(function() {
 		$('.contentDiv').hide();
 		$('#addRecDiv').show();
+		 $('#regbtnDiv2').hide();
 		$('.contentSelection').click(function(){
 			$('#displayArea').empty();
 			$('.contentDiv').hide();
 			$('#' + $(this).attr('id') + 'Div').show();
 		});
 		
+		$('#role').change(function(){
+		    $(this).find("option:selected").each(function(){
+	            if($(this).attr("value")=="ROLE_DOCTOR"){
+	                $("#doctorslots").show();
+	                $('#regbtnDiv').hide();
+	                $('#regbtnDiv2').show();
+	                $('#pwdDiv').hide();
+	               }
+	            else{
+	            	 $("#doctorslots").hide();
+	            	 $('#regbtnDiv').show();
+		               $('#regbtnDiv2').hide();
+		               $('#pwdDiv').show();
+	            }
+	               });
+	    }).change();
 		$('.roleselection').click(function(){
 			$('#addRecDiv').hide();
 			$('#displayArea').empty();
@@ -107,6 +124,44 @@
 				
 			});
 		});
+		$('#regbtn').click(function() {
+			console.log($('#startTime').val());
+			/* var isoDate = new Date($('#startTime').val()).toISOString();
+			console.log('isoDate = ' + isoDate);
+			 */
+
+			name = $('#name').val();
+			mobile = $('#username').val();
+			startTime = $('#startTime').val();
+			endTime = $('#endTime').val();
+			speciality = $('#speciality').val();
+			alert(name + mobile + startTime + endTime + speciality);
+			$.ajax({
+
+				type : "POST",
+				url : "content/addDoctor",
+				data : {
+					"name" : name,
+					"mobile" : mobile,
+					"startTime" : startTime + ":00Z",
+					"endTime" : endTime + ":00Z",
+					"speciality" : speciality,
+					"duration" : "15"
+
+				},
+				success : function(result) {
+					console.log(result);
+					if (result.status == "OK") {
+						alert("Insertion completed");
+
+					}
+				}
+			});
+			document.getElementById("name").value = "";
+			document.getElementById("speciality").value = "";
+			document.getElementById("mobile").value = "";
+
+		});
 		
 	});
 	</script>
@@ -137,6 +192,21 @@
     </div>
     <div class="panel-body">
      <div id="signupform" class="form-horizontal" >
+     <div class="form-group">
+       <label for="role" class="col-md-3 control-label">Select Role</label>
+       <div class="col-md-9">
+        <select id="role">
+        <option value="ROLE_RECP">Reception</option>
+         <option value="ROLE_ADMIN">Administrator</option>
+         <option value="ROLE_DOCTOR">Doctor</option>
+        <option value="ROLE_LAB">Lab</option>
+        <option value="ROLE_PHARMACY">Pharmacy</option>
+        <option value="ROLE_USER">User</option>
+       
+        </select>
+      
+       </div>
+      </div>
       <div class="form-group">
        <label for="UserName" class="col-md-3 control-label">Mobile</label>
        <div class="col-md-9">
@@ -144,7 +214,7 @@
         <div id="usernameerror" class="errorstyle"></div><br/>
        </div>
       </div>
-      <div class="form-group">
+      <div id="pwdDiv" class="form-group">
        <label for="password" class="col-md-3 control-label">password</label>
        <div class="col-md-9">
         <input id="password" type="password"  class="form-control" placeholder="password" onkeypress="passwordclear()" />
@@ -158,28 +228,63 @@
         <div id="passworderror" class="errorstyle"></div><br/>
        </div>
       </div>
-      <div class="form-group">
-       <label for="role" class="col-md-3 control-label">Select Role</label>
-       <div class="col-md-9">
-        <select id="role">
-        <option value="ROLE_RECP">Reception</option>
-         <option value="ROLE_ADMIN">Administrator</option>
-         <option value="ROLE_DOCTOR">Doctor</option>
-        <option value="ROLE_LAB">Lab</option>
-        <option value="ROLE_PHARMACY">Pharmacy</option>
-        <option value="ROLE_USER">User</option>
-       
-        </select>
-        <br/>
-       </div>
-      </div>
+           <div id="doctorslots">
+     	<div class="form-group">
+										<label for="Speciality" class="col-md-3 control-label">Speciality</label>
+										<div class="col-md-9">
+											<select id="speciality">
+												<option value="Gynecologist">Gynecologist</option>
+												<option value="orthopedician">orthopedician</option>
+												<option value="Cardiologist">Cardiologist</option>
+												<option value="Pediatrician">Pediatrician</option>
+												<option value="Ent Surgeon">Ent Surgeon</option>
+												<option value="Endocrinologist">Endocrinologist</option>
+												<option value="Nephrologist">Nephrologist</option>
+												<option value="Neurosurgeon">Neurosurgeon</option>
+												<option value="Neuro Physician">Neuro Physician</option>
+											</select>
+											<!--  <input id="speciality" type="tel" class="form-control"
+												placeholder="speciality"  />-->
+											<div id="specialityerror" class="errorstyle"></div>
+											<br />
+										</div>
+									</div>
      
+     	<div class="form-group">
+										
+					<label for="startTime" class="col-md-3 control-label">Start
+											Time</label>
+										<div class="col-md-9">
+											<input id="startTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="startTime" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="endTime" class="col-md-3 control-label">End
+											Time</label>
+										<div class="col-md-9">
+											<input id="endTime" type="datetime-local"
+												class="form-control" required="required"
+												placeholder="end time" />
+										</div>
+									</div>
+     </div>
 
       
-      <div class="form-group">
+      <div id="regbtnDiv" class="form-group">
       
        <div class="col-sm-12 controls">
         <button id="addRecpbtn" class="btn btn-success">
+         <i class="glyphicon glyphicon-send"></i>Register
+        </button>
+        
+       </div>
+      </div>
+     <div id="regbtnDiv2" class="form-group" >
+      
+       <div class="col-sm-12 controls">
+        <button id="regbtn" class="btn btn-success">
          <i class="glyphicon glyphicon-send"></i>Register
         </button>
         

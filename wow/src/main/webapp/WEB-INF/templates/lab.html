@@ -10,8 +10,9 @@
 	$(function() {
 		var testsTable = $('#testsTable').DataTable();
 		var testSubTypesTable = $('#testSubTypesTable').DataTable();
-		
+		var slotsTable=$('#slotsTable').DataTable();
 		testsTable.clear().draw();
+		slotsTable.clear().draw();
 		testSubTypesTable.clear().draw();
 		
 		$('.alert .close').on('click', function(e) {
@@ -31,6 +32,135 @@
 		$('#testSubTypeHomePickUp-addSubType').change(function(){
 			   $("#testSubTypeMaxHomePickUp-addSubType").prop("disabled", !$(this).is(':checked'));
 		}); 
+		$('#addBooking').click(function(){
+			$('#labTypeDiv').empty();
+			$('#slotbookingArea2').hide();
+			$('#dateArea2').hide();
+			$('#form2').hide();
+			$('#output2').empty();
+			
+			$('#labSubTypeDiv').empty();
+			$.ajax({
+
+				url : "api/lab/type",
+				data : {
+
+				},
+				success : function(result) {
+					console.log(result);
+					if (result.status == "OK") {
+					
+						$.each(result.results, function(index, item) {
+							var htmlContent = '';
+							htmlContent = htmlContent
+									+ "<h3>"
+									+ '<input type="radio"  name="labTest" value="'+  item.id + '"  class="labTest"  />'
+									+ item.name
+									+ "</h3>";
+
+							console.log(index+ " => "+ item.name);
+							$('#labTypeDiv').append(htmlContent);
+						});//each loop end
+
+					}//ok end
+					$(".labTest").click(function(){
+						$('#slotbookingArea2').hide();
+						$('#dateArea2').hide();
+						$('#form2').hide();
+						$('#output2').empty();
+						
+						$('#labSubTypeDiv').empty();
+						
+						var id=$(this).attr('value');
+						var url="api/lab/subType/"+id;
+						$
+								.ajax({
+									url : url,
+									data : {
+
+									},
+									success : function(
+											result) {
+										console
+												.log(result);
+										if (result.status == "OK") {
+
+											$('#labSubTypeDiv').html('');
+											
+											$.each(result.results,function(
+																	index,
+																	item) {
+																var htmlContent = '';
+																htmlContent = htmlContent
+																		+ "<h3>"
+																		+ '<input type="radio"  name="subtype" value="'+  item.id  + '"  class="subtype"  />'
+																		+ item.name
+																		+ "</h3>";
+
+																console
+																		.log(index
+																				+ " => "
+																				+ item.name);
+																$(
+																		'#labSubTypeDiv')
+																		.append(
+																				htmlContent);
+															}); // End $.each
+										} // End STatus OK
+
+
+		$('.subtype')	.click(function() {
+		$('#dateArea2').show();
+		});
+															}
+
+								});
+			
+					});
+				}//Success End
+			});
+		});
+		
+		$('#datetimepicker2').change(
+				function() {
+					var date2 = $('#datetimepicker2').val();
+					$('#form2').show();
+					$('#output2').empty();
+					$('#slotsDropdown2').find('option').remove();
+					var id=$('input[name=subtype]:checked', '#labSubTypeDiv').val();;
+			
+					$.ajax({
+						url : "api/lab/slots",
+						data : {
+							subTypeId :id ,
+							date : date2
+						},
+						success : function(result) {
+							console.log(result);
+							if (result.status == "OK") {
+														$('#slotsDropdown2').find('option').remove();
+								$('#slotdisplayArea2').html('');
+								$('#slotdisplayArea2').show();
+							
+								$.each(result.results, function(index, slot) {
+									$.each(slot.availableSlots, function(index, item) {
+									console.log(item);
+									$('#slotsDropdown2').append(
+											$('<option></option>', {
+												value : item.id,
+												text : item.slotTime
+											}));
+
+									});
+									});
+								$('#slotbookingArea2').show();// End $.each
+							} // End STatus OK
+
+						}
+
+					});
+
+				});
 		
 		$("#addTest").click(function(){
 			$('#addTestsubmit-errorDiv').hide();
@@ -235,6 +365,147 @@
 			; // Ajax End
 		}); // addTestSubTypesubmit End
 
+		$('#addSlot').click(function(){
+			$.ajax({
+				url :"api/lab/type",
+				success: function(result){
+					console.log(result);
+					if (result.status == "OK") {
+
+						$('#typeId').find('option').remove();
+					
+						$.each(result.results, function(index, item) {
+							console.log(item);
+							$('#typeId').append(
+									$('<option></option>', {
+										value : item.id ,
+										text : item.name
+									}));
+
+						});
+						var id=$('#typeId').val();
+						var url="api/lab/subType/"+id;
+						$.ajax({
+							url :url,
+							success : function(
+									result) {
+								console
+										.log(result);
+								if (result.status == "OK") {
+
+									$('#subTypeId').find('option').remove();
+									
+									$.each(result.results,function(
+															index,
+															item) {
+										$('#subTypeId').append(
+												$('<option></option>', {
+													value : item.id ,
+													text : item.name
+												}));
+													}); // End $.each
+								} // End STatus OK
+
+
+													}
+						});
+					
+					} // End STatus OK
+				}
+			});
+			
+		});//Get Type End
+		
+		$('#typeId').change(function(){
+			var id=$('#typeId').val();
+			var url="api/lab/subType/"+id;
+			$.ajax({
+				url :url,
+				success : function(
+						result) {
+					console
+							.log(result);
+					if (result.status == "OK") {
+
+						$('#subTypeId').find('option').remove();
+						
+						$.each(result.results,function(
+												index,
+												item) {
+							$('#subTypeId').append(
+									$('<option></option>', {
+										value : item.id ,
+										text : item.name
+									}));
+										}); // End $.each
+					} // End STatus OK
+
+
+										}
+			});
+		});//Get SubType End
+	$('#slotsubmit').click(function(){
+	
+		$.ajax({
+			type : "POST",
+			url : "api/lab/slots",
+			data :{
+				subTypeId :$('#subTypeId').val(),
+				startTime : $('#slotstartTime').val()+":00Z",
+				endTime :$('#slotendTime').val()+":00Z"
+			},
+			success : function(result) {
+				console.log(result);
+
+				if (result.status == "OK") {
+
+					$('#output2').empty();
+				alert("Slot Added Successfully")
+
+				}
+			}
+		});
+		
+	});//Add Slotsubmit End
+	
+	 $('#submitbtn2').click(function(){
+				
+		$.ajax({
+			type : "POST",
+			url : "api/lab/booking",
+			data :{
+				slotId : $('#slotsDropdown2').val(),
+				address :$('#labbookingaddress').val(),
+				mobile : $('#labbookingmobile').val(),
+				name :$('#labbookingname').val(),
+				source :$('#labbookingsource').val(),
+				receive_mode :$('#recievemode').val()
+			},
+			success : function(result) {
+				console.log(result);
+
+				if (result.status == "OK") {
+
+					$('#output2').empty();
+					$('#output2').show();
+				
+					$('#output2').append(
+							"<h4>Booking Completed Successfully"+"<br/>"+"Slot time:"+result.results[0].slotTime+"<br/>"+"Test:"
+							+result.results[0].testName
+							+"<br/>"+"Recieve Mode:"+result.results[0].receiveMode+"</h4>"
+							
+							);
+
+				}
+			}
+		});
+		
+	}); 
+	
+	$("#datetimepicker2").datepicker({
+		dateFormat : "yy-mm-dd"
+	});
+	
 	});
 </script>
 </head>
@@ -317,7 +588,7 @@
 
 				</div>
 				
-								<div id="addTestSubTypeDiv" class="contentDiv">
+					<div id="addTestSubTypeDiv" class="contentDiv">
 				
 					<div class="row"> 
 						<div  class="mainbox col-md-6  col-sm-8 ">
@@ -448,20 +719,17 @@
 							<div class="panel-body">
 								<div id="signupform" class="form-horizontal">
 									<div class="form-group">
-										<label for="doctorId" class="col-md-3 control-label">Doctor
-											Id</label>
+										<label for="typeId" class="col-md-3 control-label">Select Type</label>
 										<div class="col-md-9">
-											<select id="doctorId"></select>
+											<select id="typeId"></select>
 										</div>
 									</div>
-									<!-- <div class="form-group">
-							<label for="doctorId" class="col-md-3 control-label">Doctor
-								Id</label>
-							<div class="col-md-9">
-								<input id="doctorId" type="text" class="form-control"
-									required="required" placeholder="Name" />
-							</div>
-						</div> -->
+						<div class="form-group">
+										<label for="subTypeId" class="col-md-3 control-label">Select Subtype</label>
+										<div class="col-md-9">
+											<select id="subTypeId"></select>
+										</div>
+									</div>
 
 									<div class="form-group">
 										<label for="startTime" class="col-md-3 control-label">Start
@@ -500,179 +768,86 @@
 					</div>
 
 				</div>
-				<!-- 	Add User Div started -->
-				<div id="addUserDiv" class="contentDiv">
-					<div id="signupbox" class="mainbox col-md-6  col-sm-8 ">
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<div class="panel-title">Enter User Details</div>
-							</div>
-							<div class="panel-body">
-								<div id="signupform" class="form-horizontal">
-									<div class="form-group">
-										<label for="Name" class="col-md-3 control-label">Name</label>
-										<div class="col-md-9">
-											<input id="name" type="tel" class="form-control"
-												placeholder="name" onkeypress="nameclear()" />
-											<div id="nameerror" class="errorstyle"></div>
-											<br />
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label for="Mobile Number" class="col-md-3 control-label">Mobile
-											Number</label>
-										<div class="col-md-9">
-											<input id="mobile" type="tel" class="form-control"
-												placeholder="Mobile" onkeypress="mobileclear()" />
-											<div id="mobileerror" class="errorstyle"></div>
-											<br />
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="startTime" class="col-md-3 control-label">Start
-											Time</label>
-										<div class="col-md-9">
-											<input id="startTime" type="datetime-local"
-												class="form-control" required="required"
-												placeholder="startTime" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="endTime" class="col-md-3 control-label">End
-											Time</label>
-										<div class="col-md-9">
-											<input id="endTime" type="text" class="form-control"
-												required="required" placeholder="end time" />
-										</div>
-									</div>
-
-
-									<div class="form-group">
-										<!-- Button -->
-										<div class="col-sm-12 controls">
-											<button id="usersubmit" class="btn btn-success">
-												<i class="glyphicon glyphicon-send"></i>Register
-											</button>
-
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- 	Bookind Div started -->
-				</div>
+			
 				
 				<div id="addBookingDiv" class="contentDiv">
 
 					<div class="row">
-						<div class="col-md-3">
-							<h4 style="color: green;">Select Speciality</h4>
-							<ul class="nav">
-								<li id="Gynecologist" class="clinicspeciality"><a href="#"
-									class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="1">
-										<p id="li1" class="list-group-item-text">Gynecologist</p>
-								</a></li>
-								<li id="Orthopaedician" class="clinicspeciality"><a
-									href="#" class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="2">
-										<p class="list-group-item-text">Orthopaedician</p>
-								</a></li>
-								<li id="Cardiologist" class="clinicspeciality"><a href="#"
-									class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="3">
-										<p class="list-group-item-text">Cardiologist Checks</p>
-								</a></li>
-								<li id="Pediatrician" class="clinicspeciality"><a href="#"
-									class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="4">
-
-										<p class="list-group-item-text">Pediatrician</p>
-								</a></li>
-								<li id="Ent Surgeon" class="clinicspeciality"><a href="#"
-									class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="5">
-										<p class="list-group-item-text">Ent Surgeon</p>
-								</a></li>
-								<li id="Endocrinologist" class="clinicspeciality"><a
-									href="#" class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="6">
-										<p class="list-group-item-text">Endocrinologist</p>
-								</a></li>
-								<li id="Nephrologist" class="clinicspeciality"><a href="#"
-									class="list-group-item  liststyles"
-									data-target="#custom_carousel" data-slide-to="7">
-										<p id="li1" class="list-group-item-text">Nephrologist</p>
-								</a></li>
-								<li id="Neurosurgeon" class="clinicspeciality"><a href="#"
-									class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="8"><p
-											class="list-group-item-text">Neurosurgeon</p> </a></li>
-								<li id="Neuro Physician" class="clinicspeciality"><a
-									href="#" class="list-group-item liststyles"
-									data-target="#custom_carousel" data-slide-to="9">
-										<p class="list-group-item-text">Neuro Physician</p>
-								</a></li>
-							</ul>
-						</div>
-						<div class="col-md-3">
-							<div class="displaystyle">
-								<div id="displayArea" style="background-color: cyan;"></div>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div id="example">
-								<div id="dateArea" style="display: none;">
-									Preferred Date And Time <input id="datetimepicker"
+						<div id="labTypeDiv" class="col-md-3">
+				<h4 style="color: green;">Select Test Type</h4></div>
+				<div id="labSubTypeDiv" class="col-md-2"></div>
+						<div id="dateArea2" style="display: none;" class="col-md-4">
+									Preferred Date And Time <input id="datetimepicker2"
 										style="width: 80%;" />
-									<div class=" controls">
-										<button id="datebtn" class="btn btn-success">
-											<i class="glyphicon glyphicon-send"></i>Get Slot
-										</button>
-
-									</div>
-									<div id="slotbookingArea" style="display: none;">
-										<select id="slotsDropdown"></select> <select
-											id="bookingSource">
-											<option value="practo">Practo</option>
-											<option value="reference">Reference</option>
-
-										</select>
-
+								<br/>
+									<div id="slotbookingArea2" style="display: none;">
+										<select id="slotsDropdown2"></select> 
+									<br/><br/>
+							<div id="output2" class=" alert alert-success"></div>
 									</div>
 								</div>
 
-							</div>
-
-						</div>
-
-
-
-
-						<div class="col-md-3">
-							<div id="form">
-								<span for="name" class="blocklabel">Name</span><br /> <input
-									name="name" type="text" id="bookingName" style="width: 280px;" />
-								<br /> <span for="mobile" class="blocklabel">Mobile</span> <br />
-								<input name="mobile" type="text" id="bookingMobile"
-									style="width: 280px;" /> <br /> <span for="age"
-									class="blocklabel">Age</span> <br /> <input name="age"
-									type="text" id="bookingAge" style="width: 280px;" /><br /> <br />
-								<button id="submitbtn" type="submit"
-									class="btn btn-primary btn-md">Submit</button>
-							</div>
-							<br /> <br />
-
-						</div>
+		<div class="col-md-2" ><div id="form2" style="display: none;">
+					<span for="labbookingname" class="blocklabel">Name</span><br /> <input
+						name="labbookingname" type="text" id="labbookingname" style="width: 280px;" />
+					<br/>
+					<span for="labbookingmobile" class="blocklabel">Mobile</span> <br /> <input
+						name="labbookingmobile" type="text" id="labbookingmobile" style="width: 280px;"/>
+					<br/>
+					
+					<span for="labbookingaddress" class="blocklabel">Address</span><br /> 
+					<textarea
+						name="labbookingaddress"  id="labbookingaddress" style="width: 280px;"></textarea>
+					<br/>
+	<span for="labbookingsource" class="blocklabel">Source</span><br />
+	<select id="labbookingsource">
+	<option value="reference">Reference</option>
+	<option value="practo">Practo</option>
+	
+	</select> 
+				<br/>
+				<span for="recievemode" class="blocklabel">recieve_mode</span><br />
+				<select id="recievemode">
+	<option value="walkin">Walkin</option>
+	<option value="homepickup">Home Pickup</option>
+	
+	</select> 
+				<br/>
+					<button id="submitbtn2" type="submit"
+						class="btn btn-primary btn-md">Submit</button>
+				</div>
+				
+		</div>
 					</div>
 				</div>
 			</div>
 
 			<div id="getBookingsDiv" class="contentDiv col-md-10">
 				<div id="displayBookingArea"></div>
+					<div class="row"> 
+						<table id="slotsTable" class="display">
+							<thead>
+        						<tr>
+						            <th>Id</th>
+						            <th>Test Name</th>
+						        </tr>
+    						</thead>
+    						<tbody>
+    							<tr>
+    								<td>Row1-Col1</td>
+    								<td>Row1-Col2</td>
+    							</tr>
+    							<tr>
+    								<td>Row2-Col1</td>
+    								<td>Row2-Col2</td>
+    							</tr>
+    							<tr>
+    								<td>Row3-Col1</td>
+    								<td>Row3-Col2</td>
+    							</tr>
+    						</tbody>
+						</table>
+					</div>
 			</div>
 		</div>
 		

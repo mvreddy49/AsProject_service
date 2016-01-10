@@ -3,104 +3,173 @@
 	layout:decorator="layout">
 
 <head>
-
 <title>Diagnostics Booking</title>
+<script type="text/javascript">
+$(function(){
 
-<script type="text/javascript" src="resources/custom/jquery-1.11.3.js"></script>
-<script type="text/javascript" src="resources/custom/lakshman.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+				$.ajax({
+
+					url : "api/lab/type",
+					data : {
+
+					},
+					success : function(result) {
+						console.log(result);
+						if (result.status == "OK") {
+						
+							$.each(result.results, function(index, item) {
+								var htmlContent = '';
+								htmlContent = htmlContent
+										+ "<h3>"
+										+ '<input type="radio"  name="labTest" value="'+  item.id + '"  class="labTest"  />'
+										+ item.name
+										+ "</h3>";
+
+								console.log(index+ " => "+ item.name);
+								$('#labTypeDiv').append(htmlContent);
+							});//each loop end
+
+						}//ok end
+						$(".labTest").click(function(){
+							$('#slotbookingArea2').hide();
+							$('#dateArea2').hide();
+							$('#form2').hide();
+							$('#output2').empty();
+							
+							$('#labSubTypeDiv').empty();
+							
+							var id=$(this).attr('value');
+							var url="api/lab/subType/"+id;
+							$
+									.ajax({
+										url : url,
+										data : {
+
+										},
+										success : function(
+												result) {
+											console
+													.log(result);
+											if (result.status == "OK") {
+
+												$('#labSubTypeDiv').html('');
+												
+												$.each(result.results,function(
+																		index,
+																		item) {
+																	var htmlContent = '';
+																	htmlContent = htmlContent
+																			+ "<h3>"
+																			+ '<input type="radio"  name="subtype" value="'+  item.id  + '"  class="subtype"  />'
+																			+ item.name
+																			+ "</h3>";
+
+																	console
+																			.log(index
+																					+ " => "
+																					+ item.name);
+																	$(
+																			'#labSubTypeDiv')
+																			.append(
+																					htmlContent);
+																}); // End $.each
+											} // End STatus OK
 
 
-<style>
-.col-md-offset-3 {
-	margin-left: 10%;
-}
+$('.subtype')	.click(function() {
+$('#dateArea2').show();
+			});
+																}
 
-.col-md-2 img:hover {
-	opacity: .5;
-}
+									});
+				
+						});
+					}//Success End
+				});//Ajax End
+			 	$('#datetimepicker2').change(
+						function() {
+							var date2 = $('#datetimepicker2').val();
+							$('#form2').show();
+							$('#output2').empty();
+							$('#slotsDropdown2').find('option').remove();
+							var id=$('input[name=subtype]:checked', '#labSubTypeDiv').val();;
+					
+							$.ajax({
+								url : "api/lab/slots",
+								data : {
+									subTypeId :id ,
+									date : date2
+								},
+								success : function(result) {
+									console.log(result);
+									if (result.status == "OK") {
+										$('#slotsDropdown2').find('option').remove();
+				$('#slotdisplayArea2').html('');
+				$('#slotdisplayArea2').show();
+			
+				$.each(result.results, function(index, slot) {
+					$.each(slot.availableSlots, function(index, item) {
+					console.log(item);
+					$('#slotsDropdown2').append(
+							$('<option></option>', {
+								value : item.id,
+								text : item.slotTime
+							}));
 
-.myButton {
-	padding: 10px 16px;
-	margin-left: 10%;
-	margin-bottom: 2%;
-}
+					});
+					});
+				$('#slotbookingArea2').show();// End $.each
+			} // End STatus OK
 
-#loc {
-	/* 	display: none; */
-	margin-left: 30%;
-	margin-bottom: 2%;
-	font-family: inherit;
-	font-size: inherit;
-	line-height: inherit;
-}
-</style>
+								}
 
-<script>
-	$(function() {
-		var speciality = 'not set';
-		var location = 'not set';
+							});
 
-		console.log(speciality);
-
-		$(".labspeciality").click(function() {
-			speciality = $(this).context.id;
-			console.log(speciality);
-		});
-
-		$("#labSearchBtn").click(
-				function() {
-					console.log("In search btn click ");
-					console.log(speciality);
-					location = $("#location").val();
-					console.log(location);
-
-					console.log("sending ajax req");
+						});
+				/*Lab booking Submitbtn  */
+				$('#submitbtn2').click(function(){
+					
 					$.ajax({
-						url : "api/labs",
-						data : {
-							"speciality" : speciality,
-							"location" : location
+						type : "POST",
+						url : "api/lab/booking",
+						data :{
+							slotId : $('#slotsDropdown2').val(),
+							address :$('#labbookingaddress').val(),
+							mobile : $('#labbookingmobile').val(),
+							name :$('#labbookingname').val(),
+							source :$('#labbookingsource').val(),
+							receive_mode :$('#recievemode').val()
 						},
 						success : function(result) {
 							console.log(result);
+
 							if (result.status == "OK") {
-								$('#displayArea').html('');
-								if (result.clinics.length == 0) {
-									$('#displayArea').append(
-											'<center><h3 class="style-heading" >No records to display for '
-													+ speciality + ' in '
-													+ location
-													+ ' </h3></center>');
-								}
-								$.each(result.clinics, function(index, item) {
 
-									var htmlContent = '<div class="col-md-4">';
-									htmlContent = htmlContent
-											+ '<h3 class="style-heading">'
-											+ item.clinicName + "</h3>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicDesc + "</p>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicAddress + "</p>";
-									htmlContent = htmlContent + "<p>"
-											+ item.clinicPhones + "</p>";
 
-									console.log(index + " => "
-											+ item.clinicName);
-									htmlContent = htmlContent + "</div>";
-									$('#displayArea').append(htmlContent);
-								});
+								$('#output2').empty();
+								
+								$('#output2').append(
+										"<h4>Booking Completed Successfully"+"<br/>"+"Slot time:"+result.results[0].slotTime+"<br/>"+"Test:"
+										+result.results[0].testName
+										+"<br/>"+"Recieve Mode:"+result.results[0].receiveMode+"</h4>"
+										
+										);
+
 							}
-							document.getElementById("location").value = "";
 						}
 					});
-					console.log("ajax req sent");
-
+					
 				});
+
+			
+});
+
+</script>
+<script>
+	$(function() {
+		$("#datetimepicker2").datepicker({
+			dateFormat : "yy-mm-dd"
+		});
 
 	});
 </script>
@@ -110,150 +179,54 @@
 <body>
 	<section layout:fragment="content">
 		<div class="row">
-			<div class="col-md-8 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
-				<div class="panel-title">
-					<h2>Diagnostics Booking</h2>
+		<div id="addLabBookingDiv" >
+				<div id="labTypeDiv" class="col-md-2">
+				<h4 style="color: green;">Select Test Type</h4></div>
+				<div id="labSubTypeDiv" class="col-md-2"></div>
+				<div id="dateArea2" style="display: none;" class="col-md-4">
+									Preferred Date And Time <input id="datetimepicker2"
+										style="width: 80%;" />
+								<br/>
+									<div id="slotbookingArea2" style="display: none;">
+										<select id="slotsDropdown2"></select> 
+									<br/>
+							<div id="output2" class=" alert alert-success"></div>
+									</div>
+								</div>
+				<div class="col-md-2" ><div id="form2" style="display: none;">
+					<span for="labbookingname" class="blocklabel">Name</span><br /> <input
+						name="labbookingname" type="text" id="labbookingname" style="width: 280px;" />
+					<br/>
+					<span for="labbookingmobile" class="blocklabel">Mobile</span> <br /> <input
+						name="labbookingmobile" type="text" id="labbookingmobile" style="width: 280px;"/>
+					<br/>
+					
+					<span for="labbookingaddress" class="blocklabel">Address</span><br /> 
+					<textarea
+						name="labbookingaddress"  id="labbookingaddress" style="width: 280px;"></textarea>
+					<br/>
+	<span for="labbookingsource" class="blocklabel">Source</span><br />
+	<select id="labbookingsource">
+	<option value="reference">Reference</option>
+	<option value="practo">Practo</option>
+	
+	</select> 
+				<br/>
+				<span for="recievemode" class="blocklabel">recieve_mode</span><br />
+				<select id="recievemode">
+	<option value="walkin">Walkin</option>
+	<option value="homepickup">Home Pickup</option>
+	
+	</select> 
+				<br/>
+					<button id="submitbtn2" type="submit"
+						class="btn btn-primary btn-md">Submit</button>
 				</div>
-
-			</div>
+				
 		</div>
-
-		<div class="row">
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="thyroid" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/thyroid.jpg}" /> <br /> Thyroid
 				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Heart" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/heart1.jpg}" /> <br /> Heart
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Sugar" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/sugar.jpg}" /> <br /> Sugar
-
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Liver" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/liver1.jpg}" /> <br /> Liver
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Kidny" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/kidny.jpg}" /> <br /> Kidney
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Bones" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/bones.jpg}" /> <br /> Bones
-
-				</div>
-			</div>
-
-		</div>
-
-
-
-
-
-
-		<div class="row">
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-
-					<img id="BloodPlessure" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/blood.png}" /> <br /> BloodPlessure
-
-				</div>
-			</div>
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Infertility" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/inf.jpg}" /> <br /> Infertility
-
-				</div>
-			</div>
-
-
-
-
-
-
-			<div class="col-md-2">
-				<div class="row top-buffer" align="center">
-					<img id="Pregtnacey" class="labspeciality"
-						style="width: 60px; height: 60px;"
-						th:src="@{/resources/img/pregnancy - Copy.jpg}" /> <br />
-					Pregtnacey
-
-				</div>
-			</div>
-		</div>
-
-
-		<br />
-		<br />
-
-		<div class="row">
-			<div class="col-md-12">
-				<center>
-					<div class="input-group col-md-2 pull-center">
-
-
-
-						<input id="location" type="text" class="form-control"
-							placeholder="Location..." name="srch-term" /> <span
-							class="input-group-btn">
-							<button id="labSearchBtn" class="btn btn-warning" type="button">
-								<i class="glyphicon glyphicon-search"></i>
-							</button>
-						</span>
-
-					</div>
-				</center>
-			</div>
-		</div>
-
-
-		<br /> <br />
-
-
-
-
-		<div class="row">
-			<div id="displayArea"></div>
-		</div>
-
+</div>
 	</section>
 </body>
 </html>

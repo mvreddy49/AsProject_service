@@ -45,6 +45,45 @@
 			});
 			
 		});	
+		
+		$('#labbookingsbtn').click(function(){
+			
+			$.ajax({
+				url: "api/lab/myBookings",
+				data : {},
+				success: function(result){
+					var content =
+						'<table class="table table-hover " >'
+						+'<th class="tablestyle">Slot Time</th><th class="tablestyle">Test Name</th><th class="tablestyle">Mode</th>';
+				var htmlContent='';
+					console.log(result);
+					if (result.status == "OK") {
+					
+						$.each(result.bookings,function(index,item) {
+							
+							htmlContent = htmlContent
+									+ "<tr>"+"<td>"
+									+  item.slotTime  +"</td>"+"<td>"
+									
+									+ item.doctor.name+"</td>"+"<td>"
+									
+									+ item.doctor.speciality+"</td>"
+									+ "</tr>";
+			content=content+htmlContent;
+			htmlContent='';
+							console.log(index+ " => "+ item.name);
+							
+						}); // End $.each
+						content=content+"</table>";
+						$('#displayArea').empty();
+						$('#displayArea').append(content);
+						}
+				}
+				
+				
+			});
+			
+		});	
 	
 	});
 </script>
@@ -52,9 +91,11 @@
 <body>
 	<section layout:fragment="content">
 		<div class="row">
-		<div class="col-md-2">
+		<div class="col-md-2 btn-group-vertical">
 		<button id="bookingsbtn" type="button"
 						class="btn btn-primary contentSelection">My Bookings</button>
+						<button id="labbookingsbtn" type="button"
+						class="btn btn-primary contentSelection">My Lab Bookings</button>
 	 </div>
 			
 			<div class="col-md-10">
