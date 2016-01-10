@@ -143,8 +143,12 @@ public class LabService {
 		try{
 			
 			logger.info("in getLab types");
+
 			LabType labType=new LabType(id);
-			List<LabSubType> labSubType=labDao.getLabSubType(labType);
+			List<LabSubType> labSubType = null;
+			if(id == null) labSubType = labDao.getLabSubType();
+			else labSubType=labDao.getLabSubType(labType);
+			
 			if(labSubType.size() > 0 && labSubType != null)
 			{
 				for(LabSubType type:labSubType)
@@ -321,7 +325,7 @@ public class LabService {
 						logger.info("registred user");
 						for(GrantedAuthority auth :ud.getAuthorities())
 							role=auth.getAuthority();
-						if(role!=null && role.contains(Constants.ROLE_RECP))
+						if(role!=null && Constants.ROLE_LAB_ACCESS.contains(role))
 						{
 							if(model.getMobile() ==null || model.getName() ==null || model.getAddress() ==null){
 								logger.info("Anonymous user requested parameters are not coming to user");

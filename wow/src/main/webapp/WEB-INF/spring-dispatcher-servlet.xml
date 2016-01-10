@@ -49,6 +49,7 @@
  	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
       <property name="templateEngine" ref="templateEngine" />
       <property name="order" value="1" />
+
  	</bean>
  
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
