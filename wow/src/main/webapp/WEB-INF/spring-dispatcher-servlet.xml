@@ -29,7 +29,7 @@
 		</property>
 	</bean> -->
 
- <!--  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
 
  	  <property name="prefix" value="/WEB-INF/templates/" />
   	  <property name="suffix" value=".html" />
@@ -49,10 +49,7 @@
  	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
       <property name="templateEngine" ref="templateEngine" />
       <property name="order" value="1" />
-
-         <property name="viewNames" value="*.html,*.xhtml" />
-
- 	</bean> -->
+ 	</bean>
  
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
     	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
