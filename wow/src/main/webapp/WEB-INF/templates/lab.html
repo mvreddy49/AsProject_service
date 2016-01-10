@@ -10,7 +10,8 @@
 	$(function() {
 		var testsTable = $('#testsTable').DataTable();
 		var testSubTypesTable = $('#testSubTypesTable').DataTable();
-		var slotsTable=$('#slotsTable').DataTable();
+		var slotsTable = $('#slotsTable').DataTable();
+
 		testsTable.clear().draw();
 		slotsTable.clear().draw();
 		testSubTypesTable.clear().draw();
@@ -32,6 +33,37 @@
 		$('#testSubTypeHomePickUp-addSubType').change(function(){
 			   $("#testSubTypeMaxHomePickUp-addSubType").prop("disabled", !$(this).is(':checked'));
 		}); 
+		
+		$("#getBookings").click(function(){
+			$.ajax({
+				url : "api/lab/booking",
+				method: "GET",
+				beforeSend: function( xhr ) {
+					$('#getLabBookingsAjaxLoad').show();
+				 }
+			})
+			.done(function(result) {
+				if (result.status == "OK") {
+					slotsTable.clear().draw();
+					$.each(result.results[0], function(index,bking){
+						slotsTable.row.add([bking.id, bking.testName, bking.slotTime, bking.receiveMode, bking.user.username, bking.user.mobile]).draw( false );
+					});
+					
+				}
+				else{
+					// TODO Display dismissible alert somewhere
+				}
+				console.log(result);
+			})
+			.fail(function() {
+				// TODO Display dismissible alert somewhere
+			})
+			.always(function() {
+				$('#getLabBookingsAjaxLoad').hide();
+			})
+			; // Ajax end
+		}); // getBookings click end
+		
 		$('#addBooking').click(function(){
 			$('#labTypeDiv').empty();
 			$('#slotbookingArea2').hide();
@@ -269,8 +301,6 @@
 			; // Ajax end
 		}); // addTestSubType click end
 		
-		$("#addTest").click();
-		//$("#addTestSubType").click();
 		
 		$('#addTestsubmit').click(function() {
 			$.ajax({
@@ -503,8 +533,13 @@
 	}); 
 	
 	$("#datetimepicker2").datepicker({
-		dateFormat : "yy-mm-dd"
+		dateFormat : "yy-mm-dd",
+		minDate: 0
 	});
+	//$("#addTest").click();
+	//$("#addTestSubType").click();
+	$("#getBookings").click();
+	
 	
 	});
 </script>
@@ -514,6 +549,8 @@
 		<div class="row">
 			<div class="col-md-2">
 				<div class="btn-group-vertical">
+					<button id="getBookings" type="button"  class="btn btn-primary contentSelection">
+						<i id="getLabBookingsAjaxLoad" class="ajaxLoad fa fa-cog fa-spin"></i> View Bookings</button>
 					<button id="addTest" type="button"
 						class="btn btn-primary contentSelection">Add Test</button>
 					<button id="addTestSubType" type="button"
@@ -522,8 +559,7 @@
 						class="btn btn-primary contentSelection">Add Slots</button>
 					<button id="addBooking" type="button"
 						class="btn btn-primary contentSelection">Add Booking</button>
-					<button id="getBookings" type="button"
-						class="btn btn-primary contentSelection">View Bookings</button>
+					
 				</div>
 			</div>
 			<div class="col-md-10">
@@ -830,21 +866,14 @@
         						<tr>
 						            <th>Id</th>
 						            <th>Test Name</th>
+						            <th>Time</th>
+						            <th>Mode</th>
+						            <th>User</th>
+						            <th>Mobile</th>
 						        </tr>
     						</thead>
     						<tbody>
-    							<tr>
-    								<td>Row1-Col1</td>
-    								<td>Row1-Col2</td>
-    							</tr>
-    							<tr>
-    								<td>Row2-Col1</td>
-    								<td>Row2-Col2</td>
-    							</tr>
-    							<tr>
-    								<td>Row3-Col1</td>
-    								<td>Row3-Col2</td>
-    							</tr>
+    						
     						</tbody>
 						</table>
 					</div>

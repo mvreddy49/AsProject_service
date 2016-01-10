@@ -3,12 +3,18 @@ package com.wow.webapp.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wow.webapp.dao.UserDAO;
+import com.wow.webapp.domain.model.LoginModel;
+import com.wow.webapp.util.Constants;
 
 @Controller
 public class HomeController {
@@ -18,8 +24,40 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(){
-		logger.debug("index get start");
-		ModelAndView mv = new ModelAndView("HomeOne");
+		logger.debug("/ get start");
+		String home = "HomeOne";
+		ModelAndView mv = null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth instanceof AnonymousAuthenticationToken){
+			mv = new ModelAndView(home);
+			
+		}
+		else{
+			
+			logger.info("Home page is :" + home);
+			logger.info("Role is :" + auth.getAuthorities());
+			String role = "";
+			for(GrantedAuthority grantAuth :auth.getAuthorities())
+			{
+				role=grantAuth.getAuthority();
+				if(Constants.ROLE_RECP.equalsIgnoreCase(role)){
+					home = "recp"; break;
+				}
+				else if(Constants.ROLE_ADMIN.equalsIgnoreCase(role)){
+					home = "admin"; break;
+				}
+				else if(Constants.ROLE_LAB.equalsIgnoreCase(role)){
+					home = "lab"; break;
+				}
+				else if(Constants.ROLE_DOCTOR.equalsIgnoreCase(role)){
+					home = "doctor"; break;
+				}
+			}
+			logger.info("Home page is :" + home);
+			mv = new ModelAndView("redirect:"+home);
+			
+		}
+		
 		return mv;
 	}
 	

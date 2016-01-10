@@ -40,6 +40,7 @@ public class Constants {
 
 	//Default Values
 	public static final String ONLINE_SOURCE = "web";
+	public static final String ROLE_LAB = "ROLE_LAB";
 		
 	
 }

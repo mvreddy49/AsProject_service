@@ -21,7 +21,7 @@ public interface LabDAO {
 	
 	public List<LabType> getLabType();
 	public List<LabSubType> getLabSubType(LabType labType);
-	
+	public List<LabSubType> getLabSubType();
 	public LabSubType gerLabsubType(Integer id);
 	
 	public List<String> findSlotsByStartAndEndTimes(Date startTime, Date endTime, LabSubType labsubType);
