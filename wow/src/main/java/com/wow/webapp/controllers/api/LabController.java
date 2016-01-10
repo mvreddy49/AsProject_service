@@ -9,6 +9,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +24,9 @@ import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
 import com.wow.webapp.services.LabService;
+import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
+import com.wow.webapp.util.Utils;
 
 @RestController
 @RequestMapping("/api/lab")
@@ -35,6 +39,18 @@ public class LabController {
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	public ApiReturnModel addLabType(@RequestParam(value = "name", required = true) String name){
 		ApiReturnModel returnModel=null;
+		UserDetails ud = Utils.getUserSession();
+		if(ud == null) return Responses.invaliedSession();
+		else
+		{
+			String role=null;
+			for(GrantedAuthority auth :ud.getAuthorities())
+				role=auth.getAuthority();
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
+			{
+				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert lab Types");
+			}
+		}
 		List<String> errors = labService.addLabType(name);
 		if(errors.size()==0)
 		{
@@ -61,6 +77,19 @@ public class LabController {
 		ApiReturnModel returnModel=null;
 		
 		List<String> errors=new ArrayList<String>();
+		UserDetails ud = Utils.getUserSession();
+		if(ud == null) return Responses.invaliedSession();
+		else
+		{
+			String role=null;
+			for(GrantedAuthority auth :ud.getAuthorities())
+				role=auth.getAuthority();
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
+			{
+				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert labSubTypes",errors);
+			}
+		}
+		
 		if(bindingResult.hasFieldErrors()){
 			logger.debug("Invalid Data");
 			for(FieldError e : bindingResult.getFieldErrors()){
@@ -124,6 +153,19 @@ public class LabController {
 	public ApiReturnModel addLabSlots(@RequestParam("subTypeId") String subTypeId , @RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime)
 	{
 		ApiReturnModel returnModel=null;
+		
+		UserDetails ud = Utils.getUserSession();
+		if(ud == null) return Responses.invaliedSession();
+		else
+		{
+			String role=null;
+			for(GrantedAuthority auth :ud.getAuthorities())
+				role=auth.getAuthority();
+			if(!(role!=null && Constants.ROLE_LAB_ACCESS.contains(role)))
+			{
+				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert lab slots");
+			}
+		}
 		
 		List<String> errors = labService.addLabSlots(subTypeId, startTime, endTime);
 		

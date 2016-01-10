@@ -108,7 +108,7 @@ public class ContentInsertController {
 				role=auth.getAuthority();
 			if(!(role!=null && role.contains(Constants.ROLE_RECP)))
 			{
-				apiReturnModel=new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert doctor",errors);
+				return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"only recp can insert doctor",errors);
 			}
 		}
 		

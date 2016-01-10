@@ -26,11 +26,11 @@ public class LabBooking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "username", nullable = false)
 	private User user;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lab_slot_id", nullable = false)
 	private LabSlots labSlot;
 	
@@ -126,6 +126,13 @@ public class LabBooking {
 
 	public void setReceive_mode(String receive_mode) {
 		this.receive_mode = receive_mode;
+	}
+
+	@Override
+	public String toString() {
+		return "LabBooking [id=" + id + ", user=" + user + ", labSlot=" + labSlot + ", status=" + status + ", source="
+				+ source + ", inserted_on=" + inserted_on + ", modified_on=" + modified_on + ", receive_mode="
+				+ receive_mode + ", address=" + address + "]";
 	}
 
 		

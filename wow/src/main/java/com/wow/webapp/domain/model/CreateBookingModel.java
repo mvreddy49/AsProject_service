@@ -15,6 +15,8 @@ public class CreateBookingModel {
 	 private String mobile;
 	 
 	 private String age;
+	 
+	 private String source;
 
 	public String getSlotId() {
 		return slotId;
@@ -58,6 +60,14 @@ public class CreateBookingModel {
 
 	public void setAge(String age) {
 		this.age = age;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 	 
 	
