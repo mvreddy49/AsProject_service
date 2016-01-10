@@ -6,22 +6,18 @@
 <title>Diagnostics Booking</title>
 <script type="text/javascript">
 $(function(){
-
-				$.ajax({
-
-					url : "api/lab/type",
-					data : {
-
-					},
-					success : function(result) {
-						console.log(result);
-						if (result.status == "OK") {
-						
-							$.each(result.results, function(index, item) {
-								var htmlContent = '';
-								htmlContent = htmlContent
-										+ "<p>"
-										+ '<input type="radio"  name="labTest" value="'+  item.id + '"  class="labTest"  />'
+	
+	$.ajax({
+		url : "api/lab/type",
+		data : {},
+		success : function(result) {
+			console.log(result);
+			if (result.status == "OK") {
+				$.each(result.results, function(index, item) {
+				var htmlContent = '';
+				htmlContent = htmlContent
+					+ "<p>"
+					+ '<input type="radio"  name="labTest" value="'+  item.id + '"  class="labTest"  />'
 										+ item.name
 										+ "</p>";
 
@@ -30,141 +26,150 @@ $(function(){
 							});//each loop end
 
 						}//ok end
-						$(".labTest").click(function(){
-							$('#slotbookingArea2').hide();
-							$('#dateArea2').hide();
-							$('#form2').hide();
-							$('#output2').empty();
-							
-							$('#labSubTypeDiv').empty();
-							
-							var id=$(this).attr('value');
-							var url="api/lab/subType/"+id;
-							$
-									.ajax({
-										url : url,
-										data : {
-
-										},
-										success : function(
-												result) {
-											console
-													.log(result);
-											if (result.status == "OK") {
-
-												$('#labSubTypeDiv').html('');
-												
-												$.each(result.results,function(
-																		index,
-																		item) {
-																	var htmlContent = '';
-																	htmlContent = htmlContent
-																			+ "<p>"
-																			+ '<input type="radio"  name="subtype" value="'+  item.id  + '"  class="subtype"  />'
-																			+ item.name
-																			+ "</p>";
-
-																	console
-																			.log(index
-																					+ " => "
-																					+ item.name);
-																	$(
-																			'#labSubTypeDiv')
-																			.append(
-																					htmlContent);
-																}); // End $.each
-											} // End STatus OK
-
-
-$('.subtype').click(function() {
-	var d = new Date();
-	var date = (d.getFullYear())+'-'+(d.getMonth()+1)+ '-' +(d.getDate());
-	$('#datetimepicker2').val(date).change();
-$('#dateArea2').show();
-			});
-																}
-
-									});
-				
-						});
+						
 					}//Success End
 				});//Ajax End
-			 	$('#datetimepicker2').change(
-						function() {
-							var date2 = $('#datetimepicker2').val();
-							$('#form2').show();
-							$('#output2').empty();
+				
+	$('body').on('click','.subtype',function(){
+	//$('.subtype').click(function() {
+		
+		$('#datetimepicker2').val(getFormatedDate_YYYYMMDD()).change();
+		$('#dateArea2').show();
+				});
+ 	$('#datetimepicker2').change(
+			function() {
+				var date2 = $('#datetimepicker2').val();
+				$('#form2').show();
+				$('#output2').empty();
+				$('#slotsDropdown2').find('option').remove();
+				var id=$('input[name=subtype]:checked', '#labSubTypeDiv').val();;
+		
+				$.ajax({
+					url : "api/lab/slots",
+					data : {
+						subTypeId :id ,
+						date : date2
+					},
+					success : function(result) {
+						console.log(result);
+						if (result.status == "OK") {
 							$('#slotsDropdown2').find('option').remove();
-							var id=$('input[name=subtype]:checked', '#labSubTypeDiv').val();;
-					
-							$.ajax({
-								url : "api/lab/slots",
-								data : {
-									subTypeId :id ,
-									date : date2
-								},
-								success : function(result) {
-									console.log(result);
-									if (result.status == "OK") {
-										$('#slotsDropdown2').find('option').remove();
-				$('#slotdisplayArea2').html('');
-				$('#slotdisplayArea2').show();
-			
-				$.each(result.results, function(index, slot) {
-					$.each(slot.availableSlots, function(index, item) {
-					console.log(item);
-					$('#slotsDropdown2').append(
-							$('<option></option>', {
-								value : item.id,
-								text : item.slotTime
-							}));
+	$('#slotdisplayArea2').html('');
+	$('#slotdisplayArea2').show();
 
-					});
-					});
-				$('#slotbookingArea2').show();// End $.each
-			} // End STatus OK
+	$.each(result.results, function(index, slot) {
+		$.each(slot.availableSlots, function(index, item) {
+		console.log(item);
+		$('#slotsDropdown2').append(
+				$('<option></option>', {
+					value : item.id,
+					text : item.slotTime
+				}));
 
-								}
+		});
+		});
+	$('#slotbookingArea2').show();// End $.each
+} // End STatus OK
 
-							});
+					}
 
-						});
-				/*Lab booking Submitbtn  */
-				$('#submitbtn2').click(function(){
-					
-					$.ajax({
-						type : "POST",
-						url : "api/lab/booking",
-						data :{
-							slotId : $('#slotsDropdown2').val(),
-							address :$('#labbookingaddress').val(),
-							mobile : $('#labbookingmobile').val(),
-							name :$('#labbookingname').val(),
-							source :$('#labbookingsource').val(),
-							receive_mode :$('#recievemode').val()
-						},
-						success : function(result) {
-							console.log(result);
-
-							if (result.status == "OK") {
-
-
-								$('#output2').empty();
-								
-								$('#output2').append(
-										"<h4>Booking Completed Successfully"+"<br/>"+"Slot time:"+result.results[0].slotTime+"<br/>"+"Test:"
-										+result.results[0].testName
-										+"<br/>"+"Recieve Mode:"+result.results[0].receiveMode+"</h4>"
-										
-										);
-
-							}
-						}
-					});
-					
 				});
 
+			});
+	/*Lab booking Submitbtn  */
+	$('body').on('click','#submitbtn2',function(){
+	//$('#submitbtn2').click(function(){
+		
+		$.ajax({
+			type : "POST",
+			url : "api/lab/booking",
+			data :{
+				slotId : $('#slotsDropdown2').val(),
+				address :$('#labbookingaddress').val(),
+				mobile : $('#labbookingmobile').val(),
+				name :$('#labbookingname').val(),
+				source :$('#labbookingsource').val(),
+				receive_mode :$('#recievemode').val()
+			},
+			success : function(result) {
+				console.log(result);
+
+				if (result.status == "OK") {
+
+
+					$('#output2').empty();
+					
+					$('#output2').append(
+							"<h4>Booking Completed Successfully"+"<br/>"+"Slot time:"+result.results[0].slotTime+"<br/>"+"Test:"
+							+result.results[0].testName
+							+"<br/>"+"Recieve Mode:"+result.results[0].receiveMode+"</h4>"
+							
+							);
+
+				}
+			}
+		});
+		
+	});
+	
+	$('body').on('click','.labTest',function(){
+	
+	//$(".labTest").click(function(){
+		$('#slotbookingArea2').hide();
+		$('#dateArea2').hide();
+		$('#form2').hide();
+		$('#output2').empty();
+		
+		$('#labSubTypeDiv').empty();
+		
+		var id=$(this).attr('value');
+		var url="api/lab/subType/"+id;
+		$
+				.ajax({
+					url : url,
+					data : {
+
+					},
+					success : function(
+							result) {
+						console
+								.log(result);
+						if (result.status == "OK") {
+
+							$('#labSubTypeDiv').html('');
+							
+							$.each(result.results,function(
+													index,
+													item) {
+												var htmlContent = '';
+												htmlContent = htmlContent
+														+ "<p>"
+														+ '<input type="radio"  name="subtype" value="'+  item.id  + '"  class="subtype"  />'
+														+ item.name
+														+ "</p>";
+
+												console
+														.log(index
+																+ " => "
+																+ item.name);
+												$(
+														'#labSubTypeDiv')
+														.append(
+																htmlContent);
+											}); // End $.each
+						} // End STatus OK
+
+											}
+
+				});
+
+	});
+				
+
 			
+
+	
+				
 });
 
 </script>

@@ -6,37 +6,31 @@
 <title>User Home</title>
 <script type="text/javascript">
 	$(function(){		
+		
+		$('#myClinicBookingsDiv').hide();
+		$('#myLabBookingsDiv').hide();
+		
+		var myClinicBookingsTableDiv = $('#myClinicBookingsTableDiv').DataTable();
+		var myLabBookingsTableDiv = $('#myLabBookingsTableDiv').DataTable();
+		
 		$('#bookingsbtn').click(function(){
-				
+			$('#myLabBookingsDiv').hide();		
 			$.ajax({
 				url: "api/bookings/myBookings",
 				data : {},
 				success: function(result){
-					var content =
-						'<table class="table table-hover " >'
-						+'<th class="tablestyle">Slot Time</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
-				var htmlContent='';
-					console.log(result);
-					if (result.status == "OK") {
 					
+					if (result.status == "OK") {
+						myClinicBookingsTableDiv.clear().draw();
 						$.each(result.bookings,function(index,item) {
-							
-							htmlContent = htmlContent
-									+ "<tr>"+"<td>"
-									+  item.slotTime  +"</td>"+"<td>"
-									
-									+ item.doctor.name+"</td>"+"<td>"
-									
-									+ item.doctor.speciality+"</td>"
-									+ "</tr>";
-			content=content+htmlContent;
-			htmlContent='';
-							console.log(index+ " => "+ item.name);
+							var date = new Date(item.slotTime);
+							var date1 = date.toLocaleString(); 
+							myClinicBookingsTableDiv.row.add([date1,item.doctor.name,item.doctor.speciality]).draw( false );
 							
 						}); // End $.each
-						content=content+"</table>";
-						$('#displayArea').empty();
-						$('#displayArea').append(content);
+						
+						$('#myClinicBookingsDiv').show();
+						
 						}
 				}
 				
@@ -46,38 +40,21 @@
 		});	
 		
 		$('#labbookingsbtn').click(function(){
-			
+			$('#myClinicBookingsDiv').hide();
 			$.ajax({
 				url: "api/lab/booking",
 				data : {},
 				success: function(result){
-					var content =
-						'<table class="table table-hover " >'
-						+'<th class="tablestyle"> Id </th><th class="tablestyle"> Test Name </th><th class="tablestyle">Slot Time</th><th class="tablestyle">Mode</th>';
-				var htmlContent='';
-					console.log(result);
-					if (result.status == "OK") {
 					
+					if (result.status == "OK") {
+						myLabBookingsTableDiv.clear().draw();
 						$.each(result.results[0],function(index,item) {
 							console.log("Result is " + item);
-							htmlContent = htmlContent
-									+ "<tr>"+"<td>"
-									
-									+ item.id + "</td><td>"
-									
-									+ item.testName + "</td><td>"
-	
-									+  item.slotTime  +"</td>"+"<td>"
-									
-									+ item.receiveMode + "</td></tr>";
-			content=content+htmlContent;
-			htmlContent='';
-							console.log(index+ " => "+ item.name);
-							
-						}); // End $.each
-						content=content+"</table>";
-						$('#displayArea').empty();
-						$('#displayArea').append(content);
+							var date = new Date(item.slotTime);
+							var date1 = date.toLocaleString(); 
+							myLabBookingsTableDiv.row.add([item.id,item.testName,date1,item.receiveMode]).draw( false );
+								}); // End $.each
+						$('#myLabBookingsDiv').show();
 						}
 				}
 				
@@ -93,16 +70,39 @@
 	<section layout:fragment="content">
 		<div class="row">
 		<div class="col-md-2 btn-group-vertical">
-		<button id="bookingsbtn" type="button"
-						class="btn btn-primary contentSelection">My Doctor Bookings</button>
-						<button id="labbookingsbtn" type="button"
+		<button id="bookingsbtn" type="button" class="btn btn-primary contentSelection">My Doctor Bookings</button>
+		<button id="labbookingsbtn" type="button"
 						class="btn btn-primary contentSelection">My Lab Bookings</button>
 	 </div>
+	 <div id="myClinicBookingsDiv">
+	 	<div class="col-md-9">
+	 		<table class="table table-hover " id="myClinicBookingsTableDiv">	
+	 			<thead>
+	 				<tr>
+	 					<th class="tablestyle">Slot Time</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>	
+	 				</tr>
+	 			</thead>
+	 			<tbody>
+	 				
+	 			</tbody>
+	 		</table>
+	 	</div>
+	 </div>			
+	 <div id="myLabBookingsDiv">
+	 	<div class="col-md-9">
+	 		<table class="table table-hover " id="myLabBookingsTableDiv">
+	 			<thead>
+	 				<tr>
+	 					<th class="tablestyle"> Id </th><th class="tablestyle"> Test Name </th><th class="tablestyle">Slot Time</th><th class="tablestyle">Mode</th>
+	 				</tr>
+	 			</thead>
+	 			<tbody>
+	 				
+	 			</tbody>
+	 		</table>
+	 	</div>
+	 </div>
 			
-			<div class="col-md-10">
-			<div id="displayArea" >
-			
-			</div></div>
 			</div>
 	</section>
 </body>

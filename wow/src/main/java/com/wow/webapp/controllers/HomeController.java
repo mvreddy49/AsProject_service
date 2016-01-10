@@ -55,6 +55,9 @@ public class HomeController {
 				else if(Constants.ROLE_NURSE.equalsIgnoreCase(role)){
 					home = "nurse"; break;
 				}
+				else if(Constants.ROLE_USER.equalsIgnoreCase(role)){
+					home = "home-user"; break;
+				}
 			}
 			logger.info("Home page is :" + home);
 			mv = new ModelAndView("redirect:"+home);

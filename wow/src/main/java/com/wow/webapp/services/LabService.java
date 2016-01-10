@@ -499,6 +499,7 @@ public class LabService {
 				List<LabBookingModel> results = new ArrayList<LabBookingModel>();
 				for(LabBooking book: bookings){
 					LabBookingModel result = new LabBookingModel();
+					result.setId(book.getId());
 					result.setReceiveMode(book.getReceive_mode());
 					LabSlots bookedSlot = book.getLabSlot();
 					result.setSlotTime(new Utils().convertDateToUTCFormat(bookedSlot.getTime()));

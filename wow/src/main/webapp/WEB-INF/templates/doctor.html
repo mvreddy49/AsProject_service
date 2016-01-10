@@ -41,6 +41,7 @@
 </script>
 <script type="text/javascript">
 	$(function(){
+		var myBookingsTableDiv = $('#myBookingsTableDiv').DataTable();
 		
 		$('#addBooking').click(function(){
 				
@@ -48,30 +49,17 @@
 				url: "api/bookings/myBookings",
 				data : {},
 				success: function(result){
-					var content =
-						'<table class="table table-hover " >'
-						+'<th class="tablestyle">Slot Time</th><th class="tablestyle">Doctor Name</th><th class="tablestyle">Speciality</th>';
-				var htmlContent='';
-					console.log(result);
-					if (result.status == "OK") {
 					
+					if (result.status == "OK") {
+						myBookingsTableDiv.clear().draw();
 						$.each(result.bookings,function(index,item) {
 							
-							htmlContent = htmlContent
-									+ "<tr>"+"<td>"
-									+  item.slotTime  +"</td>"+"<td>"
-									
-									+ item.doctor.name+"</td>"+"<td>"
-									
-									+ item.doctor.speciality+"</td>"
-									+ "</tr>";
-			content=content+htmlContent;
-			htmlContent='';
-							console.log(index+ " => "+ item.name);
+							var date = new Date(item.slotTime);
+							var time = date.toLocaleString();
+							myBookingsTableDiv.row.add([item.user.name,item.user.username,time]).draw( false );
+							
 							}); // End $.each
-						content=content+"</table>";
-						$('#addBookingDiv').empty();
-						$('#addBookingDiv').append(content);
+						
 						}
 				}
 				
@@ -152,7 +140,18 @@
 			</div>
 		
 			<div id="addBookingDiv" class="contentDiv">
-				
+				<div class="col-md-9">
+					<table class="table table-hover " id="myBookingsTableDiv">
+						<thead>
+							<tr>
+								<th class="tablestyle">UserName</th><th class="tablestyle">UserMobile</th><th class="tablestyle">Slot Time</th>
+							</tr>
+						</thead>
+						<tbody>
+										
+						</tbody>
+					</table>
+					</div>
 					</div>
 				</div>
 			
