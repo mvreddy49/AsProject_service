@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +19,23 @@ import org.springframework.stereotype.Service;
 import com.wow.webapp.controllers.api.LabController;
 import com.wow.webapp.dao.LabDAO;
 import com.wow.webapp.dao.UserDAO;
+import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnLab;
 import com.wow.webapp.domain.model.ApiReturnModel;
-import com.wow.webapp.domain.model.CreateBookingModel;
 import com.wow.webapp.domain.model.CreateLabBookingModel;
 import com.wow.webapp.domain.model.CreateLabSubTypeModel;
+import com.wow.webapp.domain.model.UserModel;
 import com.wow.webapp.domain.pojo.LabBookingModel;
 import com.wow.webapp.domain.pojo.LabSlotModel;
 import com.wow.webapp.domain.pojo.LabSlotResponseModel;
 import com.wow.webapp.domain.pojo.LabSubTypeModel;
 import com.wow.webapp.domain.pojo.LabTypeModel;
 import com.wow.webapp.entitymodel.Authority;
-import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.LabBooking;
 import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
 import com.wow.webapp.entitymodel.Profile;
-import com.wow.webapp.entitymodel.Slot;
 import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Constants;
 import com.wow.webapp.util.Responses;
@@ -457,6 +458,64 @@ public class LabService {
 		
 		return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
 		
+	}
+	
+	public ApiReturnModel getBookings(HttpServletRequest request) {
+		List<String> errors = new ArrayList<String>();
+		UserDetails ud=null;
+		try {
+			ud=Utils.getUserSession();
+			if (ud == null) {
+				return new ApiBookingReturnModel(
+						Responses.USER_NOTLOGGEDIN, Responses.SUCCESS_STATUS,
+						"user not logged in,please login");
+			} else {
+				List<LabBooking> bookings = new ArrayList<LabBooking>();
+				logger.debug("Authorities : "+ ud.getAuthorities());
+				String userName = ud.getUsername();
+				String role=null;
+				for(GrantedAuthority auth :ud.getAuthorities())
+					role=auth.getAuthority();
+				if(role!=null && Constants.ROLE_LAB_ACCESS.contains(role))
+				{
+					String requestedDate=request.getParameter("date");
+					if(requestedDate != null && !requestedDate.isEmpty()){
+						bookings = labDao.findLabBookings(requestedDate);
+					}
+					else{
+						bookings = labDao.findLabBookings();
+					}
+				}
+				else{
+					User user=userDao.findByUserName(userName);
+					bookings = labDao.findLabBookingsByUser(user);
+				}
+				List<LabBookingModel> results = new ArrayList<LabBookingModel>();
+				for(LabBooking book: bookings){
+					LabBookingModel result = new LabBookingModel();
+					result.setReceiveMode(book.getReceive_mode());
+					//logger.info("slot time is :" + book);
+					//logger.info("slot time is :" + book.getLabSlot().getTime());
+					LabSlots bookedSlot = book.getLabSlot();
+					logger.info("Slot info is : " + bookedSlot.getId());
+					result.setSlotTime(new Utils().convertDateToUTCFormat(bookedSlot.getTime()));
+					result.setTestName(book.getLabSlot().getSubType().getName());
+					UserModel userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername(),book.getAddress());
+					result.setUser(userDetails);
+					results.add(result);
+				}
+				List<Object> res = new ArrayList<Object>();
+				res.add(results);
+				return new ApiReturnLab(Responses.SUCCESS_CODE, Responses.SUCCESS_STATUS, Responses.SUCCESS_MSG, res);
+			}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				logger.error("exception occurs while getting get slots :::"+e.toString());
+				errors.add(e.getMessage());
+			}
+		
+		return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
 	}
 	
 }
