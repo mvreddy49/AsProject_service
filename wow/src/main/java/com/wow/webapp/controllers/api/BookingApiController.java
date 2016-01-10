@@ -26,7 +26,9 @@ import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.CreateBookingModel;
+import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
@@ -216,7 +218,10 @@ public class BookingApiController {
 			try
 			{
 				Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
+				
 				if (slot != null) {
+					Clinic clinic =  slot.getClinic();
+					Doctor doctor = slot.getDoctor();
 					logger.info("request slot id is available");
 					ud=Utils.getUserSession();
 					String role=null;
@@ -281,7 +286,7 @@ public class BookingApiController {
 					/*
 					//clinic model
 					ClinicModel clinicModel=new ClinicModel();
-					Clinic clinic=slot.getClinic();
+					
 					clinicModel.setId(clinic.getId());
 					clinicModel.setClinicName(clinic.getName());
 					clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
@@ -291,13 +296,13 @@ public class BookingApiController {
 					
 					//DoctorModel
 					DoctorModel doctorModel=new DoctorModel();
-					Doctor doctor=slot.getDoctor();
+					
 					doctorModel.setId(doctor.getId());
 					doctorModel.setName(doctor.getUser().getUserProfile().getName());
 					doctorModel.setMobile(doctor.getUser().getUsername());
 					
 					//set bookingModel
-					bookingModel.setClinic(clinicModel);
+					//bookingModel.setClinic(clinicModel);
 					bookingModel.setDoctor(doctorModel);
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
 					*/
