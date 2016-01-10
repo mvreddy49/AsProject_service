@@ -291,7 +291,7 @@ public class BookingApiController {
 					BookingModel bookingModel=new BookingModel();
 					
 					
-					//clinic model
+					/*//clinic model
 					ClinicModel clinicModel=new ClinicModel();
 					
 					clinicModel.setId(clinic.getId());
@@ -299,7 +299,7 @@ public class BookingApiController {
 					clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
 					clinicModel.setClinicAddress(clinic.getAddresses().toString());
 					clinicModel.setClinicDesc(clinic.getDescription());
-					
+					*/
 					
 					//DoctorModel
 					DoctorModel doctorModel=new DoctorModel();
@@ -309,7 +309,7 @@ public class BookingApiController {
 					doctorModel.setMobile(doctor.getUser().getUsername());
 					
 					//set bookingModel
-					bookingModel.setClinic(clinicModel);
+					//bookingModel.setClinic(clinicModel);
 					bookingModel.setDoctor(doctorModel);
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
 					
