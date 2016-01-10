@@ -8,8 +8,10 @@
 	$(function() {
 		$('.contentDiv').hide();
 		//$('#addSlotDiv').show();
+		$("#displayRportsDiv").hide();
 		$('.contentSelection').click(function() {
 			$('.contentDiv').hide();
+			$("#displayRportsDiv").hide();
 			$('#' + $(this).attr('id') + 'Div').show();
 		});
 
@@ -42,7 +44,7 @@
 <script type="text/javascript">
 	$(function(){
 		var myBookingsTableDiv = $('#myBookingsTableDiv').DataTable();
-		
+		$("#displayRportsDiv").hide();
 		$('#addBooking').click(function(){
 				
 			$.ajax({
@@ -56,7 +58,8 @@
 							
 							var date = new Date(item.slotTime);
 							var time = date.toLocaleString();
-							myBookingsTableDiv.row.add([item.user.name,item.user.username,time]).draw( false );
+							var link = '<a onclick="viewReports()">View</a>';
+							myBookingsTableDiv.row.add([item.user.name,item.user.username,time,link]).draw( false );
 							
 							}); // End $.each
 						
@@ -69,6 +72,11 @@
 		});	
 		$('#addBooking').click();
 	});
+	function viewReports()
+	{
+		
+		$("#displayRportsDiv").show();
+	}
 </script>
 
 </head>
@@ -145,12 +153,59 @@
 						<thead>
 							<tr>
 								<th class="tablestyle">UserName</th><th class="tablestyle">UserMobile</th><th class="tablestyle">Slot Time</th>
+								<th class="tablestyle">View</th>
 							</tr>
 						</thead>
 						<tbody>
 										
 						</tbody>
 					</table>
+					</div>
+					<div class="row" id="displayRportsDiv">
+					<div class="col-md-12" align="center">
+					<div class="col-sm-2">
+					</div>
+					<div class="col-sm-9">
+					<table style="width:361px;">
+						<tr>
+							<td>Vitals</td>
+							<td>	
+								<textarea class="form-control" rows="2">
+									
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>Doctor Review</td>
+							<td>	
+								<textarea class="form-control" rows="2">
+									
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>Diagnostics Review</td>
+							<td>	
+								<textarea class="form-control" rows="2">
+									
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>Medical Prescription</td>
+							<td>	
+								<textarea class="form-control" rows="2">
+									
+								</textarea>
+							</td>
+						</tr>
+					</table>
+					<div class="clearfix">&nbsp;&nbsp;</div>
+					<div class="text-center">
+						<button type="button" class="btn btn-default">Save</button>
+					</div>
+					</div>
+					</div>
 					</div>
 					</div>
 				</div>

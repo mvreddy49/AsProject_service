@@ -124,6 +124,9 @@
 							
 						<!-- 						<li><a th:href="@{/tests}">Tests</a></li> -->
 						<!-- 						<li><a th:href="@{/clinics}">Clinics</a></li> -->
+						<li sec:authorize="hasRole('ROLE_NURSE')"><a
+							th:href="@{/nurse}">Nurse</a></li>
+						
 						<li sec:authorize="hasRole('ROLE_ADMIN')"><a
 							th:href="@{/admin}">Admin</a></li>
 							

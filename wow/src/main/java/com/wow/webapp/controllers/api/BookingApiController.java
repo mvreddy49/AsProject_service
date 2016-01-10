@@ -80,6 +80,15 @@ public class BookingApiController {
 					logger.debug("Before calling getCookings on clinic");
 					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
 				}
+				else if(role!=null && role.contains(Constants.ROLE_NURSE))
+				{
+					User user=userDao.findByUserName("9999999999");
+					//if clinic wants to date by bookings
+					String requestedDate=request.getParameter("date");
+					logger.debug("Before calling getCookings on clinic");
+					returnModel=getBookingsOnclinic(user.getClinic(),requestedDate);
+				}
+					
 				else if(role!=null && role.contains(Constants.ROLE_DOCTOR))
 				{
 					User user=userDao.findByUserName(userName);

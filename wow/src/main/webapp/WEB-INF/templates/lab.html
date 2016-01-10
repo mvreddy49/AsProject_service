@@ -48,8 +48,9 @@
 					$.each(result.results[0], function(index,bking){
 						
 						var date = new Date(bking.slotTime);
-						var time = date.toLocaleString(); 
-						slotsTable.row.add([bking.id, bking.testName, time, bking.receiveMode, bking.user.username, bking.user.mobile]).draw( false );
+						var time = date.toLocaleString();
+						var link = '<input type="file" name="Upload"></input>';
+						slotsTable.row.add([bking.id, bking.testName, time, bking.receiveMode, bking.user.username, bking.user.mobile,link]).draw( false );
 					});
 					
 				}
@@ -875,6 +876,7 @@
 						            <th>Mode</th>
 						            <th>User</th>
 						            <th>Mobile</th>
+						            <th>Reports</th>
 						        </tr>
     						</thead>
     						<tbody>
