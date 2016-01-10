@@ -26,7 +26,9 @@ import com.wow.webapp.dao.UserDAO;
 import com.wow.webapp.domain.model.ApiBookingReturnModel;
 import com.wow.webapp.domain.model.ApiReturnModel;
 import com.wow.webapp.domain.model.BookingModel;
+import com.wow.webapp.domain.model.ClinicModel;
 import com.wow.webapp.domain.model.CreateBookingModel;
+import com.wow.webapp.domain.model.DoctorModel;
 import com.wow.webapp.entitymodel.Authority;
 import com.wow.webapp.entitymodel.Clinic;
 import com.wow.webapp.entitymodel.Doctor;
@@ -214,7 +216,10 @@ public class BookingApiController {
 			try
 			{
 				Slot slot = bookingDao.findSlot(Integer.parseInt(createBookingModel.getSlotId()));
+				
 				if (slot != null) {
+					Clinic clinic =  slot.getClinic();
+					Doctor doctor = slot.getDoctor();
 					logger.info("request slot id is available");
 					ud=Utils.getUserSession();
 					String role=null;
@@ -240,7 +245,7 @@ public class BookingApiController {
 							logger.info("existed user ::: username::"+userName);
 						}
 							
-						slot.setSource("web");
+						
 					}
 					else
 					{
@@ -256,17 +261,26 @@ public class BookingApiController {
 								return retunModel;
 							}
 							logger.info("ROLE RECP is booking a slot for new user");
-							addUser(createBookingModel);
+							User user=userDao.findByUserName(createBookingModel.getMobile());
+							if(user == null){
+								addUser(createBookingModel);
+							}
 							userName = createBookingModel.getMobile();
-							slot.setSource("recp");
+							
 						}else
 						{
 							logger.info("ROLE USER booking a slot for own");
 							userName=ud.getUsername();
-							slot.setSource("web");
+							
 						}
 							
 					}
+					
+					if(createBookingModel.getSource() != null)
+						slot.setSource(createBookingModel.getSource());
+					else
+						slot.setSource(Constants.ONLINE_SOURCE);
+					
 					logger.info("source coming from :::"+slot.getSource());
 					User user=new User(userName);
 					slot.setUser(user);
@@ -276,10 +290,10 @@ public class BookingApiController {
 					
 					BookingModel bookingModel=new BookingModel();
 					
-					/*
+					
 					//clinic model
 					ClinicModel clinicModel=new ClinicModel();
-					Clinic clinic=slot.getClinic();
+					
 					clinicModel.setId(clinic.getId());
 					clinicModel.setClinicName(clinic.getName());
 					clinicModel.setClinicPhones(clinic.getPhoneNos().toString());
@@ -289,7 +303,7 @@ public class BookingApiController {
 					
 					//DoctorModel
 					DoctorModel doctorModel=new DoctorModel();
-					Doctor doctor=slot.getDoctor();
+					
 					doctorModel.setId(doctor.getId());
 					doctorModel.setName(doctor.getUser().getUserProfile().getName());
 					doctorModel.setMobile(doctor.getUser().getUsername());
@@ -298,9 +312,10 @@ public class BookingApiController {
 					bookingModel.setClinic(clinicModel);
 					bookingModel.setDoctor(doctorModel);
 					bookingModel.setSlotTime(utils.convertDateToUTCFormat(slot.getTime()));
-					*/
+					
 					List<BookingModel> bookingList=new ArrayList<BookingModel>();
 					bookingList.add(bookingModel);
+					
 					SMS sms = new SMS();
 					sms.sendSMS(Constants.SMS_BOOKING_MSG + "FOR " + userName, createBookingModel.getMobile());
 					

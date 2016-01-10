@@ -329,7 +329,10 @@ public class LabService {
 								return new ApiReturnModel(Responses.FAILURE_CODE,Responses.ERROR_STATUS,"lab slot booking failed",errors);
 							}
 							logger.info("ROLE RECP is booking a slot for new user");
-							addUser(model);
+							User user=userDao.findByUserName(model.getMobile());
+							if(user == null){
+								addUser(model);
+							}
 							userName = model.getMobile();
 							
 						}else
@@ -487,14 +490,12 @@ public class LabService {
 					User user=userDao.findByUserName(userName);
 					bookings = labDao.findLabBookingsByUser(user);
 				}
+				bookings = labDao.findLabBookings();
 				List<LabBookingModel> results = new ArrayList<LabBookingModel>();
 				for(LabBooking book: bookings){
 					LabBookingModel result = new LabBookingModel();
 					result.setReceiveMode(book.getReceive_mode());
-					//logger.info("slot time is :" + book);
-					//logger.info("slot time is :" + book.getLabSlot().getTime());
 					LabSlots bookedSlot = book.getLabSlot();
-					logger.info("Slot info is : " + bookedSlot.getId());
 					result.setSlotTime(new Utils().convertDateToUTCFormat(bookedSlot.getTime()));
 					result.setTestName(book.getLabSlot().getSubType().getName());
 					UserModel userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername(),book.getAddress());
