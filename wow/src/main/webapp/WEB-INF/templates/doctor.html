@@ -7,7 +7,7 @@
 <script>
 	$(function() {
 		$('.contentDiv').hide();
-		$('#addSlotDiv').show();
+		//$('#addSlotDiv').show();
 		$('.contentSelection').click(function() {
 			$('.contentDiv').hide();
 			$('#' + $(this).attr('id') + 'Div').show();
@@ -67,7 +67,7 @@
 			});
 			
 		});	
-	
+		$('#addBooking').click();
 	});
 </script>
 
@@ -77,11 +77,10 @@
 		<div class="row">
 			<div class="col-md-2">
 				<div class="btn-group-vertical">
-					
+					<button id="addBooking" type="button"
+						class="btn btn-primary contentSelection">My Bookings</button>
 					<button id="addSlot" type="button"
 						class="btn btn-primary contentSelection">Add Slots</button>
-							<button id="addBooking" type="button"
-						class="btn btn-primary contentSelection">My Bookings</button>
 				</div>
 			</div>
 			

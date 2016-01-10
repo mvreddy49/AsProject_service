@@ -52,6 +52,9 @@ public class HomeController {
 				else if(Constants.ROLE_DOCTOR.equalsIgnoreCase(role)){
 					home = "doctor"; break;
 				}
+				else if(Constants.ROLE_NURSE.equalsIgnoreCase(role)){
+					home = "nurse"; break;
+				}
 				else if(Constants.ROLE_USER.equalsIgnoreCase(role)){
 					home = "home-user"; break;
 				}
@@ -186,6 +189,12 @@ public class HomeController {
 	public ModelAndView homeclinic(){
 		logger.debug("homeclinic get get start");
 		ModelAndView mv = new ModelAndView("homeclinic");
+		return mv;
+	}
+	@RequestMapping(value = "/nurse", method = RequestMethod.GET)
+	public ModelAndView nurse(){
+		logger.debug("nurse get get start");
+		ModelAndView mv = new ModelAndView("nurse");
 		return mv;
 	}
 

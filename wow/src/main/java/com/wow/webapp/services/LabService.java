@@ -491,10 +491,11 @@ public class LabService {
 					}
 				}
 				else{
+					logger.info("In user booking");
 					User user=userDao.findByUserName(userName);
+					logger.info("User is :" + user);
 					bookings = labDao.findLabBookingsByUser(user);
 				}
-				bookings = labDao.findLabBookings();
 				List<LabBookingModel> results = new ArrayList<LabBookingModel>();
 				for(LabBooking book: bookings){
 					LabBookingModel result = new LabBookingModel();
@@ -503,7 +504,12 @@ public class LabService {
 					LabSlots bookedSlot = book.getLabSlot();
 					result.setSlotTime(new Utils().convertDateToUTCFormat(bookedSlot.getTime()));
 					result.setTestName(book.getLabSlot().getSubType().getName());
-					UserModel userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername(),book.getAddress());
+					UserModel userDetails = null;
+					logger.info("Booking address is : " + book.getAddress());
+					if(book.getAddress() != null)
+						userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername(),book.getAddress());
+					else
+						userDetails = new UserModel(book.getUser().getUserProfile().getName(),book.getUser().getUsername());
 					result.setUser(userDetails);
 					results.add(result);
 				}
