@@ -11,12 +11,11 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wow.webapp.entitymodel.Doctor;
 import com.wow.webapp.entitymodel.LabBooking;
 import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
-import com.wow.webapp.entitymodel.Slot;
+import com.wow.webapp.entitymodel.User;
 import com.wow.webapp.util.Utils;
 
 public class LabDAOImpl implements LabDAO{
@@ -168,7 +167,27 @@ public class LabDAOImpl implements LabDAO{
 		logger.info("in find slots on type");
 		Session session = this.getSession();
 		List<LabBooking> bookings = session.createQuery("from LabBooking where labSlot=:labslot").setParameter("labslot", slot).list();
-		return bookings;	}	
-
+		return bookings;	}
 	
+	@Transactional
+	public List<LabBooking> findLabBookings(String date) {
+		Session session = this.getSession();
+		String slotDate="l.inserted_on like '%"+date+"%'";
+		List<LabBooking> bookings = session.createQuery("from LabBooking l where "+slotDate).list();
+		return bookings;
+	}
+	
+	@Transactional
+	public List<LabBooking> findLabBookings() {
+		Session session = this.getSession();
+		List<LabBooking> bookings = session.createQuery("from LabBooking").list();
+		return bookings;
+	}
+
+	@Transactional
+	public List<LabBooking> findLabBookingsByUser(User user) {
+		Session session = this.getSession();
+		List<LabBooking> bookings = session.createQuery("from LabBooking where user=:user").setParameter("user", user).list();
+		return bookings;
+	}
 }
