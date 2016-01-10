@@ -18,6 +18,8 @@ public class Constants {
 	public static final List<String>ROLE_CLINIC_ACCESS = Arrays.asList("ROLE_RECP","ROLE_DOCTOR","ROLE_LAB","ROLE_PHARMACY");
 	public static final List<String>ROLE_ADMIN_ACCESS = Arrays.asList("ROLE_RECP", "ROLE_USER", "ROLE_ADMIN","ROLE_DOCTOR","ROLE_LAB","ROLE_PHARMACY");
 	
+	
+	public static final List<String> ROLE_LAB_ACCESS = Arrays.asList("ROLE_RECP","ROLE_LAB");
 	//SMS Config
 	public static final String SMS_URL="http://www.siegsms.com/PostSms.aspx";
 	public static final String SMS_USERID="demo3";

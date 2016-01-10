@@ -3,6 +3,7 @@ package com.wow.webapp.controllers.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -172,6 +173,19 @@ public class LabController {
 		
 		returnModel = labService.labBooking(model);
 		
+		return returnModel;
+	}
+	
+	@RequestMapping(value = "/booking" , method = RequestMethod.GET)
+	public ApiReturnModel myLabBooking(HttpServletRequest request)
+	{
+		ApiReturnModel returnModel=null;
+		try{
+			returnModel = labService.getBookings(request);
+		}
+		catch(Exception ex){
+			
+		}
 		return returnModel;
 	}
 	

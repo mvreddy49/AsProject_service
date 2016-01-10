@@ -8,6 +8,7 @@ import com.wow.webapp.entitymodel.LabBooking;
 import com.wow.webapp.entitymodel.LabSlots;
 import com.wow.webapp.entitymodel.LabSubType;
 import com.wow.webapp.entitymodel.LabType;
+import com.wow.webapp.entitymodel.User;
 
 public interface LabDAO {
 
@@ -22,11 +23,15 @@ public interface LabDAO {
 	public List<LabSubType> getLabSubType(LabType labType);
 	
 	public LabSubType gerLabsubType(Integer id);
+	
 	public List<String> findSlotsByStartAndEndTimes(Date startTime, Date endTime, LabSubType labsubType);
 	
 	public LabSlots findSlot(Integer id);
-	
 	public List<LabBooking> findBookingsOnslot(LabSlots slot , String receive_mode);
 	public List<LabBooking> findBookingsOnslot(LabSlots slot);
 	public List<LabSlots> findLabSlotsOnDate(LabSubType labSubType, String date);
+	
+	public List<LabBooking> findLabBookings(String date);
+	public List<LabBooking> findLabBookings();
+	public List<LabBooking> findLabBookingsByUser(User user);
 }
