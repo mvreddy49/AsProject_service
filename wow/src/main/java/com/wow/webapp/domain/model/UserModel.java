@@ -6,10 +6,15 @@ public class UserModel {
 	
 	private String username;
 	private String mobile;
-	private String address; 
+	private String address = "Default Address"; 
 	
 	public UserModel(){
 		
+	}
+	
+	public UserModel(String username,String mobile){
+		this.mobile = mobile;
+		this.username = username;
 	}
 	
 	public UserModel(String username,String mobile,String address){

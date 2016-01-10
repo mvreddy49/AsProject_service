@@ -7,9 +7,8 @@
 <script>
 	$(function() {
 		$('.contentDiv').hide();
-		$('#addSlotDiv').show();
+		//$('#addSlotDiv').show();
 		$("#displayRportsDiv").hide();
-		
 		$('.contentSelection').click(function() {
 			$('.contentDiv').hide();
 			$("#displayRportsDiv").hide();
@@ -71,7 +70,7 @@
 			});
 			
 		});	
-	
+		$('#addBooking').click();
 	});
 	function viewReports()
 	{
@@ -86,11 +85,10 @@
 		<div class="row">
 			<div class="col-md-2">
 				<div class="btn-group-vertical">
-					
+					<button id="addBooking" type="button"
+						class="btn btn-primary contentSelection">My Bookings</button>
 					<button id="addSlot" type="button"
 						class="btn btn-primary contentSelection">Add Slots</button>
-							<button id="addBooking" type="button"
-						class="btn btn-primary contentSelection">My Bookings</button>
 				</div>
 			</div>
 			

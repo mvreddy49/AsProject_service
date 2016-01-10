@@ -10,13 +10,15 @@ public class Constants {
 	public static final String ROLE_DOCTOR="ROLE_DOCTOR";
 	public static final String ROLE_ADMIN="ROLE_ADMIN";
 	public static final String ROLE_RECP="ROLE_RECP";
+	public static final String ROLE_LAB = "ROLE_LAB";
+	public static final String ROLE_NURSE = "ROLE_NURSE";
 	
 	public static final String CLINIC_TYPE="labs";
 	public static final Integer LABS_BOOKING_LIMIt=10;
 	
 	public static final List<String>ROLE_RECP_ACCESS = Arrays.asList("ROLE_USER","ROLE_DOCTOR");
 	public static final List<String>ROLE_CLINIC_ACCESS = Arrays.asList("ROLE_RECP","ROLE_DOCTOR","ROLE_LAB","ROLE_PHARMACY");
-	public static final List<String>ROLE_ADMIN_ACCESS = Arrays.asList("ROLE_RECP", "ROLE_USER", "ROLE_ADMIN","ROLE_DOCTOR","ROLE_LAB","ROLE_PHARMACY");
+	public static final List<String>ROLE_ADMIN_ACCESS = Arrays.asList("ROLE_RECP", "ROLE_USER", "ROLE_ADMIN","ROLE_DOCTOR","ROLE_LAB","ROLE_PHARMACY","ROLE_NURSE");
 	
 	
 	public static final List<String> ROLE_LAB_ACCESS = Arrays.asList("ROLE_RECP","ROLE_LAB");
@@ -40,7 +42,7 @@ public class Constants {
 
 	//Default Values
 	public static final String ONLINE_SOURCE = "web";
-	public static final String ROLE_LAB = "ROLE_LAB";
+	
 		
 	
 }
